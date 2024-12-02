@@ -4,11 +4,11 @@ A library of helpful, efficient, and well designed, utility functions and classe
 
 ## Motivation
 
-There is a lot of helpful code online for working with Revit, unfortunately some of it has gotten quite old, and some of it was written using software engineering best practices.
-
-Additionally Revit plug-in developers tend to cut and paste, or re-invent, the same unwieldy and sub-par code over and over again. 
+There is a lot of helpful code online for working with Revit, unfortunately some of it has gotten quite old, and some of it could benefit from the 
+application of modern best practices. There has been a tendency in the industry for code to be cut and paste, reinvented, or copied
+from Chat GPT without review or consideration of how to make it more resuable.  
 
 We have decided to share our utility libraries to enable us, and others to develop better quality extensions to Revit, in less time.
 
-By making it open-source we hope that others not only may find it useful, but that they can easily identify areas for improvement and contribute back to it.  
- 
+By making it open-source we hope that you may not only find it useful, but you can identify areas for improvement and contribute code or suggestions.  
+
