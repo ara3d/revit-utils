@@ -1,0 +1,67 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>net48</TargetFramework>
+		<OutputType>Library</OutputType>
+		<PlatformTarget>x64</PlatformTarget>
+		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+		<UseWPF>true</UseWPF>
+		<ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
+		<Configurations>Debug R22</Configurations>
+		<Configurations>$(Configurations);R18;R19;R20;R21;R22;R23</Configurations>
+	</PropertyGroup>
+	<PropertyGroup Condition="$(Configuration.Contains('Debug'))">
+		<DebugSymbols>true</DebugSymbols>
+		<DebugType>full</DebugType>
+		<DefineConstants>$(DefineConstants);DEBUG</DefineConstants>
+	</PropertyGroup>
+	<PropertyGroup Condition="$(Configuration.Contains('Release'))">
+		<Optimize>true</Optimize>
+		<DebugType>none</DebugType>
+		<DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'R23|AnyCPU'">
+		<OutputPath>bin\REVIT2023\</OutputPath>
+		<DefineConstants>R23</DefineConstants>
+		<RevitVersion>2023</RevitVersion>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'R22|AnyCPU'">
+		<OutputPath>bin\REVIT2022\</OutputPath>
+		<DefineConstants>R22</DefineConstants>
+		<RevitVersion>2022</RevitVersion>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'R21|AnyCPU'">
+		<OutputPath>bin\REVIT2021\</OutputPath>
+		<DefineConstants>R21</DefineConstants>
+		<RevitVersion>2021</RevitVersion>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'R20|AnyCPU'">
+		<OutputPath>bin\REVIT2020\</OutputPath>
+		<DefineConstants>R20</DefineConstants>
+		<RevitVersion>2020</RevitVersion>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'R19|AnyCPU'">
+		<OutputPath>bin\REVIT2019\</OutputPath>
+		<DefineConstants>R19</DefineConstants>
+		<RevitVersion>2019</RevitVersion>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'R18|AnyCPU'">
+		<OutputPath>bin\REVIT2018\</OutputPath>
+		<DefineConstants>R18</DefineConstants>
+		<RevitVersion>2018</RevitVersion>
+	</PropertyGroup>
+	
+	<PropertyGroup>
+		<Version>$(RevitVersion)</Version>
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+		<Description>A Project Support Parameter Database for developer in revit</Description>
+	</PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+		<PackageReference Include="Revit_All_Main_Versions_API_x64" Version="$(RevitVersion).*" />
+		<PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
+		<PackageReference Include="Microsoft.Windows.Compatibility" Version="6.0.0" />
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+	</ItemGroup>
+</Project>

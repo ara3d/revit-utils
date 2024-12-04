@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RevitAddIns>
+  <AddIn Type="Command">
+    <Text>Create and print views for all selected</Text>
+    <Description>Create and print sheets and views for all selected parts</Description>
+    <Assembly>CreateAndPrintSheetsAndViews.dll</Assembly>
+    <FullClassName>CreateAndPrintSheetsAndViews.Command</FullClassName>
+    <ClientId>76669f62-4326-409d-8d83-022778d2bc1f</ClientId>
+    <VendorId>com.typepad.thebuildingcoder</VendorId>
+    <VendorDescription>The Building Coder, http://thebuildingcoder.typepad.com</VendorDescription>
+  </AddIn>
+  <AddIn Type="Command">
+    <Text>Create and print views for single</Text>
+    <Description>Create and print sheets and views for a single part</Description>
+    <Assembly>CreateAndPrintSheetsAndViews.dll</Assembly>
+    <FullClassName>CreateAndPrintSheetsAndViews.CmdCreateAndPrintSheetAndViews</FullClassName>
+    <ClientId>017a659d-c893-4c5e-9ae2-a261224fa918</ClientId>
+    <VendorId>com.typepad.thebuildingcoder</VendorId>
+    <VendorDescription>The Building Coder, http://thebuildingcoder.typepad.com</VendorDescription>
+  </AddIn>
+</RevitAddIns>
