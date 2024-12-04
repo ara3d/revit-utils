@@ -28,12 +28,8 @@ namespace RevitElementBipChecker.Viewmodel
 
         public ObservableCollection<ParameterData> Data
         {
-            get
-            {
-
-                return data;
-            }
-            set { OnPropertyChanged(ref data, value); }
+            get => data;
+            set => OnPropertyChanged(ref data, value);
         }
 
         private ICollectionView itemsView;
@@ -68,7 +64,7 @@ namespace RevitElementBipChecker.Viewmodel
 
         private bool filterSearchText(object item)
         {
-            ParameterData paradata = (ParameterData)item;
+            var paradata = (ParameterData)item;
             if (SearchText != null || SearchText != "")
             {
                 return paradata.ParameterName.ToUpper().Contains(SearchText.ToUpper());
@@ -95,8 +91,8 @@ namespace RevitElementBipChecker.Viewmodel
         public ICommand CheckTypeInstance => new RelayCommand(PickFirstCommand.ToggleTypeInstance);
         public BipCheckerViewmodel(UIDocument uidoc)
         {
-            this.UIDoc = uidoc;
-            SelectedCommand SelectedCommand = new SelectedCommand(this);
+            UIDoc = uidoc;
+            var SelectedCommand = new SelectedCommand(this);
             PickFirstCommand = new PickFirstCommand(this);
             
         }
@@ -125,10 +121,10 @@ namespace RevitElementBipChecker.Viewmodel
                 }
             }
 
-            ObservableCollection<ParameterData> list = Data.GroupBy(x => x.Parameter.Id).Select(x => x.First()).ToObservableCollection();
+            var list = Data.GroupBy(x => x.Parameter.Id).Select(x => x.First()).ToObservableCollection();
             Data = list;
             //Sort
-            CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(data);
+            var view = (CollectionView)CollectionViewSource.GetDefaultView(data);
             view.SortDescriptions.Add(new SortDescription("TypeOrInstance", ListSortDirection.Ascending));
             view.SortDescriptions.Add(new SortDescription("ParameterName", ListSortDirection.Ascending));
         }

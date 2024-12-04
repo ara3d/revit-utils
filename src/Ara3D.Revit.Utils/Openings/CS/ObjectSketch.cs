@@ -42,7 +42,7 @@ namespace Revit.SDK.Samples.Openings.CS
         /// <summary>
         /// pen to draw the object
         /// </summary>
-        protected Pen m_pen = new Pen(System.Drawing.Color.DarkGreen);
+        protected Pen m_pen = new Pen(Color.DarkGreen);
 
         /// <summary>
         /// defines a local geometric transform
@@ -57,13 +57,7 @@ namespace Revit.SDK.Samples.Openings.CS
         /// <summary>
         /// bounding box of the geometry object 
         /// </summary>
-        public RectangleF BoundingBox
-        {
-            get
-            {
-                return m_boundingBox;
-            }
-        }
+        public RectangleF BoundingBox => m_boundingBox;
 
         /// <summary>
         /// geometric object draw itself

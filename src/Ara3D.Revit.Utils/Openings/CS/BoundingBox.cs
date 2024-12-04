@@ -46,18 +46,12 @@ namespace Revit.SDK.Samples.Openings.CS
       /// <summary>
       /// store all the corner points in BoundingBox
       /// </summary>
-      private readonly List<Autodesk.Revit.DB.XYZ> m_points = new List<Autodesk.Revit.DB.XYZ>();
+      private readonly List<XYZ> m_points = new List<XYZ>();
 
       /// <summary>
       /// property to get all the points
       /// </summary>
-      public List<Autodesk.Revit.DB.XYZ> Points
-      {
-         get
-         {
-            return m_points;
-         }
-      }
+      public List<XYZ> Points => m_points;
 
       /// <summary>
       /// property to get width of BoundingBox (short side)
@@ -95,8 +89,8 @@ namespace Revit.SDK.Samples.Openings.CS
       /// <param name="boundBoxXYZ">The reference of the application in revit</param>
       public BoundingBox(BoundingBoxXYZ boundBoxXYZ)
       {
-         this.Min = boundBoxXYZ.Min;
-         this.Max = boundBoxXYZ.Max;
+         Min = boundBoxXYZ.Min;
+         Max = boundBoxXYZ.Max;
 
          GetCorners();
       }
@@ -114,12 +108,12 @@ namespace Revit.SDK.Samples.Openings.CS
          }
 
          //create 12 lines
-         for (int i = 0; i < 7; i++)
+         for (var i = 0; i < 7; i++)
          {
             NewModelLine(app, i, i + 1);
          }
 
-         for (int i = 0; i < 5; i = i + 2)
+         for (var i = 0; i < 5; i = i + 2)
          {
             NewModelLine(app, i, i + 3);
          }
@@ -135,44 +129,44 @@ namespace Revit.SDK.Samples.Openings.CS
       /// </summary>
       private void GetCorners()
       {
-         m_points.Add(this.Min);
+         m_points.Add(Min);
 
-         Autodesk.Revit.DB.XYZ point = new Autodesk.Revit.DB.XYZ(
-             this.Min.X,
-             this.Min.Y,
-             this.Max.Z);
+         var point = new XYZ(
+             Min.X,
+             Min.Y,
+             Max.Z);
          m_points.Add(point);
 
-         Autodesk.Revit.DB.XYZ point2 = new Autodesk.Revit.DB.XYZ(
-             this.Min.X,
-             this.Max.Y,
-             this.Max.Z);
+         var point2 = new XYZ(
+             Min.X,
+             Max.Y,
+             Max.Z);
          m_points.Add(point2);
 
-         Autodesk.Revit.DB.XYZ point3 = new Autodesk.Revit.DB.XYZ(
-             this.Min.X,
-             this.Max.Y,
-             this.Min.Z);
+         var point3 = new XYZ(
+             Min.X,
+             Max.Y,
+             Min.Z);
          m_points.Add(point3);
 
-         Autodesk.Revit.DB.XYZ point4 = new Autodesk.Revit.DB.XYZ(
-             this.Max.X,
-             this.Max.Y,
-             this.Min.Z);
+         var point4 = new XYZ(
+             Max.X,
+             Max.Y,
+             Min.Z);
          m_points.Add(point4);
 
-         m_points.Add(this.Max);
+         m_points.Add(Max);
 
-         Autodesk.Revit.DB.XYZ point5 = new Autodesk.Revit.DB.XYZ(
-             this.Max.X,
-             this.Min.Y,
-             this.Max.Z);
+         var point5 = new XYZ(
+             Max.X,
+             Min.Y,
+             Max.Z);
          m_points.Add(point5);
 
-         Autodesk.Revit.DB.XYZ point6 = new Autodesk.Revit.DB.XYZ(
-             this.Max.X,
-             this.Min.Y,
-             this.Min.Z);
+         var point6 = new XYZ(
+             Max.X,
+             Min.Y,
+             Min.Z);
          m_points.Add(point6);
       }
 
@@ -185,23 +179,23 @@ namespace Revit.SDK.Samples.Openings.CS
       private SketchPlane NewSketchPlanePassLine(Line aline, UIApplication app)
       {
          //in a cube only
-         Autodesk.Revit.DB.XYZ norm;
+         XYZ norm;
          if (aline.GetEndPoint(0).X == aline.GetEndPoint(1).X)
          {
-            norm = new Autodesk.Revit.DB.XYZ(1, 0, 0);
+            norm = new XYZ(1, 0, 0);
          }
          else if (aline.GetEndPoint(0).Y == aline.GetEndPoint(1).Y)
          {
-            norm = new Autodesk.Revit.DB.XYZ(0, 1, 0);
+            norm = new XYZ(0, 1, 0);
          }
          else
          {
-            norm = new Autodesk.Revit.DB.XYZ(0, 0, 1);
+            norm = new XYZ(0, 0, 1);
          }
 
-         Autodesk.Revit.DB.XYZ point = aline.GetEndPoint(0);
-         Plane plane = Plane.CreateByNormalAndOrigin(norm, point);
-         SketchPlane sketchPlane = SketchPlane.Create(app.ActiveUIDocument.Document, plane);
+         var point = aline.GetEndPoint(0);
+         var plane = Plane.CreateByNormalAndOrigin(norm, point);
+         var sketchPlane = SketchPlane.Create(app.ActiveUIDocument.Document, plane);
          return sketchPlane;
       }
 
@@ -213,14 +207,14 @@ namespace Revit.SDK.Samples.Openings.CS
       /// <param name="pointIndex2">index of another point in BoundingBox acme</param>
       private void NewModelLine(UIApplication app, int pointIndex1, int pointIndex2)
       {
-         Autodesk.Revit.DB.XYZ startP2 = m_points[pointIndex1];
-         Autodesk.Revit.DB.XYZ endP2 = m_points[pointIndex2];
+         var startP2 = m_points[pointIndex1];
+         var endP2 = m_points[pointIndex2];
 
          try
          {
-            Line line = Line.CreateBound(startP2, endP2);
-            SketchPlane sketchPlane = NewSketchPlanePassLine(line, app);
-            Line line2 = Line.CreateBound(startP2, endP2);
+            var line = Line.CreateBound(startP2, endP2);
+            var sketchPlane = NewSketchPlanePassLine(line, app);
+            var line2 = Line.CreateBound(startP2, endP2);
             app.ActiveUIDocument.Document.Create.NewModelCurve(line2, sketchPlane);
          }
          catch (Exception)

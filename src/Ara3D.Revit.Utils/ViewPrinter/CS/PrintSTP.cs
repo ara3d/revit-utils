@@ -49,29 +49,11 @@ namespace Revit.SDK.Samples.ViewPrinter.CS
             m_printMgr = printMgr;
         }
 
-        public string PrinterName
-        {
-            get
-            {
-                return m_printMgr.PrinterName;
-            }
-        }
+        public string PrinterName => m_printMgr.PrinterName;
 
-        public string Prefix
-        {
-            get
-            {
-                return "Default ";
-            }
-        }
+        public string Prefix => "Default ";
 
-        public int SettingCount
-        {
-            get
-            {
-                return m_commandData.Application.ActiveUIDocument.Document.GetPrintSettingIds().Count;
-            }
-        }
+        public int SettingCount => m_commandData.Application.ActiveUIDocument.Document.GetPrintSettingIds().Count;
 
         public bool SaveAs(string newName)
         {
@@ -103,12 +85,12 @@ namespace Revit.SDK.Samples.ViewPrinter.CS
         {
             get
             {
-                List<string> names = new List<string>();
+                var names = new List<string>();
                 //foreach (Element printSetting in m_commandData.Application.ActiveUIDocument.Document.PrintSettings)
-                ICollection<ElementId> printSettingIds = m_commandData.Application.ActiveUIDocument.Document.GetPrintSettingIds();
-                foreach (ElementId eid in printSettingIds)
+                var printSettingIds = m_commandData.Application.ActiveUIDocument.Document.GetPrintSettingIds();
+                foreach (var eid in printSettingIds)
                 {
-                    Element printSetting = m_commandData.Application.ActiveUIDocument.Document.GetElement(eid);
+                    var printSetting = m_commandData.Application.ActiveUIDocument.Document.GetElement(eid);
                     names.Add(printSetting.Name);
                 }
                 names.Add(ConstData.InSessionName);
@@ -120,7 +102,7 @@ namespace Revit.SDK.Samples.ViewPrinter.CS
         {
             get
             {
-                IPrintSetting setting = m_printMgr.PrintSetup.CurrentPrintSetting;
+                var setting = m_printMgr.PrintSetup.CurrentPrintSetting;
                 return (setting is PrintSetting) ?
                     (setting as PrintSetting).Name : ConstData.InSessionName;
             }
@@ -132,10 +114,10 @@ namespace Revit.SDK.Samples.ViewPrinter.CS
                     return;
                 }
                 //foreach (Element printSetting in m_commandData.Application.ActiveUIDocument.Document.PrintSettings)
-                ICollection<ElementId> printSettingIds = m_commandData.Application.ActiveUIDocument.Document.GetPrintSettingIds();
-                foreach (ElementId eid in printSettingIds)
+                var printSettingIds = m_commandData.Application.ActiveUIDocument.Document.GetPrintSettingIds();
+                foreach (var eid in printSettingIds)
                 {
-                   Element printSetting = m_commandData.Application.ActiveUIDocument.Document.GetElement(eid);
+                   var printSetting = m_commandData.Application.ActiveUIDocument.Document.GetElement(eid);
                     if (printSetting.Name.Equals(value))
                     {
                         m_printMgr.PrintSetup.CurrentPrintSetting = printSetting as PrintSetting;
@@ -148,7 +130,7 @@ namespace Revit.SDK.Samples.ViewPrinter.CS
         {
             get
             {
-                List<string> names = new List<string>();
+                var names = new List<string>();
                 foreach (PaperSize ps in m_printMgr.PaperSizes)
                 {
                     names.Add(ps.Name);
@@ -187,7 +169,7 @@ namespace Revit.SDK.Samples.ViewPrinter.CS
         {
             get
             {
-                List<string> names = new List<string>();
+                var names = new List<string>();
                 foreach (PaperSource ps in m_printMgr.PaperSources)
                 {
                     names.Add(ps.Name);
@@ -198,10 +180,7 @@ namespace Revit.SDK.Samples.ViewPrinter.CS
 
         public string PaperSource
         {
-            get
-            {
-                return m_printMgr.PrintSetup.CurrentPrintSetting.PrintParameters.PaperSource.Name;
-            }
+            get => m_printMgr.PrintSetup.CurrentPrintSetting.PrintParameters.PaperSource.Name;
             set
             {
                 foreach (PaperSource ps in m_printMgr.PaperSources)
@@ -217,206 +196,98 @@ namespace Revit.SDK.Samples.ViewPrinter.CS
 
         public PageOrientationType PageOrientation
         {
-            get
-            {
-                return m_printMgr.PrintSetup.CurrentPrintSetting.PrintParameters.PageOrientation;
-            }
-            set
-            {
-                m_printMgr.PrintSetup.CurrentPrintSetting.PrintParameters.PageOrientation = value;
-            }
+            get => m_printMgr.PrintSetup.CurrentPrintSetting.PrintParameters.PageOrientation;
+            set => m_printMgr.PrintSetup.CurrentPrintSetting.PrintParameters.PageOrientation = value;
         }
 
         public PaperPlacementType PaperPlacement
         {
-            get
-            {
-                return m_printMgr.PrintSetup.CurrentPrintSetting.PrintParameters.PaperPlacement;
-            }
-            set
-            {
-                m_printMgr.PrintSetup.CurrentPrintSetting.PrintParameters.PaperPlacement = value;
-            }
+            get => m_printMgr.PrintSetup.CurrentPrintSetting.PrintParameters.PaperPlacement;
+            set => m_printMgr.PrintSetup.CurrentPrintSetting.PrintParameters.PaperPlacement = value;
         }
 
-        public Array MarginTypes
-        {
-            get
-            {
-                return Enum.GetValues(typeof(MarginType));
-            }
-        }
+        public Array MarginTypes => Enum.GetValues(typeof(MarginType));
 
         public MarginType SelectedMarginType
         {
-            get
-            {
-                return m_printMgr.PrintSetup.CurrentPrintSetting.PrintParameters.MarginType;
-            }
-            set
-            {
-                m_printMgr.PrintSetup.CurrentPrintSetting.PrintParameters.MarginType = value;
-            }
+            get => m_printMgr.PrintSetup.CurrentPrintSetting.PrintParameters.MarginType;
+            set => m_printMgr.PrintSetup.CurrentPrintSetting.PrintParameters.MarginType = value;
         }
 
         public double OriginOffsetX
         {
-            get
-            {
-                return m_printMgr.PrintSetup.CurrentPrintSetting.PrintParameters.OriginOffsetX;
-            }
-            set
-            {
-                m_printMgr.PrintSetup.CurrentPrintSetting.PrintParameters.OriginOffsetX = value;
-            }
+            get => m_printMgr.PrintSetup.CurrentPrintSetting.PrintParameters.OriginOffsetX;
+            set => m_printMgr.PrintSetup.CurrentPrintSetting.PrintParameters.OriginOffsetX = value;
         }
 
         public double OriginOffsetY
         {
-            get
-            {
-                return m_printMgr.PrintSetup.CurrentPrintSetting.PrintParameters.OriginOffsetY;
-            }
-            set
-            {
-                m_printMgr.PrintSetup.CurrentPrintSetting.PrintParameters.OriginOffsetY = value;
-            }
+            get => m_printMgr.PrintSetup.CurrentPrintSetting.PrintParameters.OriginOffsetY;
+            set => m_printMgr.PrintSetup.CurrentPrintSetting.PrintParameters.OriginOffsetY = value;
         }
 
         public HiddenLineViewsType HiddenLineViews
         {
-            get
-            {
-                return m_printMgr.PrintSetup.CurrentPrintSetting.PrintParameters.HiddenLineViews;
-            }
-            set
-            {
-                m_printMgr.PrintSetup.CurrentPrintSetting.PrintParameters.HiddenLineViews = value;
-            }
+            get => m_printMgr.PrintSetup.CurrentPrintSetting.PrintParameters.HiddenLineViews;
+            set => m_printMgr.PrintSetup.CurrentPrintSetting.PrintParameters.HiddenLineViews = value;
         }
 
         public int Zoom
         {
-            get
-            {
-                return m_printMgr.PrintSetup.CurrentPrintSetting.PrintParameters.Zoom;
-            }
-            set
-            {
-                m_printMgr.PrintSetup.CurrentPrintSetting.PrintParameters.Zoom = value;
-            }
+            get => m_printMgr.PrintSetup.CurrentPrintSetting.PrintParameters.Zoom;
+            set => m_printMgr.PrintSetup.CurrentPrintSetting.PrintParameters.Zoom = value;
         }
 
         public ZoomType ZoomType
         {
-            get
-            {
-                return m_printMgr.PrintSetup.CurrentPrintSetting.PrintParameters.ZoomType;
-            }
-            set
-            {
-                m_printMgr.PrintSetup.CurrentPrintSetting.PrintParameters.ZoomType = value;
-            }
+            get => m_printMgr.PrintSetup.CurrentPrintSetting.PrintParameters.ZoomType;
+            set => m_printMgr.PrintSetup.CurrentPrintSetting.PrintParameters.ZoomType = value;
         }
 
-        public Array RasterQualities
-        {
-            get
-            {
-                return Enum.GetValues(typeof(RasterQualityType));
-            }
-        }
+        public Array RasterQualities => Enum.GetValues(typeof(RasterQualityType));
 
         public RasterQualityType RasterQuality
         {
-            get
-            {
-                return m_printMgr.PrintSetup.CurrentPrintSetting.PrintParameters.RasterQuality;
-            }
-            set
-            {
-                m_printMgr.PrintSetup.CurrentPrintSetting.PrintParameters.RasterQuality = value;
-            }
+            get => m_printMgr.PrintSetup.CurrentPrintSetting.PrintParameters.RasterQuality;
+            set => m_printMgr.PrintSetup.CurrentPrintSetting.PrintParameters.RasterQuality = value;
         }
 
-        public Array Colors
-        {
-            get
-            {
-                return Enum.GetValues(typeof(ColorDepthType));
-            }
-        }
+        public Array Colors => Enum.GetValues(typeof(ColorDepthType));
 
         public ColorDepthType Color
         {
-            get
-            {
-                return m_printMgr.PrintSetup.CurrentPrintSetting.PrintParameters.ColorDepth;
-            }
-            set
-            {
-                m_printMgr.PrintSetup.CurrentPrintSetting.PrintParameters.ColorDepth = value;
-            }
+            get => m_printMgr.PrintSetup.CurrentPrintSetting.PrintParameters.ColorDepth;
+            set => m_printMgr.PrintSetup.CurrentPrintSetting.PrintParameters.ColorDepth = value;
         }
 
         public bool ViewLinksinBlue
         {
-            get
-            {
-                return m_printMgr.PrintSetup.CurrentPrintSetting.PrintParameters.ViewLinksinBlue;
-            }
-            set
-            {
-                m_printMgr.PrintSetup.CurrentPrintSetting.PrintParameters.ViewLinksinBlue = value;
-            }
+            get => m_printMgr.PrintSetup.CurrentPrintSetting.PrintParameters.ViewLinksinBlue;
+            set => m_printMgr.PrintSetup.CurrentPrintSetting.PrintParameters.ViewLinksinBlue = value;
         }
 
         public bool HideScopeBoxes
         {
-            get
-            {
-                return m_printMgr.PrintSetup.CurrentPrintSetting.PrintParameters.HideScopeBoxes;
-            }
-            set
-            {
-                m_printMgr.PrintSetup.CurrentPrintSetting.PrintParameters.HideScopeBoxes = value;
-            }
+            get => m_printMgr.PrintSetup.CurrentPrintSetting.PrintParameters.HideScopeBoxes;
+            set => m_printMgr.PrintSetup.CurrentPrintSetting.PrintParameters.HideScopeBoxes = value;
         }
 
         public bool HideReforWorkPlanes
         {
-            get
-            {
-                return m_printMgr.PrintSetup.CurrentPrintSetting.PrintParameters.HideReforWorkPlanes;
-            }
-            set
-            {
-                m_printMgr.PrintSetup.CurrentPrintSetting.PrintParameters.HideReforWorkPlanes = value;
-            }
+            get => m_printMgr.PrintSetup.CurrentPrintSetting.PrintParameters.HideReforWorkPlanes;
+            set => m_printMgr.PrintSetup.CurrentPrintSetting.PrintParameters.HideReforWorkPlanes = value;
         }
 
         public bool HideCropBoundaries
         {
-            get
-            {
-                return m_printMgr.PrintSetup.CurrentPrintSetting.PrintParameters.HideCropBoundaries;
-            }
-            set
-            {
-                m_printMgr.PrintSetup.CurrentPrintSetting.PrintParameters.HideCropBoundaries = value;
-            }
+            get => m_printMgr.PrintSetup.CurrentPrintSetting.PrintParameters.HideCropBoundaries;
+            set => m_printMgr.PrintSetup.CurrentPrintSetting.PrintParameters.HideCropBoundaries = value;
         }
 
         public bool HideUnreferencedViewTags
         {
-            get
-            {
-                return m_printMgr.PrintSetup.CurrentPrintSetting.PrintParameters.HideUnreferencedViewTags;
-            }
-            set
-            {
-                m_printMgr.PrintSetup.CurrentPrintSetting.PrintParameters.HideUnreferencedViewTags = value;
-            }
+            get => m_printMgr.PrintSetup.CurrentPrintSetting.PrintParameters.HideUnreferencedViewTags;
+            set => m_printMgr.PrintSetup.CurrentPrintSetting.PrintParameters.HideUnreferencedViewTags = value;
         }
 
         public bool Save()
@@ -467,10 +338,10 @@ namespace Revit.SDK.Samples.ViewPrinter.CS
 
         public bool VerifyUserDefinedMargin(Collection<System.Windows.Forms.Control> controlsToEnableOrNot)
         {
-            bool enableOrNot =
+            var enableOrNot =
                 m_printMgr.PrintSetup.CurrentPrintSetting.PrintParameters.MarginType == MarginType.UserDefined;
 
-            foreach (System.Windows.Forms.Control control in controlsToEnableOrNot)
+            foreach (var control in controlsToEnableOrNot)
             {
                 control.Enabled = enableOrNot;
             }

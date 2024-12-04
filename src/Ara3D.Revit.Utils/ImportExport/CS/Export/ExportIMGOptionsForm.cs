@@ -59,7 +59,7 @@ namespace Revit.SDK.Samples.ImportExport.CS
         {
             m_exportOptions = new ImageExportOptions();
             InitializeComponent();
-            this.m_exportData = exportData;
+            m_exportData = exportData;
             InitializeFormats();
         }
 
@@ -130,12 +130,12 @@ namespace Revit.SDK.Samples.ImportExport.CS
 
         private void Cannel_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
 
         private void Select_Click(object sender, EventArgs e)
         {
-            using (SelectViewsForm selectViewsForm = new SelectViewsForm(m_exportData.SelectViewsData))
+            using (var selectViewsForm = new SelectViewsForm(m_exportData.SelectViewsData))
             {
                 m_exportData.SelectViewsData.SelectedViews.Clear();
                 selectViewsForm.ShowDialog();
@@ -162,9 +162,9 @@ namespace Revit.SDK.Samples.ImportExport.CS
 
         private void Change_Click(object sender, EventArgs e)
         {
-            String fileName = String.Empty;
-            int filterIndex = -1;
-            DialogResult result = ShowSaveDialog(m_exportData, ref fileName, ref filterIndex);
+            var fileName = String.Empty;
+            var filterIndex = -1;
+            var result = ShowSaveDialog(m_exportData, ref fileName, ref filterIndex);
             if (result != DialogResult.Cancel)
             {
                 saveAs.Text = fileName.Substring(0, fileName.LastIndexOf("."));
@@ -174,7 +174,7 @@ namespace Revit.SDK.Samples.ImportExport.CS
 
         private DialogResult ShowSaveDialog(ExportData exportData, ref String returnFileName, ref int filterIndex)
         {
-            using (SaveFileDialog saveDialog = new SaveFileDialog())
+            using (var saveDialog = new SaveFileDialog())
             {
                 saveDialog.Title = exportData.Title;
                 saveDialog.InitialDirectory = exportData.ExportFolder;
@@ -183,7 +183,7 @@ namespace Revit.SDK.Samples.ImportExport.CS
                 saveDialog.FilterIndex = 1;
                 saveDialog.RestoreDirectory = true;
 
-                DialogResult result = saveDialog.ShowDialog();
+                var result = saveDialog.ShowDialog();
                 if (result != DialogResult.Cancel)
                 {
                     returnFileName = saveDialog.FileName;
@@ -213,8 +213,8 @@ namespace Revit.SDK.Samples.ImportExport.CS
 
             if (m_exportOptions.ExportRange == ExportRange.SetOfViews)
             {
-                ViewSet views = m_exportData.SelectViewsData.SelectedViews;
-                List<ElementId> viewIds = new List<ElementId>();
+                var views = m_exportData.SelectViewsData.SelectedViews;
+                var viewIds = new List<ElementId>();
                 foreach (Autodesk.Revit.DB.View view in views)
                 {
                     viewIds.Add(view.Id);
@@ -228,10 +228,10 @@ namespace Revit.SDK.Samples.ImportExport.CS
             }
             catch (Exception ex)
             {
-                String errorMessage = "Failed to export img" + ex.ToString();
+                var errorMessage = "Failed to export img" + ex.ToString();
                 TaskDialog.Show("Error", errorMessage, TaskDialogCommonButtons.Ok);
             }
-            this.Close();
+            Close();
         }
 
         private void Vertical_CheckedChanged(object sender, EventArgs e)

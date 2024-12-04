@@ -13,7 +13,7 @@ namespace Revit.SDK.Samples.Custom2DExporter.CS
    /// <summary>
    /// UI Form presented to the user used to collection options related to the export. 
    /// </summary>
-   public partial class Export2DView : System.Windows.Forms.Form
+   public partial class Export2DView : Form
    {
       /// <summary>
       /// Construct a new form. 
@@ -31,13 +31,7 @@ namespace Revit.SDK.Samples.Custom2DExporter.CS
       /// <summary>
       /// Property containing the options chosen for export. 
       /// </summary>
-      public ExportOptions ViewExportOptions
-      {
-         get
-         {
-            return m_exportOptions;
-         }
-      }
+      public ExportOptions ViewExportOptions => m_exportOptions;
 
       /// <summary>
       /// The option for creating Path of Travel.
@@ -52,14 +46,8 @@ namespace Revit.SDK.Samples.Custom2DExporter.CS
          /// </summary>
          public bool ExportAnnotationObjects
          {
-            get
-            {
-               return m_exportAnnotationObjects;
-            }
-            set
-            {
-               m_exportAnnotationObjects = value;
-            }
+            get => m_exportAnnotationObjects;
+            set => m_exportAnnotationObjects = value;
          }
 
          /// <summary>
@@ -67,14 +55,8 @@ namespace Revit.SDK.Samples.Custom2DExporter.CS
          /// </summary>
          public bool ExportPatternLines
          {
-            get
-            {
-               return m_exportPatternLines;
-            }
-            set
-            {
-               m_exportPatternLines = value;
-            }
+            get => m_exportPatternLines;
+            set => m_exportPatternLines = value;
          }
       }
 

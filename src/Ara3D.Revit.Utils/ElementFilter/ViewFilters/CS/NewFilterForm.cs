@@ -53,10 +53,8 @@ namespace Revit.SDK.Samples.ViewFilters.CS
         /// <summary>
         /// Get new filter name
         /// </summary>
-        public String FilterName
-        {
-            get { return m_filterName; }
-        }
+        public String FilterName => m_filterName;
+
         #endregion
 
         /// <summary>
@@ -77,7 +75,7 @@ namespace Revit.SDK.Samples.ViewFilters.CS
         private void okButton_Click(object sender, EventArgs e)
         {
             // Check name is not empty
-            String newName = newFilterNameTextBox.Text.Trim();
+            var newName = newFilterNameTextBox.Text.Trim();
             if (String.IsNullOrEmpty(newName))
             {
                 ViewFiltersForm.MyMessageBox("Filter name is empty!");
@@ -88,7 +86,7 @@ namespace Revit.SDK.Samples.ViewFilters.CS
             // Check if filter name contains invalid characters
             // These character are different from Path.GetInvalidFileNameChars()
             char[] invalidFileChars = { '\\', ':', '{', '}', '[', ']', '|', ';', '<', '>', '?', '\'', '~' };
-            foreach (char invalidChr in invalidFileChars)
+            foreach (var invalidChr in invalidFileChars)
             {
                 if (newName.Contains(invalidChr))
                 {
@@ -99,7 +97,7 @@ namespace Revit.SDK.Samples.ViewFilters.CS
             // 
             // Check if name is used
             // check if name is already used by other filters
-            bool inUsed = m_inUseFilterNames.Contains(newName, StringComparer.OrdinalIgnoreCase);
+            var inUsed = m_inUseFilterNames.Contains(newName, StringComparer.OrdinalIgnoreCase);
             if (inUsed)
             {
                 ViewFiltersForm.MyMessageBox("The name you supplied is already in use. Enter a unique name please.");
@@ -107,8 +105,8 @@ namespace Revit.SDK.Samples.ViewFilters.CS
                 return;
             }
             m_filterName = newName;
-            this.Close();
-            this.DialogResult = DialogResult.OK;
+            Close();
+            DialogResult = DialogResult.OK;
         }
     }
 }

@@ -57,13 +57,7 @@ namespace BIM.STLExport
         /// <summary>
         /// Number of triangles in exported Revit document.
         /// </summary>
-        public int TriangularNumber
-        {
-            get
-            {
-                return m_TriangularNumber;
-            }
-        }
+        public int TriangularNumber => m_TriangularNumber;
 
         /// <summary>
         /// Constructor.
@@ -113,7 +107,7 @@ namespace BIM.STLExport
                 m_Writer.CreateFile();
                 ScanElement(settings.ExportRange);
 
-                System.Windows.Forms.Application.DoEvents();
+                Application.DoEvents();
 
                 if (m_StlExportCancel.CancelProcess == true)
                 {
@@ -169,16 +163,16 @@ namespace BIM.STLExport
             m_Categories = new SortedDictionary<string, Category>();
 
             // get all elements in the active document
-            FilteredElementCollector filterCollector = new FilteredElementCollector(m_ActiveDocument);
+            var filterCollector = new FilteredElementCollector(m_ActiveDocument);
 
             filterCollector.WhereElementIsNotElementType();
 
-            FilteredElementIterator iterator = filterCollector.GetElementIterator();
+            var iterator = filterCollector.GetElementIterator();
 
             // create sorted dictionary of the categories of the elements
             while (iterator.MoveNext())
             {
-                Element element = iterator.Current;
+                var element = iterator.Current;
 
                 if (element.Category != null)
                 {
@@ -209,7 +203,7 @@ namespace BIM.STLExport
             else
             {
                 // get and return all categories
-                SortedDictionary<string, Category> sortedCategories = new SortedDictionary<string, Category>();
+                var sortedCategories = new SortedDictionary<string, Category>();
 
                 // scan the active document for categories
                 foreach (Category category in m_ActiveDocument.Settings.Categories)
@@ -220,9 +214,9 @@ namespace BIM.STLExport
                 }
 
                 // if linked models exist scan for categories
-                List<Document> linkedDocs = GetLinkedModels();
+                var linkedDocs = GetLinkedModels();
 
-                foreach (Document linkedDoc in linkedDocs)
+                foreach (var linkedDoc in linkedDocs)
                 {
                     foreach (Category category in linkedDoc.Settings.Categories)
                     {
@@ -243,7 +237,7 @@ namespace BIM.STLExport
         /// </param>
         private void ScanElement(ElementsExportRange exportRange)
         {
-            List<Document> documents = new List<Document>();
+            var documents = new List<Document>();
 
             // active document should be the first docuemnt in the list
             documents.Add(m_ActiveDocument);
@@ -251,18 +245,18 @@ namespace BIM.STLExport
             // figure out if we need to get linked models
             if (m_Settings.IncludeLinkedModels)
             {
-                List<Document> linkedDocList = GetLinkedModels();
+                var linkedDocList = GetLinkedModels();
                 documents.AddRange(linkedDocList);
             }
 
-            foreach (Document doc in documents)
+            foreach (var doc in documents)
             {
                 FilteredElementCollector collector = null;
 
                 if (ElementsExportRange.OnlyVisibleOnes == exportRange)
                 {
                     // find the view having the same name of ActiveView.Name in active and linked model documents.
-                    ElementId viewId = FindView(doc, m_ActiveView.Name);
+                    var viewId = FindView(doc, m_ActiveView.Name);
 
                     if (viewId != ElementId.InvalidElementId)
                         collector = new FilteredElementCollector(doc, viewId);
@@ -276,16 +270,16 @@ namespace BIM.STLExport
 
                 collector.WhereElementIsNotElementType();
 
-                FilteredElementIterator iterator = collector.GetElementIterator();
+                var iterator = collector.GetElementIterator();
 
                 while (iterator.MoveNext())
                 {
-                    System.Windows.Forms.Application.DoEvents();
+                    Application.DoEvents();
 
                     if (m_StlExportCancel.CancelProcess == true)
                         return;
 
-                    Element element = iterator.Current;
+                    var element = iterator.Current;
 
                     // check if element's category is in the list, if it is continue.
                     // if there are no selected categories, take anything.
@@ -297,7 +291,7 @@ namespace BIM.STLExport
                         }
                         else
                         {
-                            IEnumerable<Category> cats = from cat in m_Settings.SelectedCategories
+                            var cats = from cat in m_Settings.SelectedCategories
                                                          where cat.Id == element.Category.Id
                                                          select cat;
 
@@ -331,10 +325,10 @@ namespace BIM.STLExport
         /// <returns>The element id of the view found.</returns>
         private ElementId FindView(Document doc, string activeViewName)
         {
-            FilteredElementCollector collector = new FilteredElementCollector(doc);
+            var collector = new FilteredElementCollector(doc);
             collector.OfClass(typeof(RevitView));
 
-            IEnumerable<Element> selectedView = from view in collector.ToList<Element>()
+            var selectedView = from view in collector.ToList()
                                                 where view.Name == activeViewName
                                                 select view;
 
@@ -354,10 +348,10 @@ namespace BIM.STLExport
         private void ScanGeomElement(Document document, GeometryElement geometry, Transform transform)
         {
             //get all geometric primitives contained in the GeometryElement
-            foreach (GeometryObject gObject in geometry)
+            foreach (var gObject in geometry)
             {
                 // if the type of the geometric primitive is Solid
-                Solid solid = gObject as Solid;
+                var solid = gObject as Solid;
                 if (null != solid)
                 {
                     ScanSolid(document,solid, transform);
@@ -365,14 +359,14 @@ namespace BIM.STLExport
                 }
 
                 // if the type of the geometric primitive is instance
-                GeometryInstance instance = gObject as GeometryInstance;
+                var instance = gObject as GeometryInstance;
                 if (null != instance)
                 {
                     ScanGeometryInstance(document, instance, transform);
                     continue;
                 }
 
-                GeometryElement geomElement = gObject as GeometryElement;
+                var geomElement = gObject as GeometryElement;
                 if (null != geomElement)
                 {
                     ScanGeomElement(document,geomElement, transform);
@@ -387,7 +381,7 @@ namespace BIM.STLExport
         /// <param name="trf">The transformation.</param>
         private void ScanGeometryInstance(Document document, GeometryInstance instance, Transform transform)
         {
-            GeometryElement instanceGeometry = instance.SymbolGeometry;
+            var instanceGeometry = instance.SymbolGeometry;
             if (null == instanceGeometry)
             {
                 return;
@@ -424,8 +418,8 @@ namespace BIM.STLExport
         private void GetTriangular(Document document, Solid solid, Transform transform)
         {
             // a solid has many faces
-            FaceArray faces = solid.Faces;
-            bool hasTransform = (null != transform);
+            var faces = solid.Faces;
+            var hasTransform = (null != transform);
             if (0 == faces.Size)
             {
                 return;
@@ -437,7 +431,7 @@ namespace BIM.STLExport
                 {
                     continue;
                 }
-                Mesh mesh = face.Triangulate();
+                var mesh = face.Triangulate();
                 if (null == mesh)
                 {
                     continue;
@@ -445,29 +439,29 @@ namespace BIM.STLExport
 
                 m_TriangularNumber += mesh.NumTriangles;
 
-                PlanarFace planarFace = face as PlanarFace;
+                var planarFace = face as PlanarFace;
 
                 // write face to stl file
                 // a face has a mesh, all meshes are made of triangles
-                for (int ii = 0; ii < mesh.NumTriangles; ii++)
+                for (var ii = 0; ii < mesh.NumTriangles; ii++)
                 {
-                    MeshTriangle triangular = mesh.get_Triangle(ii);
-                    double[] xyz = new double[9];
-                    Autodesk.Revit.DB.XYZ normal = new Autodesk.Revit.DB.XYZ();
+                    var triangular = mesh.get_Triangle(ii);
+                    var xyz = new double[9];
+                    var normal = new XYZ();
                     try
                     {
-                        Autodesk.Revit.DB.XYZ[] triPnts = new Autodesk.Revit.DB.XYZ[3];
-                        for (int n = 0; n < 3; ++n)
+                        var triPnts = new XYZ[3];
+                        for (var n = 0; n < 3; ++n)
                         {
                             double x, y, z;
-                            Autodesk.Revit.DB.XYZ point = triangular.get_Vertex(n);
+                            var point = triangular.get_Vertex(n);
                             if (hasTransform)
                             {
                                 point = transform.OfPoint(point);
                             }
                             if (m_Settings.ExportSharedCoordinates)
                             {
-                                ProjectPosition ps = document.ActiveProjectLocation.GetProjectPosition(point);
+                                var ps = document.ActiveProjectLocation.GetProjectPosition(point);
                                 x = ps.EastWest;
                                 y = ps.NorthSouth;
                                 z = ps.Elevation;
@@ -495,7 +489,7 @@ namespace BIM.STLExport
                             triPnts[n] = mypoint;
                         }
 
-                        Autodesk.Revit.DB.XYZ pnt1 = triPnts[1] - triPnts[0];
+                        var pnt1 = triPnts[1] - triPnts[0];
                         normal = pnt1.CrossProduct(triPnts[2] - triPnts[1]);
                     }
                     catch (Exception ex)
@@ -507,7 +501,7 @@ namespace BIM.STLExport
 
                     if (m_Writer is SaveDataAsBinary && m_Settings.ExportColor)
                     {
-                        Material material = document.GetElement(face.MaterialElementId) as Material;
+                        var material = document.GetElement(face.MaterialElementId) as Material;
                         if(material!=null)
                             ((SaveDataAsBinary)m_Writer).Color = material.Color;
                     }
@@ -523,16 +517,16 @@ namespace BIM.STLExport
         /// <returns>List of linked documents.</returns>
         private List<Document> GetLinkedModels()
         {
-            List<Document> linkedDocs = new List<Document>();
+            var linkedDocs = new List<Document>();
 
             try
             {
                 // scan the current model looking for Revit links
-                List<Element> linkedElements = FindLinkedModelElements();
+                var linkedElements = FindLinkedModelElements();
 
-                foreach (Element linkedElem in linkedElements)
+                foreach (var linkedElem in linkedElements)
                 {
-                    RevitLinkType linkType = linkedElem as RevitLinkType;
+                    var linkType = linkedElem as RevitLinkType;
 
                     if (linkType != null)
                     {
@@ -560,13 +554,13 @@ namespace BIM.STLExport
         /// <returns>List of linked model elements.</returns>
         private List<Element> FindLinkedModelElements()
         {
-            Document doc = m_ActiveDocument;
+            var doc = m_ActiveDocument;
 
-            FilteredElementCollector linksCollector = new FilteredElementCollector(doc);
-            List<Element> linkElements = linksCollector.WherePasses(new ElementCategoryFilter(BuiltInCategory.OST_RvtLinks)).ToList<Element>();
+            var linksCollector = new FilteredElementCollector(doc);
+            var linkElements = linksCollector.WherePasses(new ElementCategoryFilter(BuiltInCategory.OST_RvtLinks)).ToList();
 
-            FilteredElementCollector familySymbolCollector = new FilteredElementCollector(doc);
-            linkElements.AddRange(familySymbolCollector.OfClass(typeof(Autodesk.Revit.DB.FamilySymbol)).ToList<Element>());
+            var familySymbolCollector = new FilteredElementCollector(doc);
+            linkElements.AddRange(familySymbolCollector.OfClass(typeof(FamilySymbol)).ToList());
 
             return linkElements;
         }
@@ -576,7 +570,7 @@ namespace BIM.STLExport
         /// </summary>
         private void StartCancelForm()
         {
-            STLExportCancelForm stlCancel = new STLExportCancelForm();
+            var stlCancel = new STLExportCancelForm();
             stlCancel.Show();
         }
     }

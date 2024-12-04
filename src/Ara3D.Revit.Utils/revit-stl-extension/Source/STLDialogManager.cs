@@ -35,14 +35,14 @@ namespace BIM.STLExport
       public static string SaveDialog()
       {
          // save file dialog options
-         using (SaveFileDialog saveDialog = new SaveFileDialog())
+         using (var saveDialog = new SaveFileDialog())
          {
             saveDialog.OverwritePrompt = true;
             saveDialog.AddExtension = true;
             saveDialog.DefaultExt = STLExportResource.SAVE_DIALOG_DEFAULT_FILE_EXTEND;
             saveDialog.Filter = STLExportResource.SAVE_DIALOG_FILE_FILTER;
 
-            if (System.Windows.Forms.DialogResult.OK != saveDialog.ShowDialog())
+            if (DialogResult.OK != saveDialog.ShowDialog())
             {
                return String.Empty;
             }

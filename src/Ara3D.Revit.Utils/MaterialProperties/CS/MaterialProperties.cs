@@ -44,14 +44,14 @@ namespace Revit.SDK.Samples.MaterialProperties.CS
     [Autodesk.Revit.Attributes.Transaction(Autodesk.Revit.Attributes.TransactionMode.Manual)]
     [Autodesk.Revit.Attributes.Regeneration(Autodesk.Revit.Attributes.RegenerationOption.Manual)]
     [Autodesk.Revit.Attributes.Journaling(Autodesk.Revit.Attributes.JournalingMode.NoCommandData)]
-    public class MaterialProperties : Autodesk.Revit.UI.IExternalCommand
+    public class MaterialProperties : IExternalCommand
     {
         const double ToMetricUnitWeight = 0.010764;            //coefficient of converting unit weight from internal unit to metric unit 
         const double ToMetricStress = 0.334554;            //coefficient of converting stress from internal unit to metric unit
         const double ToImperialUnitWeight = 6.365827;            //coefficient of converting unit weight from internal unit to imperial unit
         const double ChangedUnitWeight = 14.5;                //the value of unit weight of selected component to be set
 
-        Autodesk.Revit.UI.UIApplication m_revit = null;
+        UIApplication m_revit = null;
         Hashtable m_allMaterialMap = new Hashtable();    //hashtable contains all materials with index of their ElementId
         FamilyInstance m_selectedComponent = null;                //selected beam, column or brace
         Parameter m_currentMaterial = null;                //current material of selected beam, column or brace
@@ -67,8 +67,8 @@ namespace Revit.SDK.Samples.MaterialProperties.CS
         {
             get
             {
-                Material material = CurrentMaterial as Material;
-                ElementId materialId = ElementId.InvalidElementId;
+                var material = CurrentMaterial as Material;
+                var materialId = ElementId.InvalidElementId;
                 if (material != null)
                 {
                     materialId = material.Id;
@@ -77,7 +77,7 @@ namespace Revit.SDK.Samples.MaterialProperties.CS
                 {
                    return StructuralAssetClass.Generic;
                 }
-                Autodesk.Revit.DB.Material materialElem = (Autodesk.Revit.DB.Material)m_allMaterialMap[materialId];
+                var materialElem = (Material)m_allMaterialMap[materialId];
                 if (null == materialElem)
                 {
                    return StructuralAssetClass.Generic;
@@ -101,24 +101,12 @@ namespace Revit.SDK.Samples.MaterialProperties.CS
         /// <summary>
         /// arraylist of all materials belonging to steel type
         /// </summary>
-        public ArrayList SteelCollection
-        {
-            get
-            {
-                return m_steels;
-            }
-        }
+        public ArrayList SteelCollection => m_steels;
 
         /// <summary>
         /// arraylist of all materials belonging to concrete type
         /// </summary>
-        public ArrayList ConcreteCollection
-        {
-            get
-            {
-                return m_concretes;
-            }
-        }
+        public ArrayList ConcreteCollection => m_concretes;
 
         /// <summary>
         /// three basic material types in Revit
@@ -127,7 +115,7 @@ namespace Revit.SDK.Samples.MaterialProperties.CS
         {
             get
             {
-                ArrayList typeAL = new ArrayList();
+                var typeAL = new ArrayList();
                 typeAL.Add("Undefined");
                 typeAL.Add("Basic");
                 typeAL.Add("Generic");
@@ -157,21 +145,21 @@ namespace Revit.SDK.Samples.MaterialProperties.CS
         /// Cancelled can be used to signify that the user cancelled the external operation 
         /// at some point. Failure should be returned if the application is unable to proceed with 
         /// the operation.</returns>
-        public Autodesk.Revit.UI.Result Execute(ExternalCommandData commandData,
-            ref string message, Autodesk.Revit.DB.ElementSet elements)
+        public Result Execute(ExternalCommandData commandData,
+            ref string message, ElementSet elements)
         {
-            Autodesk.Revit.UI.UIApplication revit = commandData.Application;
+            var revit = commandData.Application;
             m_revit = revit;
             if (!Init())
             {
                 // there must be exactly one beam, column or brace selected
                 TaskDialog.Show("Revit", "You should select only one beam, structural column or brace.");
-                return Autodesk.Revit.UI.Result.Failed;
+                return Result.Failed;
             }
 
-            Transaction documentTransaction = new Transaction(commandData.Application.ActiveUIDocument.Document, "Document");
+            var documentTransaction = new Transaction(commandData.Application.ActiveUIDocument.Document, "Document");
             documentTransaction.Start();
-            MaterialPropertiesForm displayForm = new MaterialPropertiesForm(this);
+            var displayForm = new MaterialPropertiesForm(this);
             try
             {
                 displayForm.ShowDialog();
@@ -179,10 +167,10 @@ namespace Revit.SDK.Samples.MaterialProperties.CS
             catch
             {
                 TaskDialog.Show("Revit", "Sorry that your command failed.");
-                return Autodesk.Revit.UI.Result.Failed;
+                return Result.Failed;
             }
             documentTransaction.Commit();
-            return Autodesk.Revit.UI.Result.Succeeded;
+            return Result.Succeeded;
         }
 
         /// <summary>
@@ -194,16 +182,16 @@ namespace Revit.SDK.Samples.MaterialProperties.CS
         public DataTable GetParameterTable(object o, StructuralAssetClass substanceKind)
         {
             //create an empty datatable
-            DataTable parameterTable = CreateTable();
+            var parameterTable = CreateTable();
             //if failed to convert object
-            Autodesk.Revit.DB.Material material = o as Autodesk.Revit.DB.Material;
+            var material = o as Material;
             if (material == null)
             {
                 return parameterTable;
             }
 
             Parameter temporaryAttribute = null;        // hold each parameter
-            string temporaryValue = "";                    // hold each value
+            var temporaryValue = "";                    // hold each value
 
             #region Get all material element parameters
 
@@ -360,7 +348,7 @@ namespace Revit.SDK.Samples.MaterialProperties.CS
                 return;
             }
 
-            Autodesk.Revit.DB.ElementId identity = m_cacheMaterial.Id;
+            var identity = m_cacheMaterial.Id;
             m_currentMaterial.Set(identity);
         }
 
@@ -369,13 +357,13 @@ namespace Revit.SDK.Samples.MaterialProperties.CS
         /// </summary>
         public bool ChangeUnitWeight()
         {
-            Autodesk.Revit.DB.Material material = GetCurrentMaterial();
+            var material = GetCurrentMaterial();
             if (material == null)
             {
                 return false;
             }
 
-            Parameter weightPara = material.get_Parameter(BuiltInParameter.PHY_MATERIAL_PARAM_UNIT_WEIGHT);
+            var weightPara = material.get_Parameter(BuiltInParameter.PHY_MATERIAL_PARAM_UNIT_WEIGHT);
 
             weightPara.Set(ChangedUnitWeight / ToMetricUnitWeight);
 
@@ -417,12 +405,12 @@ namespace Revit.SDK.Samples.MaterialProperties.CS
         /// <summary>
         /// get current material of selected component
         /// </summary>
-        private Autodesk.Revit.DB.Material GetCurrentMaterial()
+        private Material GetCurrentMaterial()
         {
             if (null != m_cacheMaterial)
                 return m_cacheMaterial;
 
-            ElementId identityValue = ElementId.InvalidElementId;
+            var identityValue = ElementId.InvalidElementId;
             if (m_currentMaterial != null)
                 identityValue = m_currentMaterial.AsElementId();    //get the value of current material's ElementId
             //material has no value
@@ -430,7 +418,7 @@ namespace Revit.SDK.Samples.MaterialProperties.CS
             {
                 return null;
             }
-            Autodesk.Revit.DB.Material material = (Autodesk.Revit.DB.Material)m_allMaterialMap[identityValue];
+            var material = (Material)m_allMaterialMap[identityValue];
 
             return material;
         }
@@ -441,8 +429,8 @@ namespace Revit.SDK.Samples.MaterialProperties.CS
         /// <returns></returns>
         private void GetSelectedComponent()
         {
-           ElementSet componentCollection = new ElementSet();
-            foreach (ElementId elementId in m_revit.ActiveUIDocument.Selection.GetElementIds())
+           var componentCollection = new ElementSet();
+            foreach (var elementId in m_revit.ActiveUIDocument.Selection.GetElementIds())
             {
                componentCollection.Insert(m_revit.ActiveUIDocument.Document.GetElement(elementId));
             }
@@ -453,9 +441,9 @@ namespace Revit.SDK.Samples.MaterialProperties.CS
             }
 
             //if the selection is a beam, column or brace, find out its parameters for display
-            foreach (object o in componentCollection)
+            foreach (var o in componentCollection)
             {
-                FamilyInstance component = o as FamilyInstance;
+                var component = o as FamilyInstance;
                 if (component == null)
                 {
                     continue;
@@ -470,15 +458,15 @@ namespace Revit.SDK.Samples.MaterialProperties.CS
                 }
 
                 //selection is a beam, column or brace, find out its parameters
-                foreach (object p in component.Parameters)
+                foreach (var p in component.Parameters)
                 {
-                    Parameter attribute = p as Parameter;
+                    var attribute = p as Parameter;
                     if (attribute == null)
                     {
                         continue;
                     }
 
-                    string parameterName = attribute.Definition.Name;
+                    var parameterName = attribute.Definition.Name;
                     // The "Beam Material" and "Column Material" family parameters have been replaced
                     // by the built-in parameter "Structural Material".
                     //if (parameterName == "Column Material" || parameterName == "Beam Material")
@@ -498,20 +486,20 @@ namespace Revit.SDK.Samples.MaterialProperties.CS
         /// <returns></returns>
         private void GetAllMaterial()
         {
-            FilteredElementCollector collector = new FilteredElementCollector(m_revit.ActiveUIDocument.Document);
-            FilteredElementIterator i = collector.OfClass(typeof(Material)).GetElementIterator();
+            var collector = new FilteredElementCollector(m_revit.ActiveUIDocument.Document);
+            var i = collector.OfClass(typeof(Material)).GetElementIterator();
             i.Reset();
-            bool moreValue = i.MoveNext();
+            var moreValue = i.MoveNext();
             while (moreValue)
             {
-                Autodesk.Revit.DB.Material material = i.Current as Autodesk.Revit.DB.Material;
+                var material = i.Current as Material;
                 if (material == null)
                 {
                     moreValue = i.MoveNext();
                     continue;
                 }
                 //get the type of the material
-                StructuralAssetClass materialType = GetMaterialType(material);
+                var materialType = GetMaterialType(material);
 
                 //add materials to different ArrayList according to their types
                 switch (materialType)
@@ -544,11 +532,11 @@ namespace Revit.SDK.Samples.MaterialProperties.CS
         private DataTable CreateTable()
         {
             // Create a new DataTable.
-            DataTable propDataTable = new DataTable("ParameterTable");
+            var propDataTable = new DataTable("ParameterTable");
 
             // Create parameter column and add to the DataTable.
-            DataColumn paraDataColumn = new DataColumn();
-            paraDataColumn.DataType = System.Type.GetType("System.String");
+            var paraDataColumn = new DataColumn();
+            paraDataColumn.DataType = Type.GetType("System.String");
             paraDataColumn.ColumnName = "Parameter";
             paraDataColumn.Caption = "Parameter";
             paraDataColumn.ReadOnly = true;
@@ -556,8 +544,8 @@ namespace Revit.SDK.Samples.MaterialProperties.CS
             propDataTable.Columns.Add(paraDataColumn);
 
             // Create value column and add to the DataTable.
-            DataColumn valueDataColumn = new DataColumn();
-            valueDataColumn.DataType = System.Type.GetType("System.String");
+            var valueDataColumn = new DataColumn();
+            valueDataColumn.DataType = Type.GetType("System.String");
             valueDataColumn.ColumnName = "Value";
             valueDataColumn.Caption = "Value";
             valueDataColumn.ReadOnly = false;
@@ -574,7 +562,7 @@ namespace Revit.SDK.Samples.MaterialProperties.CS
         /// <param name="parameterTable">datatable to be added row</param>
         private void AddDataRow(string parameterName, string parameterValue, DataTable parameterTable)
         {
-            DataRow newRow = parameterTable.NewRow();
+            var newRow = parameterTable.NewRow();
             newRow["Parameter"] = parameterName;
             newRow["Value"] = parameterValue;
             parameterTable.Rows.Add(newRow);
@@ -592,8 +580,8 @@ namespace Revit.SDK.Samples.MaterialProperties.CS
         {
            if (material.StructuralAssetId != ElementId.InvalidElementId)
            {
-              PropertySetElement propElem = m_revit.ActiveUIDocument.Document.GetElement(material.StructuralAssetId) as PropertySetElement;
-              Parameter propElemPara = propElem.get_Parameter(BuiltInParameter.PHY_MATERIAL_PARAM_CLASS);
+              var propElem = m_revit.ActiveUIDocument.Document.GetElement(material.StructuralAssetId) as PropertySetElement;
+              var propElemPara = propElem.get_Parameter(BuiltInParameter.PHY_MATERIAL_PARAM_CLASS);
               if (propElemPara != null)
               {
                  return (StructuralAssetClass)propElemPara.AsInteger();
@@ -627,7 +615,7 @@ namespace Revit.SDK.Samples.MaterialProperties.CS
     public class MaterialMap
     {
         string m_materialName;
-        Autodesk.Revit.DB.Material m_material;
+        Material m_material;
 
         /// <summary>
         /// constructor without parameter is forbidden
@@ -638,7 +626,7 @@ namespace Revit.SDK.Samples.MaterialProperties.CS
         /// constructor
         /// </summary>
         /// <param name="material"></param>
-        public MaterialMap(Autodesk.Revit.DB.Material material)
+        public MaterialMap(Material material)
         {
             m_materialName = material.Name;
             m_material = material;
@@ -647,23 +635,11 @@ namespace Revit.SDK.Samples.MaterialProperties.CS
         /// <summary>
         /// Get the material name
         /// </summary>
-        public string MaterialName
-        {
-            get
-            {
-                return m_materialName;
-            }
-        }
+        public string MaterialName => m_materialName;
 
         /// <summary>
         /// Get the material
         /// </summary>
-        public Autodesk.Revit.DB.Material Material
-        {
-            get
-            {
-                return m_material;
-            }
-        }
+        public Material Material => m_material;
     }
 }

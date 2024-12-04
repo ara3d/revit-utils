@@ -34,13 +34,7 @@ namespace Revit.SDK.Samples.ProjectInfo.CS
         [Category("Energy Analysis"), DisplayName("Energy Settings")]
         [TypeConverter(typeof(WrapperConverter))]
         [RevitVersion(ProductType.MEP, ProductType.Architecture)]
-        public ICustomTypeDescriptor EnergyDataSettings
-        {
-            get
-            {
-                return new WrapperCustomDescriptor(new EnergyDataSettingsWrapper(m_projectInfo.Document));
-            }
-        }
+        public ICustomTypeDescriptor EnergyDataSettings => new WrapperCustomDescriptor(new EnergyDataSettingsWrapper(m_projectInfo.Document));
 
         /// <summary>
         /// Gets or sets Project Issue Data
@@ -48,14 +42,8 @@ namespace Revit.SDK.Samples.ProjectInfo.CS
         [Category("Other"), DisplayName("Project Issue Data")]
         public String IssueDate
         {
-            get
-            {
-                return m_projectInfo.IssueDate;
-            }
-            set
-            {
-                m_projectInfo.IssueDate = value;
-            }
+            get => m_projectInfo.IssueDate;
+            set => m_projectInfo.IssueDate = value;
         }
 
         /// <summary>
@@ -64,14 +52,8 @@ namespace Revit.SDK.Samples.ProjectInfo.CS
         [Category("Other"), DisplayName("Project Status")]
         public String Status
         {
-            get
-            {
-                return m_projectInfo.Status;
-            }
-            set
-            {
-                m_projectInfo.Status = value;
-            }
+            get => m_projectInfo.Status;
+            set => m_projectInfo.Status = value;
         }
 
         /// <summary>
@@ -80,14 +62,8 @@ namespace Revit.SDK.Samples.ProjectInfo.CS
         [Category("Other"), DisplayName("Client Name")]
         public String ClientName
         {
-            get
-            {
-                return m_projectInfo.ClientName;
-            }
-            set
-            {
-                m_projectInfo.ClientName = value;
-            }
+            get => m_projectInfo.ClientName;
+            set => m_projectInfo.ClientName = value;
         }
 
         /// <summary>
@@ -96,14 +72,8 @@ namespace Revit.SDK.Samples.ProjectInfo.CS
         [Category("Other"), DisplayName("Project Address")]
         public String Address
         {
-            get
-            {
-                return m_projectInfo.Address;
-            }
-            set
-            {
-                m_projectInfo.Address = value;
-            }
+            get => m_projectInfo.Address;
+            set => m_projectInfo.Address = value;
         }
 
         /// <summary>
@@ -112,14 +82,8 @@ namespace Revit.SDK.Samples.ProjectInfo.CS
         [Category("Other"), DisplayName("Project Number")]
         public String Number
         {
-            get
-            {
-                return m_projectInfo.Number;
-            }
-            set
-            {
-                m_projectInfo.Number = value;
-            }
+            get => m_projectInfo.Number;
+            set => m_projectInfo.Number = value;
         }
 
         #region IWrapper Members
@@ -128,13 +92,7 @@ namespace Revit.SDK.Samples.ProjectInfo.CS
         /// Gets the handle object.
         /// </summary>
         [Browsable(false)]
-        public object Handle
-        {
-            get
-            {
-                return m_projectInfo;
-            }
-        }
+        public object Handle => m_projectInfo;
 
         /// <summary>
         /// Gets the name of the handle.
@@ -142,14 +100,8 @@ namespace Revit.SDK.Samples.ProjectInfo.CS
         [Category("Other"), DisplayName("Project Name")]
         public String Name
         {
-            get
-            {
-                return m_projectInfo.Name;
-            }
-            set
-            {
-                m_projectInfo.Name = value;
-            }
+            get => m_projectInfo.Name;
+            set => m_projectInfo.Name = value;
         }
         #endregion 
         #endregion

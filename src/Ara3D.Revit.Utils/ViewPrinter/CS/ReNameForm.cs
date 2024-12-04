@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace Revit.SDK.Samples.ViewPrinter.CS
 {
-    public partial class ReNameForm : System.Windows.Forms.Form
+    public partial class ReNameForm : Form
     {
         public ReNameForm(ISettingNameOperation settingWithNameOperation)
         {

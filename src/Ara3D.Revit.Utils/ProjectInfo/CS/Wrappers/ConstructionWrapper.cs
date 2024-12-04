@@ -42,10 +42,10 @@ namespace Revit.SDK.Samples.ProjectInfo.CS
         /// greater than value.-or- value is null.</returns>
         public int CompareTo(object obj)
         {
-            ConstructionWrapper wrapper = obj as ConstructionWrapper;
+            var wrapper = obj as ConstructionWrapper;
             if (wrapper != null)
             {
-                return this.Name.CompareTo(wrapper.Name);
+                return Name.CompareTo(wrapper.Name);
             }
             return 1;
         }
@@ -58,22 +58,14 @@ namespace Revit.SDK.Samples.ProjectInfo.CS
         /// Gets the handle object.
         /// </summary>
         [Browsable(false)]
-        public object Handle
-        {
-            get { return m_construction; }
-        }
+        public object Handle => m_construction;
 
         /// <summary>
         /// Gets the name of the handle.
         /// </summary>
         [Browsable(false)]
-        public String Name
-        {
-            get
-            {
-                return m_construction.Name;
-            }
-        }
+        public String Name => m_construction.Name;
+
         #endregion 
         #endregion
     }

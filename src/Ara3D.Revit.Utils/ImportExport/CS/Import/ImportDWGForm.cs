@@ -64,7 +64,7 @@ namespace Revit.SDK.Samples.ImportExport.CS
         /// <param name="e"></param>
         private void checkBoxCurrentViewOnly_CheckedChanged(object sender, EventArgs e)
         {
-            bool currentViewOnly = checkBoxCurrentViewOnly.Checked;
+            var currentViewOnly = checkBoxCurrentViewOnly.Checked;
             checkBoxOrient2View.Enabled = !currentViewOnly;
             comboBoxLevel.Enabled = !currentViewOnly;
         }
@@ -75,14 +75,14 @@ namespace Revit.SDK.Samples.ImportExport.CS
         private void InitializeControls()
         {
             //Layers
-            foreach (String layer in m_importData.VisibleLayersOnly)
+            foreach (var layer in m_importData.VisibleLayersOnly)
             {
                 comboBoxLayers.Items.Add(layer);
             }
             comboBoxLayers.SelectedIndex = 0;
 
             //unit
-            foreach (String unit in m_importData.Unit)
+            foreach (var unit in m_importData.Unit)
             {
                 comboBoxUnits.Items.Add(unit);
             }
@@ -102,7 +102,7 @@ namespace Revit.SDK.Samples.ImportExport.CS
                 checkBoxCurrentViewOnly.Enabled = false;
             }
 
-            this.Text = m_importData.Title;
+            Text = m_importData.Title;
         }
 
         /// <summary>
@@ -112,7 +112,7 @@ namespace Revit.SDK.Samples.ImportExport.CS
         /// <param name="e"></param>
         private void buttonBrowser_Click(object sender, EventArgs e)
         {
-            String returnFileFullName = String.Empty;
+            var returnFileFullName = String.Empty;
             if (MainData.ShowOpenDialog(m_importData, ref returnFileFullName) != DialogResult.Cancel)
             {
                 textBoxFileSource.Text = returnFileFullName;
@@ -126,7 +126,7 @@ namespace Revit.SDK.Samples.ImportExport.CS
         /// <param name="e"></param>
         private void comboBoxUnits_SelectedIndexChanged(object sender, EventArgs e)
         {
-            bool custom = comboBoxUnits.SelectedIndex == 7;
+            var custom = comboBoxUnits.SelectedIndex == 7;
             textBoxScale.Enabled = custom;
         }
 
@@ -164,8 +164,8 @@ namespace Revit.SDK.Samples.ImportExport.CS
                     TaskDialog.Show("Import Failed", ex.ToString(), TaskDialogCommonButtons.Ok);
                 }
 
-                this.DialogResult = DialogResult.OK;
-                this.Close();
+                DialogResult = DialogResult.OK;
+                Close();
             }
         }
 
@@ -175,7 +175,7 @@ namespace Revit.SDK.Samples.ImportExport.CS
         /// <returns></returns>
         private Boolean ValidateFileName()
         {
-            String fileNameFull = textBoxFileSource.Text;
+            var fileNameFull = textBoxFileSource.Text;
             //If the textBoxFileSource is empty
             if (String.IsNullOrEmpty(fileNameFull))
             {
@@ -215,8 +215,8 @@ namespace Revit.SDK.Samples.ImportExport.CS
                 colorMode = radioButtonInvertColor.Text;
             }
 
-            int indexColor = 0;
-            for (int i = 0; i < m_importData.ColorMode.Count; ++i)
+            var indexColor = 0;
+            for (var i = 0; i < m_importData.ColorMode.Count; ++i)
             {
                 if (colorMode == m_importData.ColorMode[i])
                 {
@@ -243,8 +243,8 @@ namespace Revit.SDK.Samples.ImportExport.CS
                 placement = radioButtonOrigin2Origin.Text;
             }
 
-            int indexPlacement = 0;
-            for (int i = 0; i < m_importData.Placement.Count; ++i)
+            var indexPlacement = 0;
+            for (var i = 0; i < m_importData.Placement.Count; ++i)
             {
                 if (placement == m_importData.Placement[i])
                 {
@@ -269,7 +269,7 @@ namespace Revit.SDK.Samples.ImportExport.CS
             {
                 m_importData.ImportThisViewOnly = false;
                 m_importData.ImportOrientToView = checkBoxOrient2View.Checked;
-                String viewName = comboBoxLevel.SelectedItem.ToString();
+                var viewName = comboBoxLevel.SelectedItem.ToString();
                 foreach (Autodesk.Revit.DB.View view in m_importData.Views)
                 {
                     if (viewName == view.Name)
@@ -295,7 +295,7 @@ namespace Revit.SDK.Samples.ImportExport.CS
         /// </summary>
         private void SetImportUnitsAndScaling()
         {
-            bool custom = comboBoxUnits.SelectedIndex == 7;
+            var custom = comboBoxUnits.SelectedIndex == 7;
 
             //Custom is selected
             if (custom)
@@ -335,11 +335,11 @@ namespace Revit.SDK.Samples.ImportExport.CS
         /// <param name="e"></param>
         private void textBoxScale_TextChanged(object sender, EventArgs e)
         {
-            bool newPoint = false;
-            char tmp = '0';
-            string text = textBoxScale.Text.Trim();
-            StringBuilder textAfter = new StringBuilder();
-            for (int i = 0; i < text.Length; i++)
+            var newPoint = false;
+            var tmp = '0';
+            var text = textBoxScale.Text.Trim();
+            var textAfter = new StringBuilder();
+            for (var i = 0; i < text.Length; i++)
             {
                 tmp = char.Parse(text.Substring(i, 1).ToString());
                 if (!newPoint && (tmp == '.'))

@@ -70,10 +70,10 @@ namespace Revit.SDK.Samples.Rooms.CS
         {
             String propertyValue = null;   //value of department
             String departmentName = null;  //department name 
-            Double areaValue = 0.0;        //room area
+            var areaValue = 0.0;        //room area
 
             // add rooms to the listview
-            foreach (Room tmpRoom in roomList)
+            foreach (var tmpRoom in roomList)
             {
                 // make sure the room has Level, that's it locates at level.
                 if (tmpRoom.Document.GetElement(tmpRoom.LevelId) == null)
@@ -81,10 +81,10 @@ namespace Revit.SDK.Samples.Rooms.CS
                     continue;
                 }
 
-                string roomId = tmpRoom.Id.ToString();
+                var roomId = tmpRoom.Id.ToString();
 
                 // create a list view Item
-                ListViewItem tmpItem = new ListViewItem(roomId);
+                var tmpItem = new ListViewItem(roomId);
                 tmpItem.SubItems.Add(tmpRoom.Name);       //display room name.
                 tmpItem.SubItems.Add(tmpRoom.Number);     //display room number.
                 tmpItem.SubItems.Add((tmpRoom.Document.GetElement(tmpRoom.LevelId) as Level).Name); //display the level
@@ -129,13 +129,13 @@ namespace Revit.SDK.Samples.Rooms.CS
             roomsListView.Items.Clear();
 
             // add rooms in the list roomsWithoutTag to the listview
-            this.DisplayRooms(m_data.RoomsWithoutTag, false);
+            DisplayRooms(m_data.RoomsWithoutTag, false);
 
             // add rooms in the list roomsWithTag to the listview
-            this.DisplayRooms(m_data.RoomsWithTag, true);
+            DisplayRooms(m_data.RoomsWithTag, true);
 
             // display the total area of each department
-            this.DisplayDartmentsInfo();
+            DisplayDartmentsInfo();
 
             // if all the rooms have tags ,the button will be set to disable
             if (0 == m_data.RoomsWithoutTag.Count)
@@ -153,8 +153,8 @@ namespace Revit.SDK.Samples.Rooms.CS
             m_data.CreateTags();
 
             roomsListView.Items.Clear();
-            this.DisplayRooms(m_data.RoomsWithTag, true);
-            this.DisplayRooms(m_data.RoomsWithoutTag, false);
+            DisplayRooms(m_data.RoomsWithTag, true);
+            DisplayRooms(m_data.RoomsWithoutTag, false);
 
             // if all the rooms have tags ,the button will be set to disable
             if (0 == m_data.RoomsWithoutTag.Count)
@@ -173,8 +173,8 @@ namespace Revit.SDK.Samples.Rooms.CS
 
             // refresh the listview
             roomsListView.Items.Clear();
-            this.DisplayRooms(m_data.RoomsWithTag, true);
-            this.DisplayRooms(m_data.RoomsWithoutTag, false);
+            DisplayRooms(m_data.RoomsWithTag, true);
+            DisplayRooms(m_data.RoomsWithoutTag, false);
         }
 
 
@@ -183,10 +183,10 @@ namespace Revit.SDK.Samples.Rooms.CS
         /// </summary>
         private void DisplayDartmentsInfo()
         {
-            for (int i = 0; i < m_data.DepartmentInfos.Count; i++)
+            for (var i = 0; i < m_data.DepartmentInfos.Count; i++)
             {
                 // create a listview item
-                ListViewItem tmpItem = new ListViewItem(m_data.DepartmentInfos[i].DepartmentName);
+                var tmpItem = new ListViewItem(m_data.DepartmentInfos[i].DepartmentName);
                 tmpItem.SubItems.Add(m_data.DepartmentInfos[i].RoomsAmount.ToString());
                 tmpItem.SubItems.Add(m_data.DepartmentInfos[i].DepartmentAreaValue.ToString() +
                                      " SF");
@@ -201,7 +201,7 @@ namespace Revit.SDK.Samples.Rooms.CS
         private void exportButton_Click(object sender, EventArgs e)
         {
             // create a save file dialog
-            using (SaveFileDialog sfdlg = new SaveFileDialog())
+            using (var sfdlg = new SaveFileDialog())
             {
                 sfdlg.Title = "Export area of department to Excel file";
                 sfdlg.Filter = "CSV(command delimited)(*.csv)|*.csv";

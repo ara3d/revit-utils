@@ -57,76 +57,34 @@ namespace BIM.STLExport
         /// <summary>
         /// Binary or ASCII STL file.
         /// </summary>
-        public SaveFormat SaveFormat
-        {
-            get
-            {
-                return m_SaveFormat;
-            }
-        }
+        public SaveFormat SaveFormat => m_SaveFormat;
 
         /// <summary>
         /// The range of elements to be exported.
         /// </summary>
-        public ElementsExportRange ExportRange
-        {
-            get
-            {
-                return m_ExportRange;
-            }
-        }
+        public ElementsExportRange ExportRange => m_ExportRange;
 
         /// <summary>
         /// Include linked models.
         /// </summary>
-        public bool IncludeLinkedModels
-        {
-            get
-            {
-                return m_IncludeLinkedModels;
-            }
-        }
+        public bool IncludeLinkedModels => m_IncludeLinkedModels;
 
         /// <summary>
         /// Export Color.
         /// </summary>
-        public bool ExportColor
-        {
-            get
-            {
-                return m_exportColor;
-            }
-        }
+        public bool ExportColor => m_exportColor;
 
         /// <summary>
         /// Export point in shared coordinates.
         /// </summary>
-        public bool ExportSharedCoordinates
-        {
-            get
-            {
-                return m_exportSharedCoordinates;
-            }
-        }
+        public bool ExportSharedCoordinates => m_exportSharedCoordinates;
 
         /// <summary>
         /// Include selected categories.
         /// </summary>
-        public List<Category> SelectedCategories
-        {
-            get
-            {
-                return m_SelectedCategories;
-            }
-        }
+        public List<Category> SelectedCategories => m_SelectedCategories;
 
-        public ForgeTypeId Units
-        {
-           get
-              {
-                 return m_Units;
-              }
-        }
+        public ForgeTypeId Units => m_Units;
 
         /// <summary>
         /// Constructor.

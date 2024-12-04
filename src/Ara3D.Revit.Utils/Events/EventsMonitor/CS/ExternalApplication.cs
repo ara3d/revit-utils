@@ -111,10 +111,7 @@ namespace Revit.SDK.Samples.EventsMonitor.CS
                 }
                 return m_infWindows;
             }
-            set
-            {
-                m_infWindows = value;
-            }
+            set => m_infWindows = value;
         }
 
         /// <summary>
@@ -160,10 +157,7 @@ namespace Revit.SDK.Samples.EventsMonitor.CS
                 }
                 return m_appEventsSelection;
             }
-            set
-            {
-                m_appEventsSelection = value;
-            }
+            set => m_appEventsSelection = value;
         }
 
         /// <summary>
@@ -213,7 +207,7 @@ namespace Revit.SDK.Samples.EventsMonitor.CS
         /// some point.
         /// If false is returned then Revit should inform the user that the external application 
         /// failed to load and the release the internal reference.</returns>
-        public Autodesk.Revit.UI.Result OnStartup(UIControlledApplication application)
+        public Result OnStartup(UIControlledApplication application)
         {
             // initialize member variables.
             m_ctrlApp = application;
@@ -266,10 +260,10 @@ namespace Revit.SDK.Samples.EventsMonitor.CS
             }
             catch (Exception)
             {
-                return Autodesk.Revit.UI.Result.Failed;
+                return Result.Failed;
             }
 
-            return Autodesk.Revit.UI.Result.Succeeded;
+            return Result.Succeeded;
         }
 
         /// <summary>
@@ -284,11 +278,11 @@ namespace Revit.SDK.Samples.EventsMonitor.CS
         /// some point.
         /// If false is returned then the Revit user should be warned of the failure of the external 
         /// application to shut down correctly.</returns>
-        public Autodesk.Revit.UI.Result OnShutdown(UIControlledApplication application)
+        public Result OnShutdown(UIControlledApplication application)
         {
             // dispose some resource.
             Dispose();
-            return Autodesk.Revit.UI.Result.Succeeded;
+            return Result.Succeeded;
         }
         #endregion
 
@@ -319,13 +313,13 @@ namespace Revit.SDK.Samples.EventsMonitor.CS
         static private void AddCustomPanel(UIControlledApplication application)
         {
             // create a panel named "Events Monitor";
-            string panelName = "Events Monitor";
+            var panelName = "Events Monitor";
             // create a button on the panel.
-            RibbonPanel ribbonPanelPushButtons = application.CreateRibbonPanel(panelName);
-            PushButtonData pushButtonData = new PushButtonData("EventsSetting", 
+            var ribbonPanelPushButtons = application.CreateRibbonPanel(panelName);
+            var pushButtonData = new PushButtonData("EventsSetting", 
                 "Set Events", System.Reflection.Assembly.GetExecutingAssembly().Location, 
                 "Revit.SDK.Samples.EventsMonitor.CS.Command");
-            PushButton pushButtonCreateWall = ribbonPanelPushButtons.AddItem(pushButtonData)as PushButton;
+            var pushButtonCreateWall = ribbonPanelPushButtons.AddItem(pushButtonData)as PushButton;
             pushButtonCreateWall.ToolTip = "Setting Events";
   
         }

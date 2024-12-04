@@ -11,29 +11,11 @@ namespace CreateAndPrintSheetsAndViews
     #region Geometrical Comparison
     public const double _eps = 1.0e-9;
 
-    public static double Eps
-    {
-      get
-      {
-        return _eps;
-      }
-    }
+    public static double Eps => _eps;
 
-    public static double MinLineLength
-    {
-      get
-      {
-        return _eps;
-      }
-    }
+    public static double MinLineLength => _eps;
 
-    public static double TolPointOnPlane
-    {
-      get
-      {
-        return _eps;
-      }
-    }
+    public static double TolPointOnPlane => _eps;
 
     public static bool IsZero(
       double a,
@@ -376,7 +358,7 @@ namespace CreateAndPrintSheetsAndViews
         string instruction,
         IList<string> content)
     {
-      string s = string.Join("\r\n", content);
+      var s = string.Join("\r\n", content);
       Debug.WriteLine($"{instruction}\r\n{s}");
       var d = new TaskDialog(_caption);
       d.MainInstruction = instruction;
@@ -387,13 +369,13 @@ namespace CreateAndPrintSheetsAndViews
     public static bool AskYesNoQuestion(
         string question)
     {
-      TaskDialog taskDialog = new TaskDialog("Please answer Yes or No");
+      var taskDialog = new TaskDialog("Please answer Yes or No");
       taskDialog.MainContent = question;
-      TaskDialogCommonButtons buttons
+      var buttons
         = TaskDialogCommonButtons.Yes
           | TaskDialogCommonButtons.No;
       taskDialog.CommonButtons = buttons;
-      TaskDialogResult result = taskDialog.Show();
+      var result = taskDialog.Show();
       return (result == TaskDialogResult.Yes);
     }
     #endregion // Formatting
@@ -402,7 +384,7 @@ namespace CreateAndPrintSheetsAndViews
     {
       const BuiltInParameter _bip_product_code
         = BuiltInParameter.FABRICATION_PRODUCT_CODE;
-      Parameter p = e.get_Parameter(_bip_product_code);
+      var p = e.get_Parameter(_bip_product_code);
       return (null != p)
         ? p.AsString()
         : null;

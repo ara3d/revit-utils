@@ -59,19 +59,19 @@ namespace Revit.SDK.Samples.Openings.CS
         /// Cancelled can be used to signify that the user cancelled the external operation 
         /// at some point. Failure should be returned if the application is unable to proceed with
         /// the operation.</returns>
-        public Autodesk.Revit.UI.Result Execute(ExternalCommandData commandData, 
-            ref string message, Autodesk.Revit.DB.ElementSet elements)
+        public Result Execute(ExternalCommandData commandData, 
+            ref string message, ElementSet elements)
         {
-            Transaction transaction = new Transaction(commandData.Application.ActiveUIDocument.Document, "External Tool");
+            var transaction = new Transaction(commandData.Application.ActiveUIDocument.Document, "External Tool");
             try
             {
                 transaction.Start();
-                Application app = commandData.Application.Application;
-                bool haveOpening = false;
+                var app = commandData.Application.Application;
+                var haveOpening = false;
 
                 //search Opening in Revit
-                List<OpeningInfo> openingInfos = new List<OpeningInfo>();
-                FilteredElementIterator iter = (new FilteredElementCollector(commandData.Application.ActiveUIDocument.Document)).OfClass(typeof(Opening)).GetElementIterator();
+                var openingInfos = new List<OpeningInfo>();
+                var iter = (new FilteredElementCollector(commandData.Application.ActiveUIDocument.Document)).OfClass(typeof(Opening)).GetElementIterator();
                 iter.Reset();
                 while (iter.MoveNext())
                 {
@@ -79,8 +79,8 @@ namespace Revit.SDK.Samples.Openings.CS
                     if (obj is Opening)
                     {
                         haveOpening = true;
-                        Opening opening = obj as Opening;
-                        OpeningInfo openingInfo = new OpeningInfo(opening, commandData.Application);
+                        var opening = obj as Opening;
+                        var openingInfo = new OpeningInfo(opening, commandData.Application);
                         openingInfos.Add(openingInfo);
                     }
                 }
@@ -88,11 +88,11 @@ namespace Revit.SDK.Samples.Openings.CS
                 if (!haveOpening)
                 {
                     message = "don't have opening in the project";
-                    return Autodesk.Revit.UI.Result.Cancelled;
+                    return Result.Cancelled;
                 }
 
                 //show dialogue
-                using (OpeningForm openingForm = new OpeningForm(openingInfos))
+                using (var openingForm = new OpeningForm(openingInfos))
                 {
                     openingForm.ShowDialog();
                 }
@@ -100,14 +100,14 @@ namespace Revit.SDK.Samples.Openings.CS
             catch (Exception e)
             {
                 message = e.ToString();
-                return Autodesk.Revit.UI.Result.Failed;
+                return Result.Failed;
             }
             finally
             {
                 transaction.Commit();
             }
 
-            return Autodesk.Revit.UI.Result.Succeeded;
+            return Result.Succeeded;
         }
         #endregion
     }

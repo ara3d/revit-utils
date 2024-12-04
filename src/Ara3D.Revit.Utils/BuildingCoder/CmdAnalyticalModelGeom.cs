@@ -56,16 +56,16 @@ namespace BuildingCoder
         /// </summary>
         ElementId GetAnalyticalElementId(Element e)
         {
-            Document doc = e.Document;
+            var doc = e.Document;
 
-            AnalyticalToPhysicalAssociationManager m 
+            var m 
                 = AnalyticalToPhysicalAssociationManager
                   .GetAnalyticalToPhysicalAssociationManager(
                     doc);
 
             if (null == m)
             {
-                throw new System.ArgumentException(
+                throw new ArgumentException(
                     "No AnalyticalToPhysicalAssociationManager found");
             }
 
@@ -136,7 +136,7 @@ namespace BuildingCoder
                 }
 #endif // USING_ANALYTICAL_MODEL_BEFORE_REVIT_2023
 
-                ElementId id = GetAnalyticalElementId(wall);
+                var id = GetAnalyticalElementId(wall);
 
             }
 

@@ -56,28 +56,28 @@ namespace BIM.STLExport
             // scan for categories to populate category list
             m_CategoryList = m_Generator.ScanCategories(true);
 
-            foreach (Category category in m_CategoryList.Values)
+            foreach (var category in m_CategoryList.Values)
             {
-                TreeNode treeNode = GetChildNode(category,m_Revit.ActiveUIDocument.Document.ActiveView);
+                var treeNode = GetChildNode(category,m_Revit.ActiveUIDocument.Document.ActiveView);
                 if (treeNode != null)
                     tvCategories.Nodes.Add(treeNode);                               
             }
             
-            string unitName = "Use Internal: Feet";
+            var unitName = "Use Internal: Feet";
             m_DisplayUnits.Add(unitName, new ForgeTypeId());
-            int selectedIndex = comboBox_DUT.Items.Add(unitName);
+            var selectedIndex = comboBox_DUT.Items.Add(unitName);
             if (m_SelectedDUT.Empty())
                comboBox_DUT.SelectedIndex = selectedIndex;
 
-            Units currentUnits = m_Revit.ActiveUIDocument.Document.GetUnits();
-            ForgeTypeId currentDut = currentUnits.GetFormatOptions(SpecTypeId.Length).GetUnitTypeId();
+            var currentUnits = m_Revit.ActiveUIDocument.Document.GetUnits();
+            var currentDut = currentUnits.GetFormatOptions(SpecTypeId.Length).GetUnitTypeId();
             unitName = "Use Current: " + LabelUtils.GetLabelForUnit(currentDut);
             m_DisplayUnits.Add(unitName, currentDut);
             selectedIndex = comboBox_DUT.Items.Add(unitName);
             if (m_SelectedDUT == currentDut)
                comboBox_DUT.SelectedIndex = selectedIndex;
 
-            foreach (ForgeTypeId dut in UnitUtils.GetValidUnits(SpecTypeId.Length))
+            foreach (var dut in UnitUtils.GetValidUnits(SpecTypeId.Length))
             {
                if (currentDut == dut)
                   continue;
@@ -112,7 +112,7 @@ namespace BIM.STLExport
             if (!category.get_AllowsVisibilityControl(view))
                 return null;
 
-            TreeNode treeNode = new TreeNode(category.Name);
+            var treeNode = new TreeNode(category.Name);
             treeNode.Tag = category;
             treeNode.Checked = true;
 
@@ -123,7 +123,7 @@ namespace BIM.STLExport
 
             foreach (Category subCategory in category.SubCategories)
             {
-                TreeNode child = GetChildNode(subCategory,view);
+                var child = GetChildNode(subCategory,view);
                 if(child !=null)
                     treeNode.Nodes.Add(child);
             }
@@ -138,7 +138,7 @@ namespace BIM.STLExport
         /// <param name="e">The event args.</param>
         private void btnHelp_Click(object sender, EventArgs e)
         {
-            string helpfile = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            var helpfile = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
             helpfile = System.IO.Path.Combine(helpfile, "STL_Export.chm");
 
             if (System.IO.File.Exists(helpfile) == false)
@@ -158,7 +158,7 @@ namespace BIM.STLExport
         /// <param name="e">The event args.</param>
         private void btnSave_Click(object sender, EventArgs e)
         {
-            string fileName = STLDialogManager.SaveDialog();
+            var fileName = STLDialogManager.SaveDialog();
 
             if (!string.IsNullOrEmpty(fileName))
             {
@@ -177,7 +177,7 @@ namespace BIM.STLExport
                 exportRange = ElementsExportRange.OnlyVisibleOnes;
 
                 // get selected categories from the category list
-                List<Category> selectedCategories = new List<Category>();
+                var selectedCategories = new List<Category>();
 
                 // only for projects
                 if (m_Revit.ActiveUIDocument.Document.IsFamilyDocument == false)
@@ -188,32 +188,32 @@ namespace BIM.STLExport
                     }
                 }
 
-                ForgeTypeId dup = m_DisplayUnits[comboBox_DUT.Text];
+                var dup = m_DisplayUnits[comboBox_DUT.Text];
                 m_SelectedDUT = dup;
 
                 // create settings object to save setting information
-                Settings aSetting = new Settings(saveFormat, exportRange, cbIncludeLinked.Checked,cbExportColor.Checked,cbExportSharedCoordinates.Checked, selectedCategories, dup);
+                var aSetting = new Settings(saveFormat, exportRange, cbIncludeLinked.Checked,cbExportColor.Checked,cbExportSharedCoordinates.Checked, selectedCategories, dup);
 
                 // save Revit document's triangular data in a temporary file
                 m_Generator = new DataGenerator(m_Revit.Application, m_Revit.ActiveUIDocument.Document, m_Revit.ActiveUIDocument.Document.ActiveView);
-                DataGenerator.GeneratorStatus succeed = m_Generator.SaveSTLFile(fileName, aSetting);
+                var succeed = m_Generator.SaveSTLFile(fileName, aSetting);
 
                 if (succeed == DataGenerator.GeneratorStatus.FAILURE)
                 {
-                    this.DialogResult = DialogResult.Cancel;
+                    DialogResult = DialogResult.Cancel;
                     MessageBox.Show(STLExportResource.ERR_SAVE_FILE_FAILED, STLExportResource.MESSAGE_BOX_TITLE,
                              MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 }
                 else if (succeed == DataGenerator.GeneratorStatus.CANCEL)
                 {
-                    this.DialogResult = DialogResult.Cancel;
+                    DialogResult = DialogResult.Cancel;
                     MessageBox.Show(STLExportResource.CANCEL_FILE_NOT_SAVED, STLExportResource.MESSAGE_BOX_TITLE,
                              MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 }
 
-                this.DialogResult = DialogResult.OK;
+                DialogResult = DialogResult.OK;
 
-                this.Close();
+                Close();
             }
             else
             {
@@ -248,8 +248,8 @@ namespace BIM.STLExport
         /// <param name="e">The event args.</param>
         private void btnCancel_Click(object sender, EventArgs e)
         {
-            this.DialogResult = DialogResult.Cancel;
-            this.Close();
+            DialogResult = DialogResult.Cancel;
+            Close();
         }
 
         /// <summary>

@@ -13,7 +13,7 @@ namespace Revit.SDK.Samples.PathOfTravelCreation.CS
    /// <summary>
    /// Form presented to the user to fill in the options to control the path of travel creation. 
    /// </summary>
-   public partial class CreateForm : System.Windows.Forms.Form
+   public partial class CreateForm : Form
    {
       PathCreateOptions m_createOption;
       /// <summary>
@@ -30,13 +30,7 @@ namespace Revit.SDK.Samples.PathOfTravelCreation.CS
       /// <summary>
       /// The option for creating Path of Travel.
       /// </summary>
-      public PathCreateOptions PathCreateOption
-      {
-         get
-         {
-            return m_createOption;
-         }
-      }
+      public PathCreateOptions PathCreateOption => m_createOption;
 
       /// <summary>
       /// Set the CreateOptions.SingleRoomCornersToSingleDoor option.

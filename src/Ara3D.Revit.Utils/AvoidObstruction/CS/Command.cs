@@ -56,27 +56,27 @@ namespace Revit.SDK.Samples.AvoidObstruction.CS
         /// Cancelled can be used to signify that the user cancelled the external operation 
         /// at some point. Failure should be returned if the application is unable to proceed with 
         /// the operation.</returns>
-        public Autodesk.Revit.UI.Result Execute(ExternalCommandData commandData, ref string message, Autodesk.Revit.DB.ElementSet elements)
+        public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
-            Transaction transaction = new Transaction(commandData.Application.ActiveUIDocument.Document, "External Tool");
+            var transaction = new Transaction(commandData.Application.ActiveUIDocument.Document, "External Tool");
             try
             {
                 transaction.Start();
             
-                Resolver resolver = new Resolver(commandData);
+                var resolver = new Resolver(commandData);
                 resolver.Resolve();                
             }
-            catch (System.Exception e)
+            catch (Exception e)
             {
                 transaction.RollBack();
                 message += e.ToString();
-                return Autodesk.Revit.UI.Result.Failed;
+                return Result.Failed;
             }
             finally
             {
                 transaction.Commit();
             }
-            return Autodesk.Revit.UI.Result.Succeeded;
+            return Result.Succeeded;
         }
 
         #endregion        

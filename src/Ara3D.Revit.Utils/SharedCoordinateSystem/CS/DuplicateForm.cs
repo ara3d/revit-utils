@@ -35,7 +35,7 @@ namespace Revit.SDK.Samples.SharedCoordinateSystem.CS
     /// <summary>
     /// dupliate coordiante data form
     /// </summary>
-    public partial class DuplicateForm : System.Windows.Forms.Form
+    public partial class DuplicateForm : Form
     {
         CoordinateSystemData m_data; //the reference of the CoordinateSystemData class 
         CoordinateSystemDataForm m_dataForm; //the reference of the CoordinateSystemDataForm class
@@ -65,7 +65,7 @@ namespace Revit.SDK.Samples.SharedCoordinateSystem.CS
         private void okButton_Click(object sender, EventArgs e)
         {
             //check whether the name has been used
-            foreach (string name in m_data.LocationNames)
+            foreach (var name in m_data.LocationNames)
             {
                 if (name == newNameTextBox.Text)
                 {
@@ -85,8 +85,8 @@ namespace Revit.SDK.Samples.SharedCoordinateSystem.CS
                 return;
             }
 
-            this.DialogResult = DialogResult.OK;    // set dialog result
-            this.Close();                           // close the form
+            DialogResult = DialogResult.OK;    // set dialog result
+            Close();                           // close the form
         }
 
         /// <summary>
@@ -96,8 +96,8 @@ namespace Revit.SDK.Samples.SharedCoordinateSystem.CS
         /// <param name="e"></param>
         private void cancelButton_Click(object sender, EventArgs e)
         {
-            this.DialogResult = DialogResult.Cancel;// set dialog result
-            this.Close();                           // close the form
+            DialogResult = DialogResult.Cancel;// set dialog result
+            Close();                           // close the form
         }
 
         /// <summary>

@@ -24,13 +24,13 @@ namespace RevitElementBipChecker.Model
         /// <returns></returns>
         public static List<Element> GetSelection(this UIDocument _uidoc)
         {
-            Document doc = _uidoc.Document;
-            List<Element> value = new List<Element>();
+            var doc = _uidoc.Document;
+            var value = new List<Element>();
             _uidoc.Selection.GetElementIds();
-            Type t = _uidoc.Selection.GetType();
+            var t = _uidoc.Selection.GetType();
             if (t.GetMethod("GetElementIds") != null)
             {
-                MethodInfo met = t.GetMethod("GetElementIds");
+                var met = t.GetMethod("GetElementIds");
                 value = ((ICollection<ElementId>)met.Invoke(_uidoc.Selection, null)).Select(a => doc.GetElement(a)).ToList();
             }
             else
@@ -73,14 +73,14 @@ namespace RevitElementBipChecker.Model
         /// </summary>
         /// <param name="parameter"></param>
         /// <returns></returns>
-        public static string GetParameterType(this Autodesk.Revit.DB.Parameter parameter)
+        public static string GetParameterType(this Parameter parameter)
         {
 #if R18 || R19 || R20 || R21
             ParameterType pt = parameter.Definition.ParameterType; // returns 'Invalid' for 'ElementId'
             string s = ParameterType.Invalid == pt ? "" : "/" + pt;
 #else
-            ForgeTypeId pt = parameter.Definition.GetDataType();
-            string s = "/" + pt.TypeId.ToString();
+            var pt = parameter.Definition.GetDataType();
+            var s = "/" + pt.TypeId.ToString();
 #endif
             return parameter.StorageType + s;
         }
@@ -101,7 +101,7 @@ namespace RevitElementBipChecker.Model
         /// </summary>
         /// <param name="_parameter"></param>
         /// <returns></returns>
-        public static string GetValue(this Autodesk.Revit.DB.Parameter _parameter)
+        public static string GetValue(this Parameter _parameter)
         {
             string value;
 
@@ -289,8 +289,8 @@ namespace RevitElementBipChecker.Model
         /// <returns></returns>
         public static string GetAssGlobalParameter(this Parameter parameter, Document doc)
         {
-            Dictionary<string, string> gloDictionary = new Dictionary<string, string>();
-            ElementId elementId = parameter.GetAssociatedGlobalParameter();
+            var gloDictionary = new Dictionary<string, string>();
+            var elementId = parameter.GetAssociatedGlobalParameter();
             if (elementId != null)
             {
                 if (doc.GetElement(elementId) is GlobalParameter globalParameter)
@@ -309,14 +309,14 @@ namespace RevitElementBipChecker.Model
         /// <returns></returns>
         public static string GetAssGlobalParameterValue(this Parameter parameter, Document doc)
         {
-            Dictionary<string, string> gloDictionary = new Dictionary<string, string>();
-            ElementId elementId = parameter.GetAssociatedGlobalParameter();
+            var gloDictionary = new Dictionary<string, string>();
+            var elementId = parameter.GetAssociatedGlobalParameter();
             if (elementId != null)
             {
                 if (doc.GetElement(elementId) is GlobalParameter globalParameter)
                 {
-                    DoubleParameterValue doublevalue = globalParameter.GetValue() as DoubleParameterValue;
-                    StringParameterValue strpra = globalParameter.GetValue() as StringParameterValue;
+                    var doublevalue = globalParameter.GetValue() as DoubleParameterValue;
+                    var strpra = globalParameter.GetValue() as StringParameterValue;
                     if (doublevalue != null)
                     {
                         return RealString(doublevalue.Value);

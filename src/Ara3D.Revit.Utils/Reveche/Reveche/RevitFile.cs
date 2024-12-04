@@ -33,29 +33,15 @@ namespace Reveche
                 _newFilename = value;
                 OnPropertyChanged("NewFilename");
             }
-            get
-            {
-                return _newFilename;
-            }
+            get => _newFilename;
         }
         public string Extension { get; set; }
         public string Directory { get; set; }
         public string Version { get; set; }
         public string AdditionalInfo { get; set; }
-        public string FullPath
-        {
-            get
-            {
-                return Path.Combine(Directory, Filename + Extension);
-            }
-        }
-        public string NewFullPath
-        {
-            get
-            {
-                return Path.Combine(Directory, NewFilename + Extension);
-            }
-        }
+        public string FullPath => Path.Combine(Directory, Filename + Extension);
+
+        public string NewFullPath => Path.Combine(Directory, NewFilename + Extension);
 
         #region INotifyPropertyChanged Members
 
@@ -63,9 +49,9 @@ namespace Reveche
 
         private void OnPropertyChanged(string propertyName)
         {
-            if (this.PropertyChanged != null)
+            if (PropertyChanged != null)
             {
-                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
         }
 

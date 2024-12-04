@@ -33,7 +33,7 @@ namespace Revit.SDK.Samples.ImportExport.CS
     /// <summary>
     /// Provide a dialog which provides the options of lower priority information for exporting dwg format
     /// </summary>
-    public partial class ExportBaseOptionsForm : System.Windows.Forms.Form
+    public partial class ExportBaseOptionsForm : Form
     {
         /// <summary>
         /// data class
@@ -57,7 +57,7 @@ namespace Revit.SDK.Samples.ImportExport.CS
             InitializeComponent();
             m_exportOptionsData = exportOptionsData;
             m_contain3DView = contain3DView;
-            this.Text = "Export " + exportFormat + " Options";
+            Text = "Export " + exportFormat + " Options";
             InitializeControl();
         }
 
@@ -110,7 +110,7 @@ namespace Revit.SDK.Samples.ImportExport.CS
             m_exportOptionsData.ExportAreas = checkBoxExportingAreas.Checked;
             m_exportOptionsData.ExportMergeFiles = checkBoxMergeViews.Checked;
 
-            this.Close();
+            Close();
         }
     }
 }

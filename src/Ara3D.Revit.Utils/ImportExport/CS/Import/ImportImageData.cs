@@ -54,7 +54,7 @@ namespace Revit.SDK.Samples.ImportExport.CS
       /// <returns></returns>
       public override bool Import()
       {
-         using (Transaction t = new Transaction(m_activeDoc))
+         using (var t = new Transaction(m_activeDoc))
          {
             t.SetName("Import");
             t.Start();
@@ -71,20 +71,20 @@ namespace Revit.SDK.Samples.ImportExport.CS
             // For other image types the page number should be 1 (the default),
             // and the resolution is only used to determine the size of the image.
 
-            ImageTypeOptions typeOptions = new ImageTypeOptions(m_importFileFullName, true, ImageTypeSource.Import);
-            ImageType imageType = ImageType.Create(m_activeDoc, typeOptions);
+            var typeOptions = new ImageTypeOptions(m_importFileFullName, true, ImageTypeSource.Import);
+            var imageType = ImageType.Create(m_activeDoc, typeOptions);
 
             // Step 2: Create an ImageInstance, but only if the active view is able to contain images.
-            View view = CommandData.Application.ActiveUIDocument.Document.ActiveView;
+            var view = CommandData.Application.ActiveUIDocument.Document.ActiveView;
             if (ImageInstance.IsValidView(view))
             {
 
                // ImagePlacementOptions
-               ImagePlacementOptions placementOptions = new ImagePlacementOptions();
-               placementOptions.PlacementPoint = Autodesk.Revit.DB.BoxPlacement.TopLeft;
+               var placementOptions = new ImagePlacementOptions();
+               placementOptions.PlacementPoint = BoxPlacement.TopLeft;
                placementOptions.Location = new XYZ(1, 1, 1);
 
-               ImageInstance imageInstance = ImageInstance.Create(m_activeDoc, view, imageType.Id, placementOptions);
+               var imageInstance = ImageInstance.Create(m_activeDoc, view, imageType.Id, placementOptions);
             }
 
             t.Commit();

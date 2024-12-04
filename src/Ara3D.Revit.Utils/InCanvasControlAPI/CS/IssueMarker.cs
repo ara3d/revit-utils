@@ -46,13 +46,13 @@ namespace Revit.SDK.Samples.InCanvasControlAPI.CS
       /// <returns>IssueMarker created from data</returns>
       public static IssueMarker Create(Document document, ElementId elementId)
       {
-         ResourceProvider resourceProvider = ResourceProvider.GetInstance();
+         var resourceProvider = ResourceProvider.GetInstance();
 
          // Prepare InCanvasControlData. It needs position and image path. 
          // In this example, all controls will share the same image - though it is possible to create controls with different images, or even change it via an update (see IssueMarkerSelector::SelectMarker).
-         Element elementTracked = document.GetElement(elementId);
+         var elementTracked = document.GetElement(elementId);
 
-         XYZ elementLocation = new XYZ();
+         var elementLocation = new XYZ();
          if (elementTracked.Location is LocationPoint pointLoc)
          {
             elementLocation = pointLoc.Point;
@@ -62,11 +62,11 @@ namespace Revit.SDK.Samples.InCanvasControlAPI.CS
             elementLocation = curveLoc.Curve.GetEndPoint(0);
          }
 
-         InCanvasControlData inCanvasControlData = new InCanvasControlData(resourceProvider.IssueImage, elementLocation);
+         var inCanvasControlData = new InCanvasControlData(resourceProvider.IssueImage, elementLocation);
 
          // Create In-Canvas control
-         TemporaryGraphicsManager manager = TemporaryGraphicsManager.GetTemporaryGraphicsManager(document);
-         int controlIndex = manager.AddControl(inCanvasControlData, ElementId.InvalidElementId);
+         var manager = TemporaryGraphicsManager.GetTemporaryGraphicsManager(document);
+         var controlIndex = manager.AddControl(inCanvasControlData, ElementId.InvalidElementId);
 
          return new IssueMarker(elementId, controlIndex, inCanvasControlData);
       }
@@ -76,26 +76,20 @@ namespace Revit.SDK.Samples.InCanvasControlAPI.CS
       /// </summary>
       public InCanvasControlData InCanvasControlData
       {
-         get
-         {
-            return inCanvasData;
-         }
+         get => inCanvasData;
 
-         set
-         {
-            inCanvasData = value;
-         }
+         set => inCanvasData = value;
       }
 
       /// <summary>
       /// Index of the control, returned by TemporaryGraphicsManager
       /// </summary>
-      public int ControlIndex { get => controlIndex; }
+      public int ControlIndex => controlIndex;
 
       /// <summary>
       /// Id of the element that the marker tracks
       /// </summary>
-      public ElementId TrackedElementId { get => elementId; }
+      public ElementId TrackedElementId => elementId;
 
       #endregion
 

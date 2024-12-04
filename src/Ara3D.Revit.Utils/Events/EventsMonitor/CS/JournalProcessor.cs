@@ -74,24 +74,13 @@ namespace Revit.SDK.Samples.EventsMonitor.CS
         /// <summary>
         /// Property to get private member variables to check the stauts is playing or recording.
         /// </summary>
-        public bool IsReplay
-        {
-            get
-            {
-                return m_isReplay;
-            }
-        }
+        public bool IsReplay => m_isReplay;
 
         /// <summary>
         /// Property to get private member variables of Event list.
         /// </summary>
-        public List<String> EventsList
-        {
-            get
-            {
-                return m_eventsInFile;
-            }
-        }
+        public List<String> EventsList => m_eventsInFile;
+
         #endregion
 
         #region Class Constructor and Destructor
@@ -101,7 +90,7 @@ namespace Revit.SDK.Samples.EventsMonitor.CS
         public JournalProcessor()
         {
             m_xs = new XmlSerializer(typeof(List<String>));
-            m_directory = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            m_directory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             m_xmlFile = Path.Combine(m_directory,"Current.xml");
             
             // if the external file is exist, it means playing journal now. No Setting Dialog will pop up.
@@ -149,8 +138,8 @@ namespace Revit.SDK.Samples.EventsMonitor.CS
         {
             if (!m_isReplay)
             {
-                string fileName =  DateTime.Now.ToString("yyyyMMdd") + ".xml";
-                string tempFile =Path.Combine(m_directory ,fileName);
+                var fileName =  DateTime.Now.ToString("yyyyMMdd") + ".xml";
+                var tempFile =Path.Combine(m_directory ,fileName);
                 Stream stream = new FileStream(tempFile, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite);
                 m_xs.Serialize(stream, eventList);
                 stream.Close();
@@ -165,8 +154,8 @@ namespace Revit.SDK.Samples.EventsMonitor.CS
         /// <returns></returns>
         public List<String> GetEventsListFromJournalData(IDictionary<String, String> data)
         {
-            List<String> eventList = new List<string>();
-            foreach (KeyValuePair<string, string> kvp in data)
+            var eventList = new List<string>();
+            foreach (var kvp in data)
             {
                eventList.Add(kvp.Key);
             }
@@ -181,7 +170,7 @@ namespace Revit.SDK.Samples.EventsMonitor.CS
         /// <param name="data"></param>
         public void DumpEventListToJournalData(List<String> eventList, ref IDictionary<String, String> data)
         {
-            foreach (String eventname in eventList)
+            foreach (var eventname in eventList)
             {
                 data.Add(eventname, "1");
             }

@@ -56,7 +56,7 @@ namespace Revit.SDK.Samples.ViewPrinter.CS
         /// Cancelled can be used to signify that the user cancelled the external operation 
         /// at some point. Failure should be returned if the application is unable to proceed with 
         /// the operation.</returns>
-        public Autodesk.Revit.UI.Result Execute(ExternalCommandData commandData,
+        public Result Execute(ExternalCommandData commandData,
         ref string message, Autodesk.Revit.DB.ElementSet elements)
         {
             Autodesk.Revit.DB.Transaction newTran = null;
@@ -65,20 +65,20 @@ namespace Revit.SDK.Samples.ViewPrinter.CS
                 newTran = new Autodesk.Revit.DB.Transaction(commandData.Application.ActiveUIDocument.Document, "ViewPrinter");
                 newTran.Start();
 
-                PrintMgr pMgr = new PrintMgr(commandData);
+                var pMgr = new PrintMgr(commandData);
 
                 if (null == pMgr.InstalledPrinterNames)
                 {
                     PrintMgr.MyMessageBox("No installed printer, the external command can't work.");
-                    return Autodesk.Revit.UI.Result.Cancelled;
+                    return Result.Cancelled;
                 }
 
-                using (PrintMgrForm pmDlg = new PrintMgrForm(pMgr))
+                using (var pmDlg = new PrintMgrForm(pMgr))
                 {
                     if (pmDlg.ShowDialog() != DialogResult.Cancel)
                     {
                         newTran.Commit();
-                        return Autodesk.Revit.UI.Result.Succeeded;
+                        return Result.Succeeded;
                     }
                     newTran.RollBack();
                 }
@@ -89,10 +89,10 @@ namespace Revit.SDK.Samples.ViewPrinter.CS
                 if (null != newTran)
                     newTran.RollBack();
                 message = ex.ToString();
-                return Autodesk.Revit.UI.Result.Failed;
+                return Result.Failed;
             }
 
-            return Autodesk.Revit.UI.Result.Cancelled;
+            return Result.Cancelled;
         }
 
     }

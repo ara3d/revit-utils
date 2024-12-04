@@ -55,7 +55,7 @@ namespace Revit.SDK.Samples.EventsMonitor.CS
         /// <summary>
         /// path of temp file and log file
         /// </summary>
-        private string m_filePath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+        private string m_filePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
         /// <summary>
         /// a temp file to record log and before revit closed the temp file will be change to log file.
@@ -68,13 +68,8 @@ namespace Revit.SDK.Samples.EventsMonitor.CS
         /// <summary>
         /// Property to get and set private member variables of Event log information.
         /// </summary>
-        public DataTable EventsLog
-        {
-            get
-            {
-                return m_eventsLog;
-            }
-        }
+        public DataTable EventsLog => m_eventsLog;
+
         #endregion
 
         #region Class Constructor and Destructor
@@ -112,7 +107,7 @@ namespace Revit.SDK.Samples.EventsMonitor.CS
             Trace.Close();
             m_txtListener.Close();
 
-            string log = Path.Combine(m_filePath, "EventsMonitor.log");
+            var log = Path.Combine(m_filePath, "EventsMonitor.log");
             if (File.Exists(log)) File.Delete(log);
             File.Copy(m_tempFile, log);
             File.Delete(m_tempFile);
@@ -125,20 +120,20 @@ namespace Revit.SDK.Samples.EventsMonitor.CS
         private DataTable CreateEventsLogTable()
         {
             // create a new dataTable
-            DataTable eventsInfoLogTable = new DataTable("EventsLogInfoTable");
+            var eventsInfoLogTable = new DataTable("EventsLogInfoTable");
 
             // Create a "Time" column
-            DataColumn timeColumn = new DataColumn("Time", typeof(System.String));
+            var timeColumn = new DataColumn("Time", typeof(String));
             timeColumn.Caption = "Time";
             eventsInfoLogTable.Columns.Add(timeColumn);
 
             // Create a "Event" column
-            DataColumn eventColum = new DataColumn("Event", typeof(System.String));
+            var eventColum = new DataColumn("Event", typeof(String));
             eventColum.Caption = "Event";
             eventsInfoLogTable.Columns.Add(eventColum);
 
             // Create a "Type" column
-            DataColumn typeColum = new DataColumn("Type", typeof(System.String));
+            var typeColum = new DataColumn("Type", typeof(String));
             typeColum.Caption = "Type";
             eventsInfoLogTable.Columns.Add(typeColum);
 
@@ -154,10 +149,10 @@ namespace Revit.SDK.Samples.EventsMonitor.CS
         /// <param name="args">EventArgs of this event.</param>
         public void TrackEvent(Object sender, EventArgs args)
         {
-            DataRow newRow = m_eventsLog.NewRow();
+            var newRow = m_eventsLog.NewRow();
 
             // set the relative information of this event into the table.
-            newRow["Time"] = System.DateTime.Now.ToString();
+            newRow["Time"] = DateTime.Now.ToString();
             newRow["Event"] = GetEventsName(args.GetType());
             newRow["Type"] = sender.GetType().ToString();
 
@@ -177,8 +172,8 @@ namespace Revit.SDK.Samples.EventsMonitor.CS
                 return;
             }
             // get this eventArgs's runtime type.
-            Type type = args.GetType();
-            String eventName = GetEventsName(type);
+            var type = args.GetType();
+            var eventName = GetEventsName(type);
             Trace.WriteLine("Raised " + sender.GetType().ToString() + "." + eventName);
             Trace.WriteLine("---------------------------------------------------------");
             
@@ -196,10 +191,10 @@ namespace Revit.SDK.Samples.EventsMonitor.CS
 
             // 2: Output event argument
             // get all properties info of this argument.
-            PropertyInfo[] propertyInfos = type.GetProperties();
+            var propertyInfos = type.GetProperties();
 
             // output some typical property's name and value. (for example, Cancelable, Cancel,etc)
-            foreach (PropertyInfo propertyInfo in propertyInfos)
+            foreach (var propertyInfo in propertyInfos)
             {
                 try
                 {
@@ -210,7 +205,7 @@ namespace Revit.SDK.Samples.EventsMonitor.CS
                     else
                     {
                         Object propertyValue;
-                        String propertyName = propertyInfo.Name;
+                        var propertyName = propertyInfo.Name;
                         switch(propertyName)
                         {
                             case "Document":
@@ -242,12 +237,12 @@ namespace Revit.SDK.Samples.EventsMonitor.CS
         /// <returns></returns>
         private String GetEventsName(Type type)
         {
-            String argName = type.ToString();
-            String tail = "EventArgs";
-            String head = "Autodesk.Revit.DB.Events.";
-            int firstIndex = head.Length;
-            int length = argName.Length - head.Length - tail.Length;
-            String eventName = argName.Substring(firstIndex, length);
+            var argName = type.ToString();
+            var tail = "EventArgs";
+            var head = "Autodesk.Revit.DB.Events.";
+            var firstIndex = head.Length;
+            var length = argName.Length - head.Length - tail.Length;
+            var eventName = argName.Substring(firstIndex, length);
             return eventName;
         }
         #endregion

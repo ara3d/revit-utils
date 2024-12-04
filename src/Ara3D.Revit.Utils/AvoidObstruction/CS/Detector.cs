@@ -52,8 +52,8 @@ namespace Revit.SDK.Samples.AvoidObstruction.CS
         public Detector(Document rvtDoc)
         {
             m_rvtDoc = rvtDoc;
-            FilteredElementCollector collector = new FilteredElementCollector(m_rvtDoc);
-            FilteredElementIterator iter = collector.OfClass(typeof(View3D)).GetElementIterator();
+            var collector = new FilteredElementCollector(m_rvtDoc);
+            var iter = collector.OfClass(typeof(View3D)).GetElementIterator();
             iter.Reset();
             while (iter.MoveNext())
             {
@@ -69,13 +69,13 @@ namespace Revit.SDK.Samples.AvoidObstruction.CS
         /// <param name="origin">Ray's origin</param>
         /// <param name="dir">Ray's direction</param>
         /// <returns>Obstructions intersected with the given ray</returns>
-        public List<ReferenceWithContext> Obstructions(Autodesk.Revit.DB.XYZ origin, Autodesk.Revit.DB.XYZ dir)
+        public List<ReferenceWithContext> Obstructions(XYZ origin, XYZ dir)
         {
-            List<ReferenceWithContext> result = new List<ReferenceWithContext>();
-            ReferenceIntersector referenceIntersector = new ReferenceIntersector(m_view3d);
+            var result = new List<ReferenceWithContext>();
+            var referenceIntersector = new ReferenceIntersector(m_view3d);
             referenceIntersector.TargetType = FindReferenceTarget.Face;
-            IList<ReferenceWithContext> obstructionsOnUnboundLine = referenceIntersector.Find(origin, dir);
-            foreach (ReferenceWithContext gRef in obstructionsOnUnboundLine)
+            var obstructionsOnUnboundLine = referenceIntersector.Find(origin, dir);
+            foreach (var gRef in obstructionsOnUnboundLine)
             {
                 if (!InArray(result, gRef))
                 {
@@ -94,16 +94,16 @@ namespace Revit.SDK.Samples.AvoidObstruction.CS
         /// <returns>Obstructions intersected with the bound line</returns>
         public List<ReferenceWithContext> Obstructions(Line boundLine)
         {
-            List<ReferenceWithContext> result = new List<ReferenceWithContext>();
-            Autodesk.Revit.DB.XYZ startPt = boundLine.GetEndPoint(0);
-            Autodesk.Revit.DB.XYZ endPt = boundLine.GetEndPoint(1);
-            Autodesk.Revit.DB.XYZ dir = (endPt - startPt).Normalize();
-            ReferenceIntersector referenceIntersector = new ReferenceIntersector(m_view3d);
+            var result = new List<ReferenceWithContext>();
+            var startPt = boundLine.GetEndPoint(0);
+            var endPt = boundLine.GetEndPoint(1);
+            var dir = (endPt - startPt).Normalize();
+            var referenceIntersector = new ReferenceIntersector(m_view3d);
             referenceIntersector.TargetType = FindReferenceTarget.Face;
-            IList<ReferenceWithContext> obstructionsOnUnboundLine = referenceIntersector.Find(startPt, dir);
-            foreach (ReferenceWithContext gRefWithContext in obstructionsOnUnboundLine)
+            var obstructionsOnUnboundLine = referenceIntersector.Find(startPt, dir);
+            foreach (var gRefWithContext in obstructionsOnUnboundLine)
             {
-                Reference gRef = gRefWithContext.GetReference();
+                var gRef = gRefWithContext.GetReference();
                 // Judge whether the point is in the bound line or not, if the distance between the point and line
                 // is Zero, then the point is in the bound line.
                 if (boundLine.Distance(gRef.GlobalPoint) < 1e-9)
@@ -129,7 +129,7 @@ namespace Revit.SDK.Samples.AvoidObstruction.CS
         /// <returns>True of false</returns>
         private bool InArray(List<ReferenceWithContext> arr, ReferenceWithContext entry)
         {
-            foreach (ReferenceWithContext tmp in arr)
+            foreach (var tmp in arr)
             {
                 if (Math.Abs(tmp.Proximity - entry.Proximity) < 1e-9 &&
                     tmp.GetReference().ElementId == entry.GetReference().ElementId)

@@ -54,22 +54,22 @@ namespace Revit.SDK.Samples.AddSpaceAndZone.CS
         /// Cancelled can be used to signify that the user cancelled the external operation 
         /// at some point. Failure should be returned if the application is unable to proceed with 
         /// the operation.</returns>
-        public Autodesk.Revit.UI.Result Execute(Autodesk.Revit.UI.ExternalCommandData commandData,
+        public Result Execute(ExternalCommandData commandData,
                                                ref string message,
                                                ElementSet elements)
         {
             try
             {
-                Transaction documentTransaction = new Transaction(commandData.Application.ActiveUIDocument.Document, "Document");
+                var documentTransaction = new Transaction(commandData.Application.ActiveUIDocument.Document, "Document");
                 documentTransaction.Start();
 
                 // Create a new instance of class DataManager
-                DataManager dataManager = new DataManager(commandData);
+                var dataManager = new DataManager(commandData);
 
                 System.Windows.Forms.DialogResult result;
 
                 // Create a form
-                using (MainForm mainForm = new MainForm(dataManager))
+                using (var mainForm = new MainForm(dataManager))
                 {
                     result = mainForm.ShowDialog();
                 }
@@ -77,19 +77,19 @@ namespace Revit.SDK.Samples.AddSpaceAndZone.CS
                 if (result == System.Windows.Forms.DialogResult.OK)
                 {
                     documentTransaction.Commit();
-                    return Autodesk.Revit.UI.Result.Succeeded;
+                    return Result.Succeeded;
                 }
                 else
                 {
                     documentTransaction.RollBack();
-                    return Autodesk.Revit.UI.Result.Cancelled;
+                    return Result.Cancelled;
                 }
             }
             catch (Exception ex)
             {
                 // If there are something wrong, give error information and return failed
                 message = ex.Message;
-                return Autodesk.Revit.UI.Result.Failed;
+                return Result.Failed;
             }
         }
     }

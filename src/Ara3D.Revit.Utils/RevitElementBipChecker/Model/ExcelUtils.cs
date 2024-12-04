@@ -20,7 +20,7 @@ namespace RevitElementBipChecker.Model
         /// <param name="filename">filename want save</param>
         public static void OpenExcel(this DataTable dt, out string path, string filename = "Report.csv")
         {
-            string PathDocument = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            var PathDocument = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
             string namesave;
             if (filename.ToLower().Contains(".csv"))
             {
@@ -37,7 +37,7 @@ namespace RevitElementBipChecker.Model
             }
             var lines = new List<string>();
 
-            string[] columnNames = dt.Columns
+            var columnNames = dt.Columns
                 .Cast<DataColumn>()
                 .Select(column => column.ColumnName)
                 .ToArray();
@@ -45,7 +45,7 @@ namespace RevitElementBipChecker.Model
             var header = string.Join(",", columnNames.Select(name => $"\"{name}\""));
             lines.Add(header);
 
-            EnumerableRowCollection<string> valueLines = dt.AsEnumerable()
+            var valueLines = dt.AsEnumerable()
                 .Select(row => string.Join(",", row.ItemArray.Select(val => $"\"{val.ToString().FixUnitInch()}\"")));
 
             lines.AddRange(valueLines);
@@ -61,18 +61,18 @@ namespace RevitElementBipChecker.Model
         /// <returns></returns>
         public static DataTable ToDataTable<T>(this IList<T> data)
         {
-            PropertyDescriptorCollection props =
+            var props =
                 TypeDescriptor.GetProperties(typeof(T));
-            DataTable table = new DataTable();
-            for(int i = 0 ; i < props.Count ; i++)
+            var table = new DataTable();
+            for(var i = 0 ; i < props.Count ; i++)
             {
-                PropertyDescriptor prop = props[i];
+                var prop = props[i];
                 table.Columns.Add(prop.Name, prop.PropertyType);
             }
-            object[] values = new object[props.Count];
-            foreach (T item in data)
+            var values = new object[props.Count];
+            foreach (var item in data)
             {
-                for (int i = 0; i < values.Length; i++)
+                for (var i = 0; i < values.Length; i++)
                 {
                     values[i] = props[i].GetValue(item);
                 }
@@ -89,14 +89,14 @@ namespace RevitElementBipChecker.Model
         /// <returns></returns>
         public static DataTable ToDataTable2<T>(this IList<T> data)
         {
-            PropertyDescriptorCollection properties = 
+            var properties = 
                 TypeDescriptor.GetProperties(typeof(T));
-            DataTable table = new DataTable();
+            var table = new DataTable();
             foreach (PropertyDescriptor prop in properties)
                 table.Columns.Add(prop.Name, Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType);
-            foreach (T item in data)
+            foreach (var item in data)
             {
-                DataRow row = table.NewRow();
+                var row = table.NewRow();
                 foreach (PropertyDescriptor prop in properties)
                     row[prop.Name] = prop.GetValue(item) ?? DBNull.Value;
                 table.Rows.Add(row);
@@ -113,8 +113,8 @@ namespace RevitElementBipChecker.Model
         public static string DecodeFromUtf8(this string utf8String)
         {
             // copy the string as UTF-8 bytes.
-            byte[] utf8Bytes = new byte[utf8String.Length];
-            for (int i=0;i<utf8String.Length;++i) {
+            var utf8Bytes = new byte[utf8String.Length];
+            for (var i=0;i<utf8String.Length;++i) {
                 //Debug.Assert( 0 <= utf8String[i] && utf8String[i] <= 255, "the char must be in byte's range");
                 utf8Bytes[i] = (byte)utf8String[i];
             }
@@ -124,8 +124,8 @@ namespace RevitElementBipChecker.Model
 
         public static string FixUnitInch(this string str)
         {
-            string pattern = "\"$";
-            Regex regex = new Regex(pattern);
+            var pattern = "\"$";
+            var regex = new Regex(pattern);
             if (regex.IsMatch(str))
             { 
                 return str.Replace(str, str + " ");

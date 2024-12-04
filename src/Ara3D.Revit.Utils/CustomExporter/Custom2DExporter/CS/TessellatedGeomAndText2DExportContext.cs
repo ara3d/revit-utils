@@ -43,29 +43,12 @@ namespace Revit.SDK.Samples.Custom2DExporter.CS
 
       Element m_currentElem = null;
 
-      public int NumElements
-      {
-         get
-         {
-            return m_numElements;
-         }
-      }
+      public int NumElements => m_numElements;
 
-      public int NumTexts
-      {
-         get
-         {
-            return m_numTexts;
-         }
-      }
+      public int NumTexts => m_numTexts;
 
-      public string Texts
-      {
-         get
-         {
-            return m_texts;
-         }
-      }
+      public string Texts => m_texts;
+
       #endregion
 
       #region IExportContext2DOverrides
@@ -155,10 +138,10 @@ namespace Revit.SDK.Samples.Custom2DExporter.CS
          {
             IList<XYZ> list = new List<XYZ>();
 
-            Curve curve = node.GetCurve();
+            var curve = node.GetCurve();
             if (curve is Line)
             {
-               Line l = curve as Line;
+               var l = curve as Line;
                list.Add(l.GetEndPoint(0));
                list.Add(l.GetEndPoint(1));
             }
@@ -179,8 +162,8 @@ namespace Revit.SDK.Samples.Custom2DExporter.CS
          // Customize processing of annotation polylines
          if (m_currentElem.Category.CategoryType == CategoryType.Annotation)
          {
-            PolyLine pLine = node.GetPolyline();
-            IList<XYZ> list = pLine.GetCoordinates();
+            var pLine = node.GetPolyline();
+            var list = pLine.GetCoordinates();
             Utilities.addTo(m_points, list);
             return RenderNodeAction.Skip;
          }
@@ -209,7 +192,7 @@ namespace Revit.SDK.Samples.Custom2DExporter.CS
          return RenderNodeAction.Proceed;
       }
 
-      public void OnText(Autodesk.Revit.DB.TextNode node)
+      public void OnText(TextNode node)
       {
          m_texts += "\n" + node.Text;
          ++m_numTexts;
@@ -233,8 +216,8 @@ namespace Revit.SDK.Samples.Custom2DExporter.CS
 
       public void OnLineSegment(LineSegment segment)
       {
-         XYZ segmentStart = segment.StartPoint;
-         XYZ segmentEnd = segment.EndPoint;
+         var segmentStart = segment.StartPoint;
+         var segmentEnd = segment.EndPoint;
 
          IList<XYZ> list = new List<XYZ>();
          list.Add(segmentStart);
@@ -244,7 +227,7 @@ namespace Revit.SDK.Samples.Custom2DExporter.CS
 
       public void OnPolylineSegments(PolylineSegments segments)
       {
-         IList<XYZ> segPoints = segments.GetVertices();
+         var segPoints = segments.GetVertices();
          Utilities.addTo(m_points, segPoints);
       }
 	  #endregion

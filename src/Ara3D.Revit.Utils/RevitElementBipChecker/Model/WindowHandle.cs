@@ -19,7 +19,7 @@ namespace RevitElementBipChecker.Model
 		{
 			if (null == dialog) { return; }
 
-			WindowInteropHelper helper = new WindowInteropHelper(dialog);
+			var helper = new WindowInteropHelper(dialog);
 			helper.Owner = FindRevitWindowHandle();
 		}
 
@@ -31,13 +31,13 @@ namespace RevitElementBipChecker.Model
 		{
 			try
 			{
-				IntPtr foundRevitHandle = IntPtr.Zero;
-				uint currentThreadID = GetCurrentThreadId();
+				var foundRevitHandle = IntPtr.Zero;
+				var currentThreadID = GetCurrentThreadId();
 
 				// Search for the Revit process with current thread ID.
-				Process[] revitProcesses = Process.GetProcessesByName("Revit");
+				var revitProcesses = Process.GetProcessesByName("Revit");
 				Process foundRevitProcess = null;
-				foreach (Process aRevitProcess in revitProcesses)
+				foreach (var aRevitProcess in revitProcesses)
 				{
 					foreach (ProcessThread aThread in aRevitProcess.Threads)
 					{

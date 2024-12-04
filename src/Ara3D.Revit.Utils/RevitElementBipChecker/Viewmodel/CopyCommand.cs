@@ -23,7 +23,7 @@ namespace RevitElementBipChecker.Viewmodel
 
         public void Execute(object parameter)
         {
-            string name = parameter as string;
+            var name = parameter as string;
             switch (name)
             {
                 case "BuildIn":
@@ -57,42 +57,42 @@ namespace RevitElementBipChecker.Viewmodel
         }
         ParameterData GetSelectedItem()
         {
-            int selected = vm.frmmain.lsBipChecker.SelectedIndex;
+            var selected = vm.frmmain.lsBipChecker.SelectedIndex;
             return  vm.frmmain.lsBipChecker.Items[selected] as ParameterData;
         }
         private void Copy_BuiltInParameter()
         {
-            ParameterData parameterData = GetSelectedItem();
+            var parameterData = GetSelectedItem();
             Clipboard.SetText(parameterData.BuiltInParameter);
         }
         private void Copy_ParameterName()
         {
-            ParameterData parameterData = GetSelectedItem();
+            var parameterData = GetSelectedItem();
             Clipboard.SetText(parameterData.ParameterName);
         }
         private void Copy_Type()
         {
-            ParameterData parameterData = GetSelectedItem();
+            var parameterData = GetSelectedItem();
             Clipboard.SetText(parameterData.Type);
         }
         private void Copy_Value()
         {
-            ParameterData parameterData = GetSelectedItem();
+            var parameterData = GetSelectedItem();
             Clipboard.SetText(parameterData.Value);
         }
         private void Copy_ParameterGroup()
         {
-            ParameterData parameterData = GetSelectedItem();
+            var parameterData = GetSelectedItem();
             Clipboard.SetText(parameterData.ParameterGroup);
         }
         private void Copy_GroupName()
         {
-            ParameterData parameterData = GetSelectedItem();
+            var parameterData = GetSelectedItem();
             Clipboard.SetText(parameterData.GroupName);
         }
         private void Copy_Guid()
         {
-            ParameterData parameterData = GetSelectedItem();
+            var parameterData = GetSelectedItem();
             Clipboard.SetText(parameterData.GUID);
         }
     }

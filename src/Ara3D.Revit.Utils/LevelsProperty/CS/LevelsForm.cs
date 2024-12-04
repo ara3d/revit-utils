@@ -36,7 +36,7 @@ namespace Revit.SDK.Samples.LevelsProperty.CS
     /// <summary>
     /// form for new levels
     /// </summary>  
-    public partial class LevelsForm : System.Windows.Forms.Form
+    public partial class LevelsForm : Form
     {
         /// <summary>
         /// form for new levels
@@ -68,7 +68,7 @@ namespace Revit.SDK.Samples.LevelsProperty.CS
 
             levelsDataGridView.Columns.AddRange(new DataGridViewColumn[] { LevelName, LevelElevation });
 
-            bindingSource1.DataSource = typeof(Revit.SDK.Samples.LevelsProperty.CS.LevelsDataSource);
+            bindingSource1.DataSource = typeof(LevelsDataSource);
             //Must place below code on the code "dataGridView1.DataSource = bindingSource1"
             levelsDataGridView.AutoGenerateColumns = false;
             levelsDataGridView.DataSource = bindingSource1;
@@ -101,7 +101,7 @@ namespace Revit.SDK.Samples.LevelsProperty.CS
         /// <param name="e"></param>
         private void addButton_Click(object sender, EventArgs e)
         {
-            System.String newLevelName;
+            String newLevelName;
             double newLevelElevation;
 
             //If it exists some Levels on Revit, 
@@ -110,10 +110,10 @@ namespace Revit.SDK.Samples.LevelsProperty.CS
             if (bindingSource1.Count > 0)
             {
                 bindingSource1.MoveLast();
-                LevelsDataSource lastItem = bindingSource1.Current as LevelsDataSource;
+                var lastItem = bindingSource1.Current as LevelsDataSource;
 
-                System.String lastLevelName = lastItem.Name;
-                double lastLevelElevation = lastItem.Elevation;
+                var lastLevelName = lastItem.Name;
+                var lastLevelElevation = lastItem.Elevation;
                 newLevelName = lastLevelName + "'";
                 newLevelElevation = lastLevelElevation + Unit.CovertFromAPI(m_objectReference.UnitTypeId, 10);
 
@@ -125,7 +125,7 @@ namespace Revit.SDK.Samples.LevelsProperty.CS
             }
 
 
-            LevelsDataSource newLevel = new LevelsDataSource();
+            var newLevel = new LevelsDataSource();
             newLevel.Name = newLevelName;
             newLevel.Elevation = newLevelElevation;
 
@@ -158,7 +158,7 @@ namespace Revit.SDK.Samples.LevelsProperty.CS
 
             if (bindingSource1.Position <= m_systemLevelsTotal - 1 && bindingSource1.Position >= 0)
             {
-                LevelsDataSource aRow = bindingSource1.Current as LevelsDataSource;
+                var aRow = bindingSource1.Current as LevelsDataSource;
                 m_deleteExistLevelIDValue[m_deleteExistLevelTotal] = aRow.LevelIDValue;
                 m_deleteExistLevelTotal++;
 
@@ -166,7 +166,7 @@ namespace Revit.SDK.Samples.LevelsProperty.CS
 
                 m_systemLevelsTotal = m_systemLevelsTotal - 1;
 
-                int[] temChangedItemsFlag = new int[m_systemLevelsTotal];
+                var temChangedItemsFlag = new int[m_systemLevelsTotal];
                 for (int i = 0, j = 0; i < m_systemLevelsTotal; i++, j++)
                 {
                     if (bindingSource1.Position == i)
@@ -182,7 +182,7 @@ namespace Revit.SDK.Samples.LevelsProperty.CS
 
             if (bindingSource1.Position < 0)
             {
-                Autodesk.Revit.UI.TaskDialog.Show("Revit", "No have Level.");
+                TaskDialog.Show("Revit", "No have Level.");
             }
         }
 
@@ -200,11 +200,11 @@ namespace Revit.SDK.Samples.LevelsProperty.CS
         {
             if (0 == levelsDataGridView.CurrentCell.ColumnIndex)
             {
-                System.String newName = e.FormattedValue as System.String;
+                var newName = e.FormattedValue as String;
 
-                char[] newNameArray = new char[newName.Length];
+                var newNameArray = new char[newName.Length];
                 newNameArray = newName.ToCharArray();
-                for (int i = 0; i < newName.Length; ++i)
+                for (var i = 0; i < newName.Length; ++i)
                 {
                     if ('\\' == newNameArray[i] || ':' == newNameArray[i] || '{' == newNameArray[i] ||
                         '}' == newNameArray[i] || '[' == newNameArray[i] || ']' == newNameArray[i] ||
@@ -221,10 +221,10 @@ namespace Revit.SDK.Samples.LevelsProperty.CS
                     }
                 }
 
-                System.String oldName = levelsDataGridView.CurrentCell.FormattedValue as System.String;
+                var oldName = levelsDataGridView.CurrentCell.FormattedValue as String;
                 if (newName != oldName)
                 {
-                    for (int i = 0; i < m_objectReference.SystemLevelsDatum.Count; i++)
+                    for (var i = 0; i < m_objectReference.SystemLevelsDatum.Count; i++)
                     {
                         if (m_objectReference.SystemLevelsDatum[i].Name == newName)
                         {
@@ -243,7 +243,7 @@ namespace Revit.SDK.Samples.LevelsProperty.CS
         /// <param name="e"></param>
         private void levelsDataGridView_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {
-            Autodesk.Revit.UI.TaskDialog.Show("Revit", e.Exception.Message);
+            TaskDialog.Show("Revit", e.Exception.Message);
         }
 
         /// <summary>
@@ -275,22 +275,22 @@ namespace Revit.SDK.Samples.LevelsProperty.CS
         {
 
             //Delete existed Levels
-            for (int i = 0; i < m_deleteExistLevelTotal; i++)
+            for (var i = 0; i < m_deleteExistLevelTotal; i++)
             {
                 m_objectReference.DeleteLevel(m_deleteExistLevelIDValue[i]);
             }
 
-            List<LevelsDataSource> tempLevels = new List<LevelsDataSource>();
+            var tempLevels = new List<LevelsDataSource>();
 
             //Set all changed Levels' name and elevation
             if (1 == m_systemLevelChangedFlag)
             {
-                for (int i = 0; i < m_changedItemsFlag.LongLength; i++)
+                for (var i = 0; i < m_changedItemsFlag.LongLength; i++)
                 {
                     if (1 == m_changedItemsFlag[i])
                     {
                         bindingSource1.Position = i;
-                        LevelsDataSource changeItem = bindingSource1.Current as LevelsDataSource;
+                        var changeItem = bindingSource1.Current as LevelsDataSource;
 
                         if (false == m_objectReference.SetLevel(changeItem.LevelIDValue, changeItem.Name, changeItem.Elevation))
                         {
@@ -302,17 +302,17 @@ namespace Revit.SDK.Samples.LevelsProperty.CS
                 }
             }
 
-            foreach (LevelsDataSource item in tempLevels)
+            foreach (var item in tempLevels)
             {
                 item.Name = item.Name.Remove(0, 8); // Remove the "TempName" string
                 m_objectReference.SetLevel(item.LevelIDValue, item.Name, item.Elevation);
             }
 
             //Create new Levels
-            for (int i = m_systemLevelsTotal; i < bindingSource1.Count; i++)
+            for (var i = m_systemLevelsTotal; i < bindingSource1.Count; i++)
             {
                 bindingSource1.Position = i;
-                LevelsDataSource newItem = bindingSource1.Current as LevelsDataSource;
+                var newItem = bindingSource1.Current as LevelsDataSource;
                 m_objectReference.CreateLevel(newItem.Name, newItem.Elevation);
             }
         }

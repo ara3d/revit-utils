@@ -43,27 +43,15 @@ namespace Revit.SDK.Samples.ModelLines.CS
         /// <summary>
         /// Indicate the type name, such ModelArc, ModelLine, etc
         /// </summary>
-        public String TypeName
-        {
-            get
-            {
-                return m_typeName;
-            }
-        }
+        public String TypeName => m_typeName;
 
         /// <summary>
         /// Indicate the number of the corresponding type which name stored in type name
         /// </summary>
         public int Number
         {
-            get
-            {
-                return m_number;
-            }
-            set
-            {
-                m_number = value;
-            }
+            get => m_number;
+            set => m_number = value;
         }
 
         // Methods
@@ -91,24 +79,12 @@ namespace Revit.SDK.Samples.ModelLines.CS
         /// <summary>
         /// The text displayed in the comboBox, as the DisplayMember
         /// </summary>
-        public String DisplayText
-        {
-            get
-            {
-                return m_text;
-            }
-        }
+        public String DisplayText => m_text;
 
         /// <summary>
         /// The real value of the comboBox, as the ValueMember
         /// </summary>
-        public ElementId Id
-        {
-            get
-            {
-                return m_id;
-            }
-        }
+        public ElementId Id => m_id;
 
         // Methods
         /// <summary>

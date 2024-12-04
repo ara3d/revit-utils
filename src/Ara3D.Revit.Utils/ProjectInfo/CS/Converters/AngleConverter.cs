@@ -37,7 +37,7 @@ namespace Revit.SDK.Samples.ProjectInfo.CS
         /// <returns>An element if the element exists, otherwise null</returns>
         public override object ConvertFrom(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
         {
-            string text = value as string;
+            var text = value as string;
             if (!string.IsNullOrEmpty(text))
             {
                 return AngleString2Double(text);
@@ -61,7 +61,7 @@ namespace Revit.SDK.Samples.ProjectInfo.CS
             if (destinationType == typeof(string))
             {
                 if (value == null) return string.Empty;
-                double angle = (double) value;
+                var angle = (double) value;
                 return Double2AngleString(angle);
             }
             return base.ConvertTo(context, culture, value, destinationType);
@@ -74,7 +74,7 @@ namespace Revit.SDK.Samples.ProjectInfo.CS
         /// <returns>Double value</returns>
         private static double AngleString2Double(string value)
         {
-            int n = value.Length - 1;
+            var n = value.Length - 1;
             if (!char.IsDigit(value[n]))
             {
                 value = value.Substring(0, n);

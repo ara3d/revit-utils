@@ -91,10 +91,10 @@ namespace Revit.SDK.Samples.ProjectInfo.CS
         /// <returns>An element if the element exists, otherwise null</returns>
         public override object ConvertFrom(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
         {
-            string text = value as string;
+            var text = value as string;
             if (!string.IsNullOrEmpty(text))
             {
-                foreach (ProjectLocation projectLocation in ProjectLocations)
+                foreach (var projectLocation in ProjectLocations)
                 {
                     if (projectLocation.Name == text)
                         return projectLocation;
@@ -119,7 +119,7 @@ namespace Revit.SDK.Samples.ProjectInfo.CS
             if (destinationType == typeof(string))
             {
                 if (value == null) return UserDefined;
-                ProjectLocation projectLocation = value as ProjectLocation;
+                var projectLocation = value as ProjectLocation;
                 if (projectLocation != null)
                     return projectLocation.Name;
                 else

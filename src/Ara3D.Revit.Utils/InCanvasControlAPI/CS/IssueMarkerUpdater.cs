@@ -39,11 +39,11 @@ namespace Revit.SDK.Samples.InCanvasControlAPI.CS
       /// <param name="data">Data about changes in the document.</param>
       public static void Execute(DocumentChangedEventArgs data)
       {
-         Document doc = data.GetDocument();
-         TemporaryGraphicsManager temporaryGraphicsManager = TemporaryGraphicsManager.GetTemporaryGraphicsManager(doc);
-         IssueMarkerTracking tracking = IssueMarkerTrackingManager.GetInstance().GetTracking(doc);
+         var doc = data.GetDocument();
+         var temporaryGraphicsManager = TemporaryGraphicsManager.GetTemporaryGraphicsManager(doc);
+         var tracking = IssueMarkerTrackingManager.GetInstance().GetTracking(doc);
          
-         foreach (ElementId deleted in data.GetDeletedElementIds())
+         foreach (var deleted in data.GetDeletedElementIds())
          {
             if (tracking.GetMarkerByElementId(deleted) is IssueMarker marker)
             {
@@ -55,14 +55,14 @@ namespace Revit.SDK.Samples.InCanvasControlAPI.CS
             }
          }
 
-         foreach (ElementId updated in data.GetModifiedElementIds())
+         foreach (var updated in data.GetModifiedElementIds())
          {
             if (tracking.GetMarkerByElementId(updated) is IssueMarker marker)
             {
-               Element element = doc.GetElement(updated);
+               var element = doc.GetElement(updated);
 
                // Since we keep a copy of InCanvasControlData, we can avoid creating a new one. It already has image and position set - and we can just change the position
-               InCanvasControlData controlData = marker.InCanvasControlData;
+               var controlData = marker.InCanvasControlData;
                if (element.Location is LocationPoint pointLoc)
                {
                   controlData.Position = pointLoc.Point;

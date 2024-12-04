@@ -60,55 +60,55 @@ namespace Revit.SDK.Samples.InvisibleParam.CS
         /// Cancelled can be used to signify that the user cancelled the external operation 
         /// at some point. Failure should be returned if the application is unable to proceed with
         /// the operation.</returns>
-        public Autodesk.Revit.UI.Result Execute(
-            ExternalCommandData commandData, ref string message, Autodesk.Revit.DB.ElementSet elements)
+        public Result Execute(
+            ExternalCommandData commandData, ref string message, ElementSet elements)
         {
-            Transaction transaction = new Transaction(commandData.Application.ActiveUIDocument.Document, "External Tool");
+            var transaction = new Transaction(commandData.Application.ActiveUIDocument.Document, "External Tool");
             try
             {
                 transaction.Start();
 
                 //Create a clear file as parameter file.
-                String path = Assembly.GetExecutingAssembly().Location;
-                int index = path.LastIndexOf("\\");
-                String newPath = path.Substring(0,index);
+                var path = Assembly.GetExecutingAssembly().Location;
+                var index = path.LastIndexOf("\\");
+                var newPath = path.Substring(0,index);
                 newPath += "\\RevitParameters.txt";
                 if(File.Exists(newPath))
                 {
                     File.Delete(newPath);
                 }
-                FileStream fs = File.Create(newPath);
+                var fs = File.Create(newPath);
                 fs.Close();               
 
                 //cache application handle
-                Application revitApp = commandData.Application.Application;
+                var revitApp = commandData.Application.Application;
                 //prepare shared parameter file
                 commandData.Application.Application.SharedParametersFilename = newPath;
 
                 //Open shared parameter file
-                DefinitionFile parafile = revitApp.OpenSharedParameterFile();
+                var parafile = revitApp.OpenSharedParameterFile();
 
                 //get walls category
-                Category wallCat = commandData.Application.ActiveUIDocument.Document.Settings.Categories.get_Item(BuiltInCategory.OST_Walls);
-                CategorySet categories = revitApp.Create.NewCategorySet();
+                var wallCat = commandData.Application.ActiveUIDocument.Document.Settings.Categories.get_Item(BuiltInCategory.OST_Walls);
+                var categories = revitApp.Create.NewCategorySet();
                 categories.Insert(wallCat);
 
-                InstanceBinding binding = revitApp.Create.NewInstanceBinding(categories);
+                var binding = revitApp.Create.NewInstanceBinding(categories);
 
                 //Create a group
-                DefinitionGroup apiGroup = parafile.Groups.Create("APIGroup");
+                var apiGroup = parafile.Groups.Create("APIGroup");
 
                 //Create a visible "VisibleParam" of text type.
-                ExternalDefinitionCreationOptions ExternalDefinitionCreationOptions1 = new ExternalDefinitionCreationOptions("VisibleParam", SpecTypeId.String.Text);
-                Definition visibleParamDef = apiGroup.Definitions.Create
+                var ExternalDefinitionCreationOptions1 = new ExternalDefinitionCreationOptions("VisibleParam", SpecTypeId.String.Text);
+                var visibleParamDef = apiGroup.Definitions.Create
                     (ExternalDefinitionCreationOptions1);
                                         ;
-                                        BindingMap bindingMap = commandData.Application.ActiveUIDocument.Document.ParameterBindings;
+                                        var bindingMap = commandData.Application.ActiveUIDocument.Document.ParameterBindings;
                 bindingMap.Insert(visibleParamDef, binding);
 
                 //Create a invisible "InvisibleParam" of text type.
-                ExternalDefinitionCreationOptions ExternalDefinitionCreationOptions2 = new ExternalDefinitionCreationOptions("InvisibleParam", SpecTypeId.String.Text);
-                Definition invisibleParamDef = apiGroup.Definitions.Create
+                var ExternalDefinitionCreationOptions2 = new ExternalDefinitionCreationOptions("InvisibleParam", SpecTypeId.String.Text);
+                var invisibleParamDef = apiGroup.Definitions.Create
                     (ExternalDefinitionCreationOptions2);
                 bindingMap.Insert(invisibleParamDef, binding);
             }
@@ -116,13 +116,13 @@ namespace Revit.SDK.Samples.InvisibleParam.CS
             {
                 transaction.RollBack();
                 message = e.ToString();
-                return Autodesk.Revit.UI.Result.Cancelled;
+                return Result.Cancelled;
             }
             finally
             {
                 transaction.Commit();
             }
-            return Autodesk.Revit.UI.Result.Succeeded;
+            return Result.Succeeded;
         }
 
         #endregion

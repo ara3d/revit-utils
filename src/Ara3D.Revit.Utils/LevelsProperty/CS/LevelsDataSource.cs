@@ -41,14 +41,8 @@ namespace Revit.SDK.Samples.LevelsProperty.CS
         /// </summary>
         public String Name
         {
-            get
-            {
-                return m_levelName;
-            }
-            set
-            {
-                m_levelName = value;
-            }
+            get => m_levelName;
+            set => m_levelName = value;
         }
 
 
@@ -57,14 +51,8 @@ namespace Revit.SDK.Samples.LevelsProperty.CS
         /// </summary>
         public double Elevation
         {
-            get
-            {
-                return m_levelElevation;
-            }
-            set
-            {
-                m_levelElevation = value;
-            }
+            get => m_levelElevation;
+            set => m_levelElevation = value;
         }
 
         /// <summary>
@@ -72,14 +60,8 @@ namespace Revit.SDK.Samples.LevelsProperty.CS
         /// </summary>
         public Autodesk.Revit.DB.ElementId LevelIDValue
         {
-            get
-            {
-                return m_levelIDValue;
-            }
-            set
-            {
-                m_levelIDValue = value;
-            }
+            get => m_levelIDValue;
+            set => m_levelIDValue = value;
         }
 
     }

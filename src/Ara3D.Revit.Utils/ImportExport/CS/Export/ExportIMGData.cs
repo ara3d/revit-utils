@@ -69,7 +69,7 @@ namespace Revit.SDK.Samples.ImportExport.CS
             m_imageType.Add("(*.tga)");
             m_imageType.Add("(*.tif)");
 
-            StringBuilder tmp = new StringBuilder();
+            var tmp = new StringBuilder();
             tmp.Append(m_imageType[0] + "|*.bmp|");
             tmp.Append(m_imageType[1] + "|*.jpeg|");
             tmp.Append(m_imageType[2] + "|*.png|");

@@ -63,7 +63,7 @@ namespace Revit.SDK.Samples.AutoStamp.CS
         /// <summary>
         /// Reserves the id of TextNote created by ViewPrinting and delete it in ViewPrinted event.
         /// </summary>
-        Autodesk.Revit.DB.ElementId m_newTextNoteId; 
+        ElementId m_newTextNoteId; 
         #endregion
 
 
@@ -107,7 +107,7 @@ namespace Revit.SDK.Samples.AutoStamp.CS
         /// </summary>
         /// <param name="sender">Event sender.</param>
         /// <param name="e">Event arguments of ViewPrinting event.</param>
-        public void AppViewPrinting(object sender, Autodesk.Revit.DB.Events.ViewPrintingEventArgs e)
+        public void AppViewPrinting(object sender, ViewPrintingEventArgs e)
         {
             // Setup log file if it still is empty
             if (null == m_eventsLog)
@@ -116,29 +116,29 @@ namespace Revit.SDK.Samples.AutoStamp.CS
             } 
             //
             // header information
-            Trace.WriteLine(System.Environment.NewLine + "View Print Start: ------------------------");
+            Trace.WriteLine(Environment.NewLine + "View Print Start: ------------------------");
             //
             // Dump the events arguments
             DumpEventArguments(e);
             //
             // Create TextNote for current view, cancel the event if TextNote creation failed
-            bool failureOccured = false; // Reserves whether failure occurred when create TextNote
+            var failureOccured = false; // Reserves whether failure occurred when create TextNote
             try
             {
-                String strText = String.Format("Printer Name: {0}{1}User Name: {2}",
-                    e.Document.PrintManager.PrinterName, System.Environment.NewLine, System.Environment.UserName);
+                var strText = String.Format("Printer Name: {0}{1}User Name: {2}",
+                    e.Document.PrintManager.PrinterName, Environment.NewLine, Environment.UserName);
                 //
                 // Use non-debug compile symbol to write constant text note
 #if !(Debug || DEBUG)
                 strText = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 #endif
-                using( Transaction eventTransaction = new Transaction(e.Document, "External Tool"))
+                using( var eventTransaction = new Transaction(e.Document, "External Tool"))
                 {
                     eventTransaction.Start();
-                    TextNoteOptions options = new TextNoteOptions();
+                    var options = new TextNoteOptions();
                     options.HorizontalAlignment = HorizontalTextAlignment.Center;
                     options.TypeId = e.Document.GetDefaultElementTypeId(ElementTypeGroup.TextNoteType);
-                    TextNote newTextNote = TextNote.Create(e.Document, e.View.Id, XYZ.Zero, strText, options);
+                    var newTextNote = TextNote.Create(e.Document, e.View.Id, XYZ.Zero, strText, options);
                     eventTransaction.Commit();
 
                     // Check to see whether TextNote creation succeeded
@@ -153,7 +153,7 @@ namespace Revit.SDK.Samples.AutoStamp.CS
                     }
                 }
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                failureOccured = true;
                 Trace.WriteLine("Exception occurred when creating TextNote, print will be canceled, ex: " + ex.Message);
@@ -174,10 +174,10 @@ namespace Revit.SDK.Samples.AutoStamp.CS
         /// </summary>
         /// <param name="sender">Event sender.</param>
         /// <param name="e">Event arguments of ViewPrinted event.</param>
-        public void AppViewPrinted(object sender, Autodesk.Revit.DB.Events.ViewPrintedEventArgs e)
+        public void AppViewPrinted(object sender, ViewPrintedEventArgs e)
         {
             // header information
-            Trace.WriteLine(System.Environment.NewLine + "View Print End: -------");
+            Trace.WriteLine(Environment.NewLine + "View Print End: -------");
             //
             // Dump the events arguments 
             DumpEventArguments(e);
@@ -188,7 +188,7 @@ namespace Revit.SDK.Samples.AutoStamp.CS
             if(RevitAPIEventStatus.Cancelled != e.Status)
             {
                //now event framework will not provide transaction, user need start by self(2009/11/18)
-               Transaction eventTransaction = new Transaction(e.Document, "External Tool");
+               var eventTransaction = new Transaction(e.Document, "External Tool");
                eventTransaction.Start();
                e.Document.Delete(m_newTextNoteId);
                eventTransaction.Commit();
@@ -213,7 +213,7 @@ namespace Revit.SDK.Samples.AutoStamp.CS
             }
             //
             // delete existed log files
-            String printEventsLogFile = Path.Combine(m_assemblyPath, "PrintEventsLog.txt");
+            var printEventsLogFile = Path.Combine(m_assemblyPath, "PrintEventsLog.txt");
             if (File.Exists(printEventsLogFile))
             {
                 File.Delete(printEventsLogFile);
@@ -239,7 +239,7 @@ namespace Revit.SDK.Samples.AutoStamp.CS
             if (eventArgs.GetType().Equals(typeof(ViewPrintingEventArgs)))
             {
                 Trace.WriteLine("ViewPrintingEventArgs Parameters ------>");
-                ViewPrintingEventArgs args = eventArgs as ViewPrintingEventArgs;
+                var args = eventArgs as ViewPrintingEventArgs;
                 Trace.WriteLine("    TotalViews          : " + args.TotalViews);
                 Trace.WriteLine("    View Index          : " + args.Index);
                 Trace.WriteLine("    View Information    :"); 
@@ -248,7 +248,7 @@ namespace Revit.SDK.Samples.AutoStamp.CS
             else if (eventArgs.GetType().Equals(typeof(ViewPrintedEventArgs)))
             {
                 Trace.WriteLine("ViewPrintedEventArgs Parameters ------>");
-                ViewPrintedEventArgs args = eventArgs as ViewPrintedEventArgs;
+                var args = eventArgs as ViewPrintedEventArgs;
                 Trace.WriteLine("    Event Status        : " + args.Status);
                 Trace.WriteLine("    TotalViews          : " + args.TotalViews);
                 Trace.WriteLine("    View Index          : " + args.Index); 

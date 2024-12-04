@@ -69,14 +69,8 @@ namespace Revit.SDK.Samples.ImportExport.CS
         /// </summary>
         public ViewSet PrintableViews
         {
-            get 
-            { 
-                return m_printableViews; 
-            }
-            set 
-            { 
-                m_printableViews = value; 
-            }
+            get => m_printableViews;
+            set => m_printableViews = value;
         }
 
         /// <summary>
@@ -84,14 +78,8 @@ namespace Revit.SDK.Samples.ImportExport.CS
         /// </summary>
         public ViewSet PrintableSheets
         {
-            get 
-            { 
-                return m_printableSheets; 
-            }
-            set 
-            { 
-                m_printableSheets = value;
-            }
+            get => m_printableSheets;
+            set => m_printableSheets = value;
         }      
 
         /// <summary>
@@ -99,14 +87,8 @@ namespace Revit.SDK.Samples.ImportExport.CS
         /// </summary>
         public ViewSet SelectedViews
         {
-            get 
-            {
-                return m_selectedViews;
-            }
-            set 
-            { 
-                m_selectedViews = value;
-            }
+            get => m_selectedViews;
+            set => m_selectedViews = value;
         }
 
         /// <summary>
@@ -114,14 +96,8 @@ namespace Revit.SDK.Samples.ImportExport.CS
         /// </summary>
         public bool Contain3DView
         {
-            get 
-            { 
-                return m_contain3DView; 
-            }
-            set 
-            { 
-                m_contain3DView = value; 
-            }
+            get => m_contain3DView;
+            set => m_contain3DView = value;
         }
         #endregion
 
@@ -144,21 +120,21 @@ namespace Revit.SDK.Samples.ImportExport.CS
         /// </summary>
         private void GetAllPrintableViews()
         {
-            FilteredElementCollector collector = new FilteredElementCollector(m_commandData.Application.ActiveUIDocument.Document);
-            FilteredElementIterator itor = collector.OfClass(typeof(View)).GetElementIterator();
+            var collector = new FilteredElementCollector(m_commandData.Application.ActiveUIDocument.Document);
+            var itor = collector.OfClass(typeof(View)).GetElementIterator();
             itor.Reset();
             m_printableViews.Clear();
             m_printableSheets.Clear();
 
             while (itor.MoveNext())
             {
-                View view = itor.Current as View;
+                var view = itor.Current as View;
                 // skip view templates because they're invisible in project browser, invalid for print
                 if (null == view || view.IsTemplate || !view.CanBePrinted)
                 {
                     continue;
                 }
-                else if(view.ViewType == Autodesk.Revit.DB.ViewType.DrawingSheet)
+                else if(view.ViewType == ViewType.DrawingSheet)
                 {
                     m_printableSheets.Insert(view);
                 }

@@ -32,7 +32,7 @@ namespace Revit.SDK.Samples.ImportExport.CS
     /// <summary>
     /// Provide a dialog which lets users choose views to export.
     /// </summary>
-    public partial class SelectViewsForm : System.Windows.Forms.Form
+    public partial class SelectViewsForm : Form
     {
         /// <summary>
         /// Data class
@@ -65,7 +65,7 @@ namespace Revit.SDK.Samples.ImportExport.CS
         /// <param name="e"></param>
         private void buttonCheckAll_Click(object sender, EventArgs e)
         {
-            for(int i = 0; i < checkedListBoxViews.Items.Count; ++i)
+            for(var i = 0; i < checkedListBoxViews.Items.Count; ++i)
             {
                 checkedListBoxViews.SetItemChecked(i, true);
             }
@@ -78,7 +78,7 @@ namespace Revit.SDK.Samples.ImportExport.CS
         /// <param name="e"></param>
         private void buttonCheckNone_Click(object sender, EventArgs e)
         {
-            for (int i = 0; i < checkedListBoxViews.Items.Count; ++i)
+            for (var i = 0; i < checkedListBoxViews.Items.Count; ++i)
             {
                 checkedListBoxViews.SetItemChecked(i, false);
             }
@@ -137,7 +137,7 @@ namespace Revit.SDK.Samples.ImportExport.CS
         private void buttonOK_Click(object sender, EventArgs e)
         {
             GetSelectedViews();
-            this.Close();           
+            Close();           
         }
 
         /// <summary>
@@ -150,8 +150,8 @@ namespace Revit.SDK.Samples.ImportExport.CS
 
             foreach(int index in checkedListBoxViews.CheckedIndices)
             {
-                String text = checkedListBoxViews.Items[index].ToString();
-                String sheetPrefix = "Drawing Sheet: ";
+                var text = checkedListBoxViews.Items[index].ToString();
+                var sheetPrefix = "Drawing Sheet: ";
                 if (text.StartsWith(sheetPrefix))
                 {
                     text = text.Substring(sheetPrefix.Length);
@@ -170,11 +170,11 @@ namespace Revit.SDK.Samples.ImportExport.CS
                 }
                 else
                 {
-                    String viewType = text.Substring(0, text.IndexOf(": "));
-                    String viewName = text.Substring(text.IndexOf(": ") + 2);
+                    var viewType = text.Substring(0, text.IndexOf(": "));
+                    var viewName = text.Substring(text.IndexOf(": ") + 2);
                     foreach (Autodesk.Revit.DB.View view in m_selectViewsData.PrintableViews)
                     {
-                        Autodesk.Revit.DB.ViewType vt = view.ViewType;
+                        var vt = view.ViewType;
                         if(viewType == vt.ToString() && viewName == view.Name)
                         {
                             m_selectViewsData.SelectedViews.Insert(view);

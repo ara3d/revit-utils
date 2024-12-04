@@ -42,8 +42,8 @@ namespace BIM.STLExport
         /// </summary>
         public int TriangularNumber
         {
-            get { return m_TriangularNumber; }
-            set { m_TriangularNumber = value; }
+            get => m_TriangularNumber;
+            set => m_TriangularNumber = value;
         }
 
         /// <summary>
@@ -107,7 +107,7 @@ namespace BIM.STLExport
         /// </summary>
         public Autodesk.Revit.DB.Color Color
         {
-            set { m_color = value; }
+            set => m_color = value;
         }
 
         /// <summary>
@@ -126,15 +126,15 @@ namespace BIM.STLExport
         /// <returns>True if succeeded, false if failed.</returns>
         public override bool CreateFile()
         {
-            bool succeed = true;
+            var succeed = true;
             try
             {
-                FileAttributes fileAttribute = FileAttributes.Normal;
+                var fileAttribute = FileAttributes.Normal;
 
                 if (File.Exists(m_FileName))
                 {
                     fileAttribute = File.GetAttributes(m_FileName);
-                    FileAttributes tempAtt = fileAttribute & FileAttributes.ReadOnly;
+                    var tempAtt = fileAttribute & FileAttributes.ReadOnly;
                     if (FileAttributes.ReadOnly == tempAtt)
                     {
                         MessageBox.Show(STLExportResource.ERR_FILE_READONLY, STLExportResource.MESSAGE_BOX_TITLE,
@@ -153,12 +153,12 @@ namespace BIM.STLExport
 
                 // write 80 bytes to STL file as the STL file entity name
                 // and preserve 4 bytes space for Triangular Number Section
-                byte[] entityName = new byte[84];
+                var entityName = new byte[84];
                 entityName[0] = (byte)/*MSG0*/'n';
                 entityName[1] = (byte)/*MSG0*/'a';
                 entityName[2] = (byte)/*MSG0*/'m';
                 entityName[3] = (byte)/*MSG0*/'e';
-                for (int i = 4; i < 84; i++)
+                for (var i = 4; i < 84; i++)
                 {
                     entityName[i] = (byte)/*MSG0*/'\0';
                 }
@@ -191,7 +191,7 @@ namespace BIM.STLExport
         /// <returns>True if succeeded, false if failed.</returns>
         public override bool CloseFile()
         {
-            bool succeed = true;
+            var succeed = true;
             if (null != binaryWriter)
             {
                 binaryWriter.Close();
@@ -213,16 +213,16 @@ namespace BIM.STLExport
         /// <returns>True if succeeded, false if failed.</returns>
         public override bool WriteSection(Autodesk.Revit.DB.XYZ normal, double[] vertexArr)
         {
-            bool succeed = true;
+            var succeed = true;
             try
             {
                 // write 3 float numbers to stl file using 12 bytes. 
-                for (int j = 0; j < 3; j++)
+                for (var j = 0; j < 3; j++)
                 {
                     binaryWriter.Write((float)normal[j]);
                 }
 
-                for (int i = 0; i < 9; i++)
+                for (var i = 0; i < 9; i++)
                 {
                     binaryWriter.Write((float)vertexArr[i]);
                 }
@@ -233,7 +233,7 @@ namespace BIM.STLExport
                 else
                 {
                     // add two spaces to stl file using two bytes.
-                    byte[] anotherSpace = new byte[2];
+                    var anotherSpace = new byte[2];
                     anotherSpace[0] = (byte)/*MSG0*/'\0';
                     anotherSpace[1] = (byte)/*MSG0*/'\0';
                     binaryWriter.Write(anotherSpace);
@@ -266,7 +266,7 @@ namespace BIM.STLExport
         /// <returns>True if succeeded, false if failed.</returns>
         public override bool AddTriangularNumberSection()
         {
-            bool succeed = true;
+            var succeed = true;
             try
             {
                 binaryWriter.BaseStream.Seek(80, SeekOrigin.Begin);
@@ -320,15 +320,15 @@ namespace BIM.STLExport
         /// <returns>True if succeeded, false if failed.</returns>
         public override bool CreateFile()
         {
-            bool succeed = true;
+            var succeed = true;
             try
             {
-                FileAttributes fileAttribute = FileAttributes.Normal;
+                var fileAttribute = FileAttributes.Normal;
 
                 if (File.Exists(m_FileName))
                 {
                     fileAttribute = File.GetAttributes(m_FileName);
-                    FileAttributes tempAtt = fileAttribute & FileAttributes.ReadOnly;
+                    var tempAtt = fileAttribute & FileAttributes.ReadOnly;
                     if (FileAttributes.ReadOnly == tempAtt)
                     {
                         MessageBox.Show(STLExportResource.ERR_FILE_READONLY, STLExportResource.MESSAGE_BOX_TITLE,
@@ -371,7 +371,7 @@ namespace BIM.STLExport
         /// <returns>True if succeeded, false if failed.</returns>
         public override bool CloseFile()
         {
-            bool succeed = true;
+            var succeed = true;
             if (null != stlFile)
             {
                 stlFile.Close();
@@ -388,22 +388,22 @@ namespace BIM.STLExport
         /// <returns>True if succeeded, false if failed.</returns>
         public override bool WriteSection(Autodesk.Revit.DB.XYZ normal, double[] vertexArr)
         {
-            bool succeed = true;
+            var succeed = true;
             try
             {
-                StringBuilder normalSb = new StringBuilder(/*MSG0*/"  facet normal ");
+                var normalSb = new StringBuilder(/*MSG0*/"  facet normal ");
 
-                for (int j = 0; j < 3; j++)
+                for (var j = 0; j < 3; j++)
                 {
                     normalSb.Append(normal[j]).Append(/*MSG0*/" ");
                 }
                 stlFile.WriteLine(normalSb);
                 stlFile.WriteLine(/*MSG0*/"    outer loop");
-                for (int i = 0; i < 3; i++)
+                for (var i = 0; i < 3; i++)
                 {
-                    StringBuilder vertexSb = new StringBuilder(/*MSG0*/" vertex ");
+                    var vertexSb = new StringBuilder(/*MSG0*/" vertex ");
 
-                    for (int j = 0; j < 3; j++)
+                    for (var j = 0; j < 3; j++)
                     {
                         vertexSb.Append(vertexArr[i * 3 + j]).Append(/*MSG0*/" ");
                     }

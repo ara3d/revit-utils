@@ -61,12 +61,12 @@ namespace Revit.SDK.Samples.EventsMonitor.CS
         /// Cancelled can be used to signify that the user cancelled the external operation 
         /// at some point. Failure should be returned if the application is unable to proceed with 
         /// the operation.</returns>
-        public Autodesk.Revit.UI.Result Execute(ExternalCommandData commandData,
+        public Result Execute(ExternalCommandData commandData,
                                        ref string message,
                                        ElementSet elements)
         {
 
-            IDictionary<string, string> journaldata = commandData.JournalData;
+            var journaldata = commandData.JournalData;
 
         // These #if directives within file are used to compile project in different purpose:
         // . Build project with Release mode for regression test,
@@ -105,7 +105,7 @@ namespace Revit.SDK.Samples.EventsMonitor.CS
                 ExternalApplication.InfoWindows.Show();
 
 
-                return Autodesk.Revit.UI.Result.Succeeded;
+                return Result.Succeeded;
         }
         #endregion
     }

@@ -57,19 +57,19 @@ namespace Revit.SDK.Samples.ParameterUtils.CS
         /// Cancelled can be used to signify that the user cancelled the external operation 
         /// at some point. Failure should be returned if the application is unable to proceed with 
         /// the operation.</returns>
-        public Autodesk.Revit.UI.Result Execute(ExternalCommandData commandData, ref string message,
+        public Result Execute(ExternalCommandData commandData, ref string message,
             ElementSet elements)
         {
             // set out default result to failure.
-            Autodesk.Revit.UI.Result retRes = Autodesk.Revit.UI.Result.Failed;
+            var retRes = Result.Failed;
 
-            Autodesk.Revit.UI.UIApplication app = commandData.Application;
+            var app = commandData.Application;
 
             // get the elements selected
             // The current selection can be retrieved from the active 
             // document via the selection object
-            ElementSet seletion = new ElementSet();
-            foreach (ElementId elementId in app.ActiveUIDocument.Selection.GetElementIds())
+            var seletion = new ElementSet();
+            foreach (var elementId in app.ActiveUIDocument.Selection.GetElementIds())
             {
                seletion.Insert(app.ActiveUIDocument.Document.GetElement(elementId));
             }
@@ -79,15 +79,15 @@ namespace Revit.SDK.Samples.ParameterUtils.CS
             {
                 // we need to get the first and only element in the selection. Do this by getting 
                 // an iterator. MoveNext and then get the current element.
-                ElementSetIterator it = seletion.ForwardIterator();
+                var it = seletion.ForwardIterator();
                 it.MoveNext();
-                Element element = it.Current as Element;
+                var element = it.Current as Element;
 
                 // Next we need to iterate through the parameters of the element,
                 // as we iterating, we will store the strings that are to be displayed
                 // for the parameters in a string list "parameterItems"
-                List<string> parameterItems = new List<string>();
-                ParameterSet parameters = element.Parameters;
+                var parameterItems = new List<string>();
+                var parameters = element.Parameters;
                 foreach (Parameter param in parameters)
                 {
                     if (param == null) continue;
@@ -96,7 +96,7 @@ namespace Revit.SDK.Samples.ParameterUtils.CS
                     // name type value
                     // create a StringBuilder object to store the string of one parameter
                     // using the character '\t' to delimit parameter name, type and value 
-                    StringBuilder sb = new StringBuilder();
+                    var sb = new StringBuilder();
 
                     // the name of the parameter can be found from its definition.
                     sb.AppendFormat("{0}\t", param.Definition.Name);
@@ -108,33 +108,33 @@ namespace Revit.SDK.Samples.ParameterUtils.CS
                     // Switch based on the storage type
                     switch (param.StorageType)
                     {
-                        case Autodesk.Revit.DB.StorageType.Double:
+                        case StorageType.Double:
                             // append the type and value
                             sb.AppendFormat("double\t{0}", param.AsDouble());
                             break;
-                        case Autodesk.Revit.DB.StorageType.ElementId:
+                        case StorageType.ElementId:
                             // for element ids, we will try and retrieve the element from the 
                             // document if it can be found we will display its name.
                             sb.Append("Element\t");
 
                             // using ActiveDocument.GetElement(the element id) to 
                             // retrieve the element from the active document
-                            Autodesk.Revit.DB.ElementId elemId = param.AsElementId();
-                            Element elem = app.ActiveUIDocument.Document.GetElement(elemId);
+                            var elemId = param.AsElementId();
+                            var elem = app.ActiveUIDocument.Document.GetElement(elemId);
 
                             // if there is an element then display its name, 
                             // otherwise display the fact that it is not set
                             sb.Append(elem != null ? elem.Name : "Not set");
                             break;
-                        case Autodesk.Revit.DB.StorageType.Integer:
+                        case StorageType.Integer:
                             // append the type and value
                             sb.AppendFormat("int\t{0}", param.AsInteger());
                             break;
-                        case Autodesk.Revit.DB.StorageType.String:
+                        case StorageType.String:
                             // append the type and value
                             sb.AppendFormat("string\t{0}", param.AsString());
                             break;
-                        case Autodesk.Revit.DB.StorageType.None:
+                        case StorageType.None:
                             // append the type and value
                             sb.AppendFormat("none\t{0}", param.AsValueString());
                             break;
@@ -147,10 +147,10 @@ namespace Revit.SDK.Samples.ParameterUtils.CS
                 }
 
                 // Create our dialog, passing it the parameters array for display.
-                PropertiesForm propertiesForm = new PropertiesForm(parameterItems.ToArray());
+                var propertiesForm = new PropertiesForm(parameterItems.ToArray());
                 propertiesForm.StartPosition = FormStartPosition.CenterParent;
                 propertiesForm.ShowDialog();
-                retRes = Autodesk.Revit.UI.Result.Succeeded;
+                retRes = Result.Succeeded;
             }
             else
             {

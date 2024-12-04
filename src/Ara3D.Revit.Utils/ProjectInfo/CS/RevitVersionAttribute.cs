@@ -44,10 +44,8 @@ namespace Revit.SDK.Samples.ProjectInfo.CS
         /// <summary>
         /// Gets Revit version names
         /// </summary>
-        public ReadOnlyCollection<ProductType> Names
-        {
-            get { return m_products.AsReadOnly(); }
-        } 
+        public ReadOnlyCollection<ProductType> Names => m_products.AsReadOnly();
+
         #endregion
 
         #region Constructors

@@ -58,23 +58,23 @@ namespace Revit.SDK.Samples.ViewFilters.CS
         /// Cancelled can be used to signify that the user cancelled the external operation 
         /// at some point. Failure should be returned if the application is unable to proceed with 
         /// the operation.</returns>
-        public Autodesk.Revit.UI.Result Execute(Autodesk.Revit.UI.ExternalCommandData commandData,
+        public Result Execute(ExternalCommandData commandData,
                                                ref string message, ElementSet elements)
         {
             try
             {
                 // create a form to display the information of view filters
-                using (ViewFiltersForm infoForm = new ViewFiltersForm(commandData))
+                using (var infoForm = new ViewFiltersForm(commandData))
                 {
                     infoForm.ShowDialog();
                 }
-                return Autodesk.Revit.UI.Result.Succeeded;
+                return Result.Succeeded;
             }
             catch (Exception ex)
             {
                 // If there is something wrong, give error information and return failed
                 message = ex.Message;
-                return Autodesk.Revit.UI.Result.Failed;
+                return Result.Failed;
             }
         }
     }

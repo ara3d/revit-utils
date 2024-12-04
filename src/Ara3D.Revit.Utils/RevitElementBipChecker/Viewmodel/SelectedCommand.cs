@@ -15,7 +15,7 @@ namespace RevitElementBipChecker.Viewmodel
         
         public SelectedCommand(BipCheckerViewmodel vm)
         {
-            int count = vm.UIDoc.GetSelection().Count;
+            var count = vm.UIDoc.GetSelection().Count;
             if (count>0)
             {
                 Element =vm.UIDoc.GetSelection().First();

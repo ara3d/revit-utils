@@ -44,14 +44,8 @@ namespace Revit.SDK.Samples.ProjectInfo.CS
         [TypeConverter(typeof(BuildingTypeConverter))]
         public gbXMLBuildingType BuildingType
         {
-            get
-            {
-                return m_energyDataSettings.BuildingType;
-            }
-            set
-            {
-                m_energyDataSettings.BuildingType = value;
-            }
+            get => m_energyDataSettings.BuildingType;
+            set => m_energyDataSettings.BuildingType = value;
         }
 
         /// <summary>
@@ -61,14 +55,8 @@ namespace Revit.SDK.Samples.ProjectInfo.CS
         [TypeConverter(typeof(ElementIdConverter<Level>))]
         public ElementId GroundPlane
         {
-            get
-            {
-                return m_energyDataSettings.GroundPlane;
-            }
-            set
-            {
-                m_energyDataSettings.GroundPlane = value;
-            }
+            get => m_energyDataSettings.GroundPlane;
+            set => m_energyDataSettings.GroundPlane = value;
         }
 
         /// <summary>
@@ -79,14 +67,8 @@ namespace Revit.SDK.Samples.ProjectInfo.CS
         [RevitVersion(ProductType.MEP)]
         public gbXMLServiceType BuildingService
         {
-            get
-            {
-                return m_energyDataSettings.ServiceType;
-            }
-            set
-            {
-                m_energyDataSettings.ServiceType = value;
-            }
+            get => m_energyDataSettings.ServiceType;
+            set => m_energyDataSettings.ServiceType = value;
         }
 
         /// <summary>
@@ -97,8 +79,8 @@ namespace Revit.SDK.Samples.ProjectInfo.CS
         {
             get
             {
-                ElementId eid = EnergyDataSettings.GetBuildingConstructionSetElementId(m_document);
-                MEPBuildingConstruction mEPBuildingConstruction = RevitStartInfo.GetElement(eid) as MEPBuildingConstruction;
+                var eid = EnergyDataSettings.GetBuildingConstructionSetElementId(m_document);
+                var mEPBuildingConstruction = RevitStartInfo.GetElement(eid) as MEPBuildingConstruction;
                 //MEPBuildingConstruction mEPBuildingConstruction = RevitStartInfo.GetElement(m_energyDataSettings.ConstructionSetElementId) as MEPBuildingConstruction;
                 if(mEPBuildingConstruction != null)
                     return new MEPBuildingConstructionWrapper(mEPBuildingConstruction);
@@ -114,14 +96,8 @@ namespace Revit.SDK.Samples.ProjectInfo.CS
         [RevitVersion(ProductType.MEP)]
         public HVACLoadConstructionClass BuildingConstructionClass
         {
-            get
-            {
-                return m_energyDataSettings.BuildingConstructionClass;
-            }
-            set
-            {
-                m_energyDataSettings.BuildingConstructionClass = value;
-            }
+            get => m_energyDataSettings.BuildingConstructionClass;
+            set => m_energyDataSettings.BuildingConstructionClass = value;
         }
 
         /// <summary>
@@ -131,14 +107,8 @@ namespace Revit.SDK.Samples.ProjectInfo.CS
         [TypeConverter(typeof(ElementIdConverter<Phase>))]
         public ElementId ProjectPhase
         {
-            get
-            {
-                return m_energyDataSettings.ProjectPhase;
-            }
-            set
-            {
-                m_energyDataSettings.ProjectPhase = value;
-            }
+            get => m_energyDataSettings.ProjectPhase;
+            set => m_energyDataSettings.ProjectPhase = value;
         }
 
         /// <summary>
@@ -147,14 +117,8 @@ namespace Revit.SDK.Samples.ProjectInfo.CS
         [Category("Detailed Model"), DisplayName("Sliver Space Tolerance")]
         public Double SliverSpaceTolerance
         {
-            get
-            {
-                return m_energyDataSettings.SliverSpaceTolerance;
-            }
-            set
-            {
-                m_energyDataSettings.SliverSpaceTolerance = value;
-            }
+            get => m_energyDataSettings.SliverSpaceTolerance;
+            set => m_energyDataSettings.SliverSpaceTolerance = value;
         }
 
         /// <summary>
@@ -164,14 +128,8 @@ namespace Revit.SDK.Samples.ProjectInfo.CS
         [TypeConverter(typeof(ExportComplexityConverter))]
         public gbXMLExportComplexity ExportComplexity
         {
-            get
-            {
-                return m_energyDataSettings.ExportComplexity;
-            }
-            set
-            {
-                m_energyDataSettings.ExportComplexity = value;
-            }
+            get => m_energyDataSettings.ExportComplexity;
+            set => m_energyDataSettings.ExportComplexity = value;
         }
 
         /// <summary>
@@ -181,14 +139,8 @@ namespace Revit.SDK.Samples.ProjectInfo.CS
         [RevitVersion(ProductType.MEP)]
         public bool ExportDefaultValues
         {
-            get
-            {
-                return m_energyDataSettings.ExportDefaults;
-            }
-            set
-            {
-                m_energyDataSettings.ExportDefaults = value;
-            }
+            get => m_energyDataSettings.ExportDefaults;
+            set => m_energyDataSettings.ExportDefaults = value;
         }
 
         /// <summary>
@@ -199,14 +151,8 @@ namespace Revit.SDK.Samples.ProjectInfo.CS
         [RevitVersion(ProductType.MEP)]
         public HVACLoadLoadsReportType ProjectReportType
         {
-            get
-            {
-                return m_energyDataSettings.ProjectReportType;
-            }
-            set
-            {
-                m_energyDataSettings.ProjectReportType = value;
-            }
+            get => m_energyDataSettings.ProjectReportType;
+            set => m_energyDataSettings.ProjectReportType = value;
         }
 
         /// <summary>
@@ -215,27 +161,15 @@ namespace Revit.SDK.Samples.ProjectInfo.CS
         [DisplayName("Project Location"), TypeConverter(typeof(ProjectLocationConverter)), RevitVersion(ProductType.MEP, ProductType.Architecture)]
         public ProjectLocation ProjectLocation
         {
-            get
-            {
-                return m_document.ActiveProjectLocation;
-            }
-            set
-            {
-                m_document.ActiveProjectLocation = value;
-            }
+            get => m_document.ActiveProjectLocation;
+            set => m_document.ActiveProjectLocation = value;
         }
 
         /// <summary>
         /// Gets Site Location
         /// </summary>
         [DisplayName("Site Location"), TypeConverter(typeof(WrapperConverter)), RevitVersion(ProductType.MEP, ProductType.Architecture)]
-        public SiteLocationWrapper SiteLocation
-        {
-            get
-            {
-                return new SiteLocationWrapper(m_document.SiteLocation);
-            }
-        }
+        public SiteLocationWrapper SiteLocation => new(m_document.SiteLocation);
 
         #region IWrapper Members
 
@@ -243,13 +177,7 @@ namespace Revit.SDK.Samples.ProjectInfo.CS
         /// Gets the handle object.
         /// </summary>
         [Browsable(false)]
-        public object Handle
-        {
-            get
-            {
-                return m_energyDataSettings;
-            }
-        }
+        public object Handle => m_energyDataSettings;
 
         /// <summary>
         /// Gets the name of the handle.
@@ -257,10 +185,7 @@ namespace Revit.SDK.Samples.ProjectInfo.CS
         [Browsable(false)]
         public string Name
         {
-            get
-            {
-                return "";
-            }
+            get => "";
             set
             {
             }

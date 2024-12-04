@@ -59,7 +59,7 @@ namespace Revit.SDK.Samples.SharedCoordinateSystem.CS
         /// <returns>conversion result</returns>
         public static CityInfoString ConvertFrom(CityInfo cityInfo)
         {
-            CityInfoString cityInfoString = new CityInfoString();            
+            var cityInfoString = new CityInfoString();            
             cityInfoString.Latitude = DoubleToString(cityInfo.Latitude, ValueType.Angle);
             cityInfoString.Longitude = DoubleToString(cityInfo.Longitude, ValueType.Angle);
             return cityInfoString;
@@ -72,7 +72,7 @@ namespace Revit.SDK.Samples.SharedCoordinateSystem.CS
         /// <returns>conversion result</returns>
         public static CityInfo ConvertTo(CityInfoString cityInfoString)
         {
-            CityInfo cityInfo = new CityInfo();
+            var cityInfo = new CityInfo();
             double temp;
 
             //convert Latitude
@@ -126,8 +126,8 @@ namespace Revit.SDK.Samples.SharedCoordinateSystem.CS
            //find first number which is not "0"
            //compare it with precision, then select
            //min of them as final precision
-           int firstNumberPos = 0;
-           double temp = Math.Abs(value);
+           var firstNumberPos = 0;
+           var temp = Math.Abs(value);
            for (firstNumberPos = 1; ; firstNumberPos++)
            {
               temp *= 10;
@@ -169,7 +169,7 @@ namespace Revit.SDK.Samples.SharedCoordinateSystem.CS
 
             if(ValueType.Angle == valueType)
             {
-                char degree = (char)0xb0;
+                var degree = (char)0xb0;
                 displayText += degree;          
             }
             
@@ -184,11 +184,11 @@ namespace Revit.SDK.Samples.SharedCoordinateSystem.CS
         /// <returns>result dealing with</returns>
         public static string DealDecimalNumber(string value, int number)
         {
-            string newValue = value;
+            var newValue = value;
             int dist;
             if (newValue.Contains("."))
             {
-                int index = newValue.IndexOf(".");
+                var index = newValue.IndexOf(".");
                 dist = newValue.Length - (index + 1);
             }
             else
@@ -198,7 +198,7 @@ namespace Revit.SDK.Samples.SharedCoordinateSystem.CS
             }
             if (dist < number)
             {
-                for (int i = 0; i < number - dist; i++)
+                for (var i = 0; i < number - dist; i++)
                 {
                     newValue += "0";
                 }
@@ -243,7 +243,7 @@ namespace Revit.SDK.Samples.SharedCoordinateSystem.CS
         private static bool ParseFromString(string value, ValueType valueType, out double result)
         {
             string newValue = null;
-            string degree = ((char)0xb0).ToString();
+            var degree = ((char)0xb0).ToString();
 
             //if nothing, set result = 0;
             if (value.Length == 0)
@@ -257,14 +257,14 @@ namespace Revit.SDK.Samples.SharedCoordinateSystem.CS
             //check if contain degree symbol
             else if (value.Contains(degree))
             {
-                int index = value.IndexOf(degree);
+                var index = value.IndexOf(degree);
                 newValue = value.Substring(0, index);
             }
             //check if have string" " ,for there is string" " 
             //between value and unit when show in PropertyGrid
             else if (value.Contains(" "))
             {
-                int index = value.IndexOf(" ");
+                var index = value.IndexOf(" ");
                 newValue = value.Substring(0, index);
             }
             //finally if don't have unit name in it 

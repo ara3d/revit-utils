@@ -49,17 +49,17 @@ namespace Revit.SDK.Samples.ViewPrinter.CS
             printerNameLabel.Text = m_printSetup.PrinterName;
             printSetupsComboBox.DataSource = m_printSetup.PrintSettingNames;
             printSetupsComboBox.SelectedItem = m_printSetup.SettingName;
-            this.printSetupsComboBox.SelectedValueChanged += new System.EventHandler(this.printSetupsComboBox_SelectedValueChanged);
+            printSetupsComboBox.SelectedValueChanged += printSetupsComboBox_SelectedValueChanged;
             renameButton.Enabled = deleteButton.Enabled =
                 m_printSetup.SettingName.Equals("<In-Session>") ? false : true;
 
             paperSizeComboBox.DataSource = m_printSetup.PaperSizes;
             paperSizeComboBox.SelectedItem = m_printSetup.PaperSize;
-            this.paperSizeComboBox.SelectedValueChanged += new System.EventHandler(this.sizeComboBox_SelectedValueChanged);
+            paperSizeComboBox.SelectedValueChanged += sizeComboBox_SelectedValueChanged;
             
             paperSourceComboBox.DataSource = m_printSetup.PaperSources;
             paperSourceComboBox.SelectedItem = m_printSetup.PaperSource;
-            this.paperSourceComboBox.SelectedValueChanged += new System.EventHandler(this.sourceComboBox_SelectedValueChanged);
+            paperSourceComboBox.SelectedValueChanged += sourceComboBox_SelectedValueChanged;
             
             if (m_printSetup.PageOrientation == PageOrientationType.Landscape)
             {
@@ -69,17 +69,17 @@ namespace Revit.SDK.Samples.ViewPrinter.CS
             {
                 portraitRadioButton.Checked = true;
             }
-            this.landscapeRadioButton.CheckedChanged += new System.EventHandler(this.landscapeRadioButton_CheckedChanged);
-            this.portraitRadioButton.CheckedChanged += new System.EventHandler(this.portraitRadioButton_CheckedChanged);
+            landscapeRadioButton.CheckedChanged += landscapeRadioButton_CheckedChanged;
+            portraitRadioButton.CheckedChanged += portraitRadioButton_CheckedChanged;
             
             marginTypeComboBox.DataSource = m_printSetup.MarginTypes;
-            this.offsetRadioButton.CheckedChanged += new System.EventHandler(this.offsetRadioButton_CheckedChanged);
-            this.centerRadioButton.CheckedChanged += new System.EventHandler(this.centerRadioButton_CheckedChanged);
-            this.userDefinedMarginYTextBox.TextChanged += new System.EventHandler(this.userDefinedMarginYTextBox_TextChanged);
-            this.userDefinedMarginXTextBox.TextChanged += new System.EventHandler(this.userDefinedMarginXTextBox_TextChanged);
+            offsetRadioButton.CheckedChanged += offsetRadioButton_CheckedChanged;
+            centerRadioButton.CheckedChanged += centerRadioButton_CheckedChanged;
+            userDefinedMarginYTextBox.TextChanged += userDefinedMarginYTextBox_TextChanged;
+            userDefinedMarginXTextBox.TextChanged += userDefinedMarginXTextBox_TextChanged;
 
             marginTypeComboBox.SelectedItem = m_printSetup.SelectedMarginType;
-            this.marginTypeComboBox.SelectedValueChanged += new System.EventHandler(this.marginTypeComboBox_SelectedValueChanged);
+            marginTypeComboBox.SelectedValueChanged += marginTypeComboBox_SelectedValueChanged;
             
             if (m_printSetup.PaperPlacement == PaperPlacementType.Center)
             {
@@ -100,8 +100,8 @@ namespace Revit.SDK.Samples.ViewPrinter.CS
             {
                 vectorRadioButton.Checked = true;
             }
-            this.rasterRadioButton.CheckedChanged += new System.EventHandler(this.rasterRadioButton_CheckedChanged);
-            this.vectorRadioButton.CheckedChanged += new System.EventHandler(this.vectorRadioButton_CheckedChanged);
+            rasterRadioButton.CheckedChanged += rasterRadioButton_CheckedChanged;
+            vectorRadioButton.CheckedChanged += vectorRadioButton_CheckedChanged;
 
             if (m_printSetup.ZoomType == ZoomType.Zoom)
             {
@@ -112,32 +112,32 @@ namespace Revit.SDK.Samples.ViewPrinter.CS
             {
                 fitToPageRadioButton.Checked = true;
             }
-            this.zoomRadioButton.CheckedChanged += new System.EventHandler(this.zoomRadioButton_CheckedChanged);
-            this.fitToPageRadioButton.CheckedChanged += new System.EventHandler(this.fitToPageRadioButton_CheckedChanged);
+            zoomRadioButton.CheckedChanged += zoomRadioButton_CheckedChanged;
+            fitToPageRadioButton.CheckedChanged += fitToPageRadioButton_CheckedChanged;
             
 
             rasterQualityComboBox.DataSource = m_printSetup.RasterQualities;
             rasterQualityComboBox.SelectedItem = m_printSetup.RasterQuality;
-            this.rasterQualityComboBox.SelectedValueChanged += new System.EventHandler(this.rasterQualityComboBox_SelectedValueChanged);
+            rasterQualityComboBox.SelectedValueChanged += rasterQualityComboBox_SelectedValueChanged;
             
             colorsComboBox.DataSource = m_printSetup.Colors;
             colorsComboBox.SelectedItem = m_printSetup.Color;
-            this.colorsComboBox.SelectedValueChanged += new System.EventHandler(this.colorsComboBox_SelectedValueChanged);
+            colorsComboBox.SelectedValueChanged += colorsComboBox_SelectedValueChanged;
 
             ViewLinksInBlueCheckBox.Checked = m_printSetup.ViewLinksinBlue;
-            this.ViewLinksInBlueCheckBox.CheckedChanged += new System.EventHandler(this.ViewLinksInBlueCheckBox_CheckedChanged);
+            ViewLinksInBlueCheckBox.CheckedChanged += ViewLinksInBlueCheckBox_CheckedChanged;
 
             hideScopeBoxedCheckBox.Checked = m_printSetup.HideScopeBoxes;
-            this.hideScopeBoxedCheckBox.CheckedChanged += new System.EventHandler(this.hideScopeBoxedCheckBox_CheckedChanged);
+            hideScopeBoxedCheckBox.CheckedChanged += hideScopeBoxedCheckBox_CheckedChanged;
 
             hideRefWorkPlanesCheckBox.Checked = m_printSetup.HideReforWorkPlanes;
-            this.hideRefWorkPlanesCheckBox.CheckedChanged += new System.EventHandler(this.hideRefWorkPlanesCheckBox_CheckedChanged);
+            hideRefWorkPlanesCheckBox.CheckedChanged += hideRefWorkPlanesCheckBox_CheckedChanged;
 
             hideCropBoundariesCheckBox.Checked = m_printSetup.HideCropBoundaries;
-            this.hideCropBoundariesCheckBox.CheckedChanged += new System.EventHandler(this.hideCropBoundariesCheckBox_CheckedChanged);
+            hideCropBoundariesCheckBox.CheckedChanged += hideCropBoundariesCheckBox_CheckedChanged;
 
             hideUnreferencedViewTagsCheckBox.Checked = m_printSetup.HideUnreferencedViewTags;
-            this.hideUnreferencedViewTagsCheckBox.CheckedChanged += new System.EventHandler(this.hideUnreferencedViewTagsCheckBox_CheckedChanged);
+            hideUnreferencedViewTagsCheckBox.CheckedChanged += hideUnreferencedViewTagsCheckBox_CheckedChanged;
             
         }
 
@@ -266,7 +266,7 @@ namespace Revit.SDK.Samples.ViewPrinter.CS
 
             m_printSetup.VerifyMarginType(marginTypeComboBox);
 
-            System.Collections.ObjectModel.Collection<System.Windows.Forms.Control> controlsToEnableOrNot =
+            var controlsToEnableOrNot =
                 new System.Collections.ObjectModel.Collection<System.Windows.Forms.Control>();
             controlsToEnableOrNot.Add(userDefinedMarginXTextBox);
             controlsToEnableOrNot.Add(userDefinedMarginYTextBox);
@@ -292,7 +292,7 @@ namespace Revit.SDK.Samples.ViewPrinter.CS
 
             m_printSetup.VerifyMarginType(marginTypeComboBox);
 
-            System.Collections.ObjectModel.Collection<System.Windows.Forms.Control> controlsToEnableOrNot =
+            var controlsToEnableOrNot =
                 new System.Collections.ObjectModel.Collection<System.Windows.Forms.Control>();
             controlsToEnableOrNot.Add(userDefinedMarginXTextBox);
             controlsToEnableOrNot.Add(userDefinedMarginYTextBox);
@@ -312,7 +312,7 @@ namespace Revit.SDK.Samples.ViewPrinter.CS
         {
             m_printSetup.SelectedMarginType = (MarginType)marginTypeComboBox.SelectedItem;
 
-            System.Collections.ObjectModel.Collection<System.Windows.Forms.Control> controlsToEnableOrNot =
+            var controlsToEnableOrNot =
                 new System.Collections.ObjectModel.Collection<System.Windows.Forms.Control>();
             controlsToEnableOrNot.Add(userDefinedMarginXTextBox);
             controlsToEnableOrNot.Add(userDefinedMarginYTextBox);
@@ -501,7 +501,7 @@ namespace Revit.SDK.Samples.ViewPrinter.CS
 
         private void saveAsButton_Click(object sender, EventArgs e)
         {
-            using (SaveAsForm dlg = new SaveAsForm(m_printSetup))
+            using (var dlg = new SaveAsForm(m_printSetup))
             {
                 dlg.ShowDialog();
             }
@@ -516,7 +516,7 @@ namespace Revit.SDK.Samples.ViewPrinter.CS
 
         private void renameButton_Click(object sender, EventArgs e)
         {
-            using (ReNameForm dlg = new ReNameForm(m_printSetup))
+            using (var dlg = new ReNameForm(m_printSetup))
             {
                 dlg.ShowDialog();
             }

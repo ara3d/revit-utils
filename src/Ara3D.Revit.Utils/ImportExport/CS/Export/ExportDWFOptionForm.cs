@@ -33,7 +33,7 @@ namespace Revit.SDK.Samples.ImportExport.CS
     /// <summary>
     /// Data class which stores information of lower priority for exporting DWF(x) format.
     /// </summary>
-    public partial class ExportDWFOptionForm : System.Windows.Forms.Form
+    public partial class ExportDWFOptionForm : Form
     {
         /// <summary>
         /// ExportDWFData object

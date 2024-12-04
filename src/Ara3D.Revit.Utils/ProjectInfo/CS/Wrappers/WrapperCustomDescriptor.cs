@@ -56,10 +56,7 @@ namespace Revit.SDK.Samples.ProjectInfo.CS
         /// <summary>
         /// Gets handle object
         /// </summary>
-        public object Handle
-        {
-            get { return m_handle; }
-        }
+        public object Handle => m_handle;
 
         /// <summary>
         /// Gets the name of the handle object if it has the Name property,
@@ -69,10 +66,10 @@ namespace Revit.SDK.Samples.ProjectInfo.CS
         {
             get
             {
-                MethodInfo mi = this.Handle.GetType().GetMethod("get_Name", new Type[0]);
+                var mi = Handle.GetType().GetMethod("get_Name", new Type[0]);
                 if (mi != null)
                 {
-                    object name = mi.Invoke(this.Handle, new object[0]);
+                    var name = mi.Invoke(Handle, new object[0]);
                     if (name != null)
                     {
                         return name.ToString();
@@ -186,19 +183,19 @@ namespace Revit.SDK.Samples.ProjectInfo.CS
         public PropertyDescriptorCollection GetProperties(Attribute[] attributes)
         {
             // get handle's properties
-            PropertyDescriptorCollection collection = TypeDescriptor.GetProperties(m_handle, attributes, false);
+            var collection = TypeDescriptor.GetProperties(m_handle, attributes, false);
             // create empty collection
-            PropertyDescriptorCollection collection2 = new PropertyDescriptorCollection(new PropertyDescriptor[0]);
+            var collection2 = new PropertyDescriptorCollection(new PropertyDescriptor[0]);
 
             // filter properties by RevitVersionAttribute.
             // if there is RevitVersionAttribute specified and the designated names does not 
             // contain current Revit version, the property will not be exposed.
             foreach (PropertyDescriptor pd in collection)
             {
-                bool matchRevitVersion = true;
+                var matchRevitVersion = true;
                 foreach (Attribute att in pd.Attributes)
                 {
-                    RevitVersionAttribute pfa = att as RevitVersionAttribute;
+                    var pfa = att as RevitVersionAttribute;
                     if (pfa != null)
                     {
                         if (!pfa.Names.Contains(RevitStartInfo.RevitProduct))
@@ -240,7 +237,7 @@ namespace Revit.SDK.Samples.ProjectInfo.CS
         /// <returns>The name of the handle object</returns>
         public override string ToString()
         {
-            return this.Name;
+            return Name;
         } 
         #endregion
     }

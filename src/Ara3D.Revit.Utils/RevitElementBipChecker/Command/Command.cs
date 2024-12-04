@@ -16,12 +16,12 @@ namespace RevitElementBipChecker.Command
     {
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
-            UIApplication uiapp = commandData.Application;
-            UIDocument uidoc = uiapp.ActiveUIDocument;
-            Document doc = uidoc.Document;
+            var uiapp = commandData.Application;
+            var uidoc = uiapp.ActiveUIDocument;
+            var doc = uidoc.Document;
 
-            BipCheckerViewmodel vm = new BipCheckerViewmodel(uidoc);
-            MainWindows frMainWindows = new MainWindows(vm);
+            var vm = new BipCheckerViewmodel(uidoc);
+            var frMainWindows = new MainWindows(vm);
             frMainWindows.WindowStartupLocation = WindowStartupLocation.CenterScreen;
             frMainWindows.SetRevitAsWindowOwner();
             frMainWindows.Show();

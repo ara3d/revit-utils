@@ -58,7 +58,7 @@ namespace Revit.SDK.Samples.Openings.CS
         public override void Draw(Graphics g, Matrix translate)
         {
             m_transform = translate;
-            GraphicsPath path = new GraphicsPath();
+            var path = new GraphicsPath();
             path.AddLine(m_line.StartPnt, m_line.EndPnt);
             path.Transform(translate);
             g.DrawPath(m_pen, path);

@@ -86,9 +86,9 @@ namespace Revit.SDK.Samples.ErrorHandling.CS
          try
          {
             // Create failure definition Ids
-            Guid guid1 = new Guid("0C3F66B5-3E26-4d24-A228-7A8358C76D39");
-            Guid guid2 = new Guid("93382A45-89A9-4cfe-8B94-E0B0D9542D34");
-            Guid guid3 = new Guid("A16D08E2-7D06-4bca-96B0-C4E4CC0512F8");
+            var guid1 = new Guid("0C3F66B5-3E26-4d24-A228-7A8358C76D39");
+            var guid2 = new Guid("93382A45-89A9-4cfe-8B94-E0B0D9542D34");
+            var guid3 = new Guid("A16D08E2-7D06-4bca-96B0-C4E4CC0512F8");
             m_idWarning = new FailureDefinitionId(guid1);
             m_idError = new FailureDefinitionId(guid2);
 
@@ -104,7 +104,7 @@ namespace Revit.SDK.Samples.ErrorHandling.CS
             m_fdError.AddResolutionType(FailureResolutionType.DeleteElements, "DeleteElements", typeof(DeleteElements));
             m_fdError.SetDefaultResolutionType(FailureResolutionType.DeleteElements);
          }
-         catch (System.Exception)
+         catch (Exception)
          {
             return Result.Failed;
          }
@@ -130,13 +130,13 @@ namespace Revit.SDK.Samples.ErrorHandling.CS
       /// Cancelled can be used to signify that the user cancelled the external operation 
       /// at some point. Failure should be returned if the application is unable to proceed with 
       /// the operation.</returns>
-      public Autodesk.Revit.UI.Result Execute(ExternalCommandData commandData,
-      ref string message, Autodesk.Revit.DB.ElementSet elements)
+      public Result Execute(ExternalCommandData commandData,
+      ref string message, ElementSet elements)
       {
          m_revitApp = commandData.Application.Application;
          m_doc = commandData.Application.ActiveUIDocument.Document;
 
-         Level level1 = GetLevel();
+         var level1 = GetLevel();
          if (level1 == null)
          {
             throw new Exception("[ERROR] Failed to get level 1");
@@ -148,17 +148,17 @@ namespace Revit.SDK.Samples.ErrorHandling.CS
             // Post a warning and resolve it in FailurePreproccessor
             try
             {
-               Transaction transaction = new Transaction(m_doc, "Warning_FailurePreproccessor");
-               FailureHandlingOptions options = transaction.GetFailureHandlingOptions();
-               FailurePreproccessor preproccessor = new FailurePreproccessor();
+               var transaction = new Transaction(m_doc, "Warning_FailurePreproccessor");
+               var options = transaction.GetFailureHandlingOptions();
+               var preproccessor = new FailurePreproccessor();
                options.SetFailuresPreprocessor(preproccessor);
                transaction.SetFailureHandlingOptions(options);
                transaction.Start();
-               FailureMessage fm = new FailureMessage(m_idWarning);
+               var fm = new FailureMessage(m_idWarning);
                m_doc.PostFailure(fm);
                transaction.Commit();
             }
-            catch (System.Exception)
+            catch (Exception)
             {
                message = "Failed to commit transaction Warning_FailurePreproccessor";
                return Result.Failed;
@@ -168,21 +168,21 @@ namespace Revit.SDK.Samples.ErrorHandling.CS
             // Dismiss the overlapped wall warning in FailurePreproccessor
             try
             {
-               Transaction transaction = new Transaction(m_doc, "Warning_FailurePreproccessor_OverlappedWall");
-               FailureHandlingOptions options = transaction.GetFailureHandlingOptions();
-               FailurePreproccessor preproccessor = new FailurePreproccessor();
+               var transaction = new Transaction(m_doc, "Warning_FailurePreproccessor_OverlappedWall");
+               var options = transaction.GetFailureHandlingOptions();
+               var preproccessor = new FailurePreproccessor();
                options.SetFailuresPreprocessor(preproccessor);
                transaction.SetFailureHandlingOptions(options);
                transaction.Start();
 
-               Line line = Line.CreateBound(new XYZ(-10, 0, 0), new XYZ(-20, 0, 0));
-               Wall wall1 = Wall.Create(m_doc, line, level1.Id, false);
-               Wall wall2 = Wall.Create(m_doc, line, level1.Id, false);
+               var line = Line.CreateBound(new XYZ(-10, 0, 0), new XYZ(-20, 0, 0));
+               var wall1 = Wall.Create(m_doc, line, level1.Id, false);
+               var wall2 = Wall.Create(m_doc, line, level1.Id, false);
                m_doc.Regenerate();
 
                transaction.Commit();
             }
-            catch (System.Exception)
+            catch (Exception)
             {
                message = "Failed to commit transaction Warning_FailurePreproccessor_OverlappedWall";
                return Result.Failed;
@@ -192,21 +192,21 @@ namespace Revit.SDK.Samples.ErrorHandling.CS
             // Post an error and resolve it in FailuresProcessingEvent
             try
             {
-               m_revitApp.FailuresProcessing += new EventHandler<Autodesk.Revit.DB.Events.FailuresProcessingEventArgs>(FailuresProcessing);
-               Transaction transaction = new Transaction(m_doc, "Error_FailuresProcessingEvent");
+               m_revitApp.FailuresProcessing += FailuresProcessing;
+               var transaction = new Transaction(m_doc, "Error_FailuresProcessingEvent");
                transaction.Start();
 
-               Line line = Line.CreateBound(new XYZ(0, 10, 0), new XYZ(20, 10, 0));
-               Wall wall = Wall.Create(m_doc, line, level1.Id, false);
+               var line = Line.CreateBound(new XYZ(0, 10, 0), new XYZ(20, 10, 0));
+               var wall = Wall.Create(m_doc, line, level1.Id, false);
                m_doc.Regenerate();
 
-               FailureMessage fm = new FailureMessage(m_idError);
-               FailureResolution fr = DeleteElements.Create(m_doc, wall.Id);
+               var fm = new FailureMessage(m_idError);
+               var fr = DeleteElements.Create(m_doc, wall.Id);
                fm.AddResolution(FailureResolutionType.DeleteElements, fr);
                m_doc.PostFailure(fm);
                transaction.Commit();
             }
-            catch (System.Exception)
+            catch (Exception)
             {
                message = "Failed to commit transaction Error_FailuresProcessingEvent";
                return Result.Failed;
@@ -216,22 +216,22 @@ namespace Revit.SDK.Samples.ErrorHandling.CS
             // Post an error and resolve it in FailuresProcessor
             try
             {
-               FailuresProcessor processor = new FailuresProcessor();
+               var processor = new FailuresProcessor();
                Application.RegisterFailuresProcessor(processor);
-               Transaction transaction = new Transaction(m_doc, "Error_FailuresProcessor");
+               var transaction = new Transaction(m_doc, "Error_FailuresProcessor");
                transaction.Start();
 
-               Line line = Line.CreateBound(new XYZ(0, 20, 0), new XYZ(20, 20, 0));
-               Wall wall = Wall.Create(m_doc, line, level1.Id, false);
+               var line = Line.CreateBound(new XYZ(0, 20, 0), new XYZ(20, 20, 0));
+               var wall = Wall.Create(m_doc, line, level1.Id, false);
                m_doc.Regenerate();
 
-               FailureMessage fm = new FailureMessage(m_idError);
-               FailureResolution fr = DeleteElements.Create(m_doc, wall.Id);
+               var fm = new FailureMessage(m_idError);
+               var fr = DeleteElements.Create(m_doc, wall.Id);
                fm.AddResolution(FailureResolutionType.DeleteElements, fr);
                m_doc.PostFailure(fm);
                transaction.Commit();
             }
-            catch (System.Exception)
+            catch (Exception)
             {
                message = "Failed to commit transaction Error_FailuresProcessor";
                return Result.Failed;
@@ -253,11 +253,11 @@ namespace Revit.SDK.Samples.ErrorHandling.CS
       /// <param name="e"></param>
       private void FailuresProcessing(object sender, Autodesk.Revit.DB.Events.FailuresProcessingEventArgs e)
       {
-         FailuresAccessor failuresAccessor = e.GetFailuresAccessor();
+         var failuresAccessor = e.GetFailuresAccessor();
          //failuresAccessor
-         String transactionName = failuresAccessor.GetTransactionName();
+         var transactionName = failuresAccessor.GetTransactionName();
 
-         IList<FailureMessageAccessor> fmas = failuresAccessor.GetFailureMessages();
+         var fmas = failuresAccessor.GetFailureMessages();
          if (fmas.Count == 0)
          {
             e.SetProcessingResult(FailureProcessingResult.Continue);
@@ -266,10 +266,10 @@ namespace Revit.SDK.Samples.ErrorHandling.CS
 
          if (transactionName.Equals("Error_FailuresProcessingEvent"))
          {
-            foreach (FailureMessageAccessor fma in fmas)
+            foreach (var fma in fmas)
             {
-               FailureDefinitionId id = fma.GetFailureDefinitionId();
-               if (id == Command.m_idError)
+               var id = fma.GetFailureDefinitionId();
+               if (id == m_idError)
                {
                   failuresAccessor.ResolveFailure(fma);
                }
@@ -290,9 +290,9 @@ namespace Revit.SDK.Samples.ErrorHandling.CS
       {
          Level level1 = null;
 
-         FilteredElementCollector collector = new FilteredElementCollector(m_doc);
-         ElementClassFilter filter = new ElementClassFilter(typeof(Level));
-         IList<Element> levels = collector.WherePasses(filter).ToElements();
+         var collector = new FilteredElementCollector(m_doc);
+         var filter = new ElementClassFilter(typeof(Level));
+         var levels = collector.WherePasses(filter).ToElements();
 
          foreach (Level level in levels)
          {
@@ -320,18 +320,18 @@ namespace Revit.SDK.Samples.ErrorHandling.CS
       /// <returns></returns>
       public FailureProcessingResult PreprocessFailures(FailuresAccessor failuresAccessor)
       {
-         IList<FailureMessageAccessor> fmas = failuresAccessor.GetFailureMessages();
+         var fmas = failuresAccessor.GetFailureMessages();
          if (fmas.Count == 0)
          {
             return FailureProcessingResult.Continue;
          }
 
-         String transactionName = failuresAccessor.GetTransactionName();
+         var transactionName = failuresAccessor.GetTransactionName();
          if (transactionName.Equals("Warning_FailurePreproccessor"))
          {
-            foreach (FailureMessageAccessor fma in fmas)
+            foreach (var fma in fmas)
             {
-               FailureDefinitionId id = fma.GetFailureDefinitionId();
+               var id = fma.GetFailureDefinitionId();
                if (id == Command.m_idWarning)
                {
                   failuresAccessor.DeleteWarning(fma);
@@ -342,9 +342,9 @@ namespace Revit.SDK.Samples.ErrorHandling.CS
          }
          else if (transactionName.Equals("Warning_FailurePreproccessor_OverlappedWall"))
          {
-            foreach (FailureMessageAccessor fma in fmas)
+            foreach (var fma in fmas)
             {
-               FailureDefinitionId id = fma.GetFailureDefinitionId();
+               var id = fma.GetFailureDefinitionId();
                if (id == BuiltInFailures.OverlapFailures.WallsOverlap)
                {
                   failuresAccessor.DeleteWarning(fma);
@@ -380,18 +380,18 @@ namespace Revit.SDK.Samples.ErrorHandling.CS
       /// <returns></returns>
       public FailureProcessingResult ProcessFailures(FailuresAccessor failuresAccessor)
       {
-         IList<FailureMessageAccessor> fmas = failuresAccessor.GetFailureMessages();
+         var fmas = failuresAccessor.GetFailureMessages();
          if (fmas.Count == 0)
          {
             return FailureProcessingResult.Continue;
          }
 
-         String transactionName = failuresAccessor.GetTransactionName();
+         var transactionName = failuresAccessor.GetTransactionName();
          if (transactionName.Equals("Error_FailuresProcessor"))
          {
-            foreach (FailureMessageAccessor fma in fmas)
+            foreach (var fma in fmas)
             {
-               FailureDefinitionId id = fma.GetFailureDefinitionId();
+               var id = fma.GetFailureDefinitionId();
                if (id == Command.m_idError)
                {
                   failuresAccessor.ResolveFailure(fma);

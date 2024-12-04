@@ -38,19 +38,19 @@ namespace Revit.SDK.Samples.MaterialProperties.CS
     /// </summary>
     public class MaterialPropertiesForm : System.Windows.Forms.Form
     {
-        private System.Windows.Forms.Label typeLable;
+        private Label typeLable;
         private System.Windows.Forms.ComboBox typeComboBox;
         private System.Windows.Forms.ComboBox subTypeComboBox;
-        private System.Windows.Forms.Button okButton;
-        private System.Windows.Forms.Button cancelButton;
-        private System.Windows.Forms.Button applyButton;
-        private System.Windows.Forms.Button changeButton;
-        private System.Windows.Forms.DataGrid parameterDataGrid;
+        private Button okButton;
+        private Button cancelButton;
+        private Button applyButton;
+        private Button changeButton;
+        private DataGrid parameterDataGrid;
 
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.Container components = null;
+        private Container components = null;
 
         private MaterialPropertiesForm()
         {
@@ -219,7 +219,7 @@ namespace Revit.SDK.Samples.MaterialProperties.CS
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void MaterialPropFrm_Load(object sender, System.EventArgs e)
+        private void MaterialPropFrm_Load(object sender, EventArgs e)
         {
             LoadCurrentMaterial();
         }
@@ -229,7 +229,7 @@ namespace Revit.SDK.Samples.MaterialProperties.CS
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void typeComboBox_SelectedIndexChanged(object sender, System.EventArgs e)
+        private void typeComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
            if ((StructuralAssetClass)typeComboBox.SelectedIndex == StructuralAssetClass.Metal)
             {
@@ -267,7 +267,7 @@ namespace Revit.SDK.Samples.MaterialProperties.CS
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void subTypeComboBox_SelectedIndexChanged(object sender, System.EventArgs e)
+        private void subTypeComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (null != subTypeComboBox.SelectedValue)
             {
@@ -282,9 +282,9 @@ namespace Revit.SDK.Samples.MaterialProperties.CS
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void cancelButton_Click(object sender, System.EventArgs e)
+        private void cancelButton_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
 
 
@@ -293,14 +293,14 @@ namespace Revit.SDK.Samples.MaterialProperties.CS
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void okButton_Click(object sender, System.EventArgs e)
+        private void okButton_Click(object sender, EventArgs e)
         {
             if (null != subTypeComboBox.SelectedValue)
             {
                 m_dataBuffer.UpdateMaterial(subTypeComboBox.SelectedValue);
                 m_dataBuffer.SetMaterial();
             }
-            this.Close();
+            Close();
         }
 
 
@@ -309,7 +309,7 @@ namespace Revit.SDK.Samples.MaterialProperties.CS
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void applyButton_Click(object sender, System.EventArgs e)
+        private void applyButton_Click(object sender, EventArgs e)
         {
             if (null != subTypeComboBox.SelectedValue)
             {
@@ -324,7 +324,7 @@ namespace Revit.SDK.Samples.MaterialProperties.CS
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void changeButton_Click(object sender, System.EventArgs e)
+        private void changeButton_Click(object sender, EventArgs e)
         {
             TaskDialog.Show("Revit", "This will change the unit weight of all instances that use this material in current document.");
 
@@ -350,7 +350,7 @@ namespace Revit.SDK.Samples.MaterialProperties.CS
             {
                 return;
             }
-            Autodesk.Revit.DB.Material tmp = m_dataBuffer.CurrentMaterial as Autodesk.Revit.DB.Material;
+            var tmp = m_dataBuffer.CurrentMaterial as Material;
             if (null == tmp)
                 return;
 

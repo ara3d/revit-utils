@@ -83,10 +83,10 @@ namespace Revit.SDK.Samples.ProjectInfo.CS
         /// <returns>An element if the element exists, otherwise null</returns>
         public override object ConvertFrom(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
         {
-            string text = value as string;
+            var text = value as string;
             if (!string.IsNullOrEmpty(text))
             {
-                foreach (City city in Cities)
+                foreach (var city in Cities)
                 {
                     if (city.Name == text)
                         return city;
@@ -112,7 +112,7 @@ namespace Revit.SDK.Samples.ProjectInfo.CS
             if (destinationType == typeof(string))
             {
                 if (value == null) return UserDefined;
-                City city = value as City;
+                var city = value as City;
                 if (city != null)
                     return city.Name;
                 else

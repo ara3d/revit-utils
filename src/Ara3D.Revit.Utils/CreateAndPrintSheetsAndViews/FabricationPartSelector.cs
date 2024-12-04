@@ -17,26 +17,26 @@ namespace CreateAndPrintSheetsAndViews
 
     public FabricationPartSelector(UIDocument uidoc)
     {
-      Document doc = uidoc.Document;
-      Selection sel = uidoc.Selection;
+      var doc = uidoc.Document;
+      var sel = uidoc.Selection;
 
       _ids = new List<ElementId>(
-        sel.GetElementIds().Where<ElementId>(
+        sel.GetElementIds().Where(
           id => doc.GetElement(id) is FabricationPart));
 
-      int n = _ids.Count;
+      var n = _ids.Count;
 
       while (0 == n)
       {
         try
         {
-          IList<Reference> refs = sel.PickObjects(
+          var refs = sel.PickObjects(
             ObjectType.Element,
             new FabricationPartSelectionFilter(),
             "Please select fabrication part duct elements");
 
           _ids = new List<ElementId>(
-            refs.Select<Reference, ElementId>(
+            refs.Select(
               r => r.ElementId));
 
           n = _ids.Count;
@@ -49,9 +49,6 @@ namespace CreateAndPrintSheetsAndViews
       }
     }
 
-    public List<ElementId> Ids
-    {
-      get { return _ids; }
-    }
+    public List<ElementId> Ids => _ids;
   }
 }

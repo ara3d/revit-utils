@@ -92,7 +92,7 @@ namespace Revit.SDK.Samples.ViewPrinter.CS
         {
             get
             {
-                IViewSheetSet theSet = m_viewSheetSetting.CurrentViewSheetSet;
+                var theSet = m_viewSheetSetting.CurrentViewSheetSet;
                 return (theSet is ViewSheetSet) ?
                     (theSet as ViewSheetSet).Name : ConstData.InSessionName;
             }
@@ -103,31 +103,19 @@ namespace Revit.SDK.Samples.ViewPrinter.CS
                     m_viewSheetSetting.CurrentViewSheetSet = m_viewSheetSetting.InSession;
                     return;
                 }
-                FilteredElementCollector filteredElementCollector = new FilteredElementCollector(m_doc);
+                var filteredElementCollector = new FilteredElementCollector(m_doc);
                 filteredElementCollector.OfClass(typeof(ViewSheetSet));
-                IEnumerable<ViewSheetSet> viewSheetSets = filteredElementCollector.Cast<ViewSheetSet>().Where<ViewSheetSet>(viewSheetSet => viewSheetSet.Name.Equals(value as string));
-                if (viewSheetSets.Count<ViewSheetSet>() > 0)
+                var viewSheetSets = filteredElementCollector.Cast<ViewSheetSet>().Where(viewSheetSet => viewSheetSet.Name.Equals(value as string));
+                if (viewSheetSets.Count() > 0)
                 {
-                    m_viewSheetSetting.CurrentViewSheetSet = viewSheetSets.First<ViewSheetSet>();
+                    m_viewSheetSetting.CurrentViewSheetSet = viewSheetSets.First();
                 }
             }
         }
 
-        public string Prefix
-        {
-            get
-            {
-                return "Set ";
-            }
-        }
+        public string Prefix => "Set ";
 
-        public int SettingCount
-        {
-            get
-            {
-                return (new FilteredElementCollector(m_doc)).OfClass(typeof(ViewSheetSet)).ToElementIds().Count;
-            }
-        }
+        public int SettingCount => (new FilteredElementCollector(m_doc)).OfClass(typeof(ViewSheetSet)).ToElementIds().Count;
 
         public bool SaveAs(string newName)
         {
@@ -159,12 +147,12 @@ namespace Revit.SDK.Samples.ViewPrinter.CS
         {
             get
             {
-                List<string> names = new List<string>();
-                FilteredElementCollector filteredElementCollector = new FilteredElementCollector(m_doc);
+                var names = new List<string>();
+                var filteredElementCollector = new FilteredElementCollector(m_doc);
                 filteredElementCollector.OfClass(typeof(ViewSheetSet));
-                foreach (Element element in filteredElementCollector)
+                foreach (var element in filteredElementCollector)
                 {
-                    ViewSheetSet viewSheetSet = element as ViewSheetSet;
+                    var viewSheetSet = element as ViewSheetSet;
                     names.Add(viewSheetSet.Name);
                 }
                 names.Add(ConstData.InSessionName);
@@ -216,15 +204,15 @@ namespace Revit.SDK.Samples.ViewPrinter.CS
             if (visibleType == VisibleType.VT_None)
                 return null;
 
-            List<Autodesk.Revit.DB.View> views = new List<Autodesk.Revit.DB.View>();
+            var views = new List<Autodesk.Revit.DB.View>();
             foreach (Autodesk.Revit.DB.View view in m_viewSheetSetting.AvailableViews)
             {
-                if (view.ViewType == Autodesk.Revit.DB.ViewType.DrawingSheet
+                if (view.ViewType == ViewType.DrawingSheet
                     && visibleType == VisibleType.VT_ViewOnly)
                 {
                     continue;   // filter out sheets.
                 }
-                if (view.ViewType != Autodesk.Revit.DB.ViewType.DrawingSheet
+                if (view.ViewType != ViewType.DrawingSheet
                     && visibleType == VisibleType.VT_SheetOnly)
                 {
                     continue;   // filter out views.
@@ -251,7 +239,7 @@ namespace Revit.SDK.Samples.ViewPrinter.CS
 
         public void ChangeCurrentViewSheetSet(List<string> names)
         {
-            ViewSet selectedViews = new ViewSet();
+            var selectedViews = new ViewSet();
 
             if (null != names && 0 < names.Count)
             {
@@ -264,7 +252,7 @@ namespace Revit.SDK.Samples.ViewPrinter.CS
                 }
             }
 
-            IViewSheetSet viewSheetSet = m_viewSheetSetting.CurrentViewSheetSet;
+            var viewSheetSet = m_viewSheetSetting.CurrentViewSheetSet;
             viewSheetSet.Views = selectedViews;
             Save();
 

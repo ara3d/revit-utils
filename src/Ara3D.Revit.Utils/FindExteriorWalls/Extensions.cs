@@ -8,7 +8,7 @@ namespace FindExteriorWalls
     {
         public static Line GetPerpendicularLine(this Curve curve, Wall wall, int leftRight)
         {
-            XYZ orientation = wall.Orientation;
+            var orientation = wall.Orientation;
             if (curve is Arc arc)
                 orientation = ((arc.GetEndPoint(0) + arc.GetEndPoint(1)) / 2 - arc.GetCenterPoint()).Normalize();
             return Line.CreateBound(curve.GetCenterPoint(),

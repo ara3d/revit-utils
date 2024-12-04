@@ -57,24 +57,24 @@ namespace Revit.SDK.Samples.ProjectInfo.CS
         /// Cancelled can be used to signify that the user cancelled the external operation 
         /// at some point. Failure should be returned if the application is unable to proceed with 
         /// the operation.</returns>
-        public Result Execute(ExternalCommandData commandData, ref string message, Autodesk.Revit.DB.ElementSet elements)
+        public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
             // initialize global information
             RevitStartInfo.RevitApp = commandData.Application.Application;
             RevitStartInfo.RevitDoc = commandData.Application.ActiveUIDocument.Document;
             RevitStartInfo.RevitProduct = commandData.Application.Application.Product;
 
-            Transaction transaction = new Transaction(RevitStartInfo.RevitDoc, "ProjectInfo");
+            var transaction = new Transaction(RevitStartInfo.RevitDoc, "ProjectInfo");
             try
             {
                 // Start transaction
                 transaction.Start();
 
                 // get current project information
-                Autodesk.Revit.DB.ProjectInfo pi = commandData.Application.ActiveUIDocument.Document.ProjectInformation;
+                var pi = commandData.Application.ActiveUIDocument.Document.ProjectInformation;
 
                 // show main form
-                using (ProjectInfoForm pif = new ProjectInfoForm(new ProjectInfoWrapper(pi)))
+                using (var pif = new ProjectInfoForm(new ProjectInfoWrapper(pi)))
                 {
                     pif.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
                     if (pif.ShowDialog() == System.Windows.Forms.DialogResult.OK)

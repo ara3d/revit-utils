@@ -46,19 +46,19 @@ namespace Revit.SDK.Samples.Site.CS
             try
             {
                 TaskDialog.Show("Preprocess failures", "Hello");
-                IList<FailureMessageAccessor> failureMessages = failuresAccessor.GetFailureMessages();
-                int numberOfFailures = failureMessages.Count;
+                var failureMessages = failuresAccessor.GetFailureMessages();
+                var numberOfFailures = failureMessages.Count;
                 TaskDialog.Show("Preprocess failures", "Found " + numberOfFailures + " failure messages.");
                 if (numberOfFailures < 5)
                 {
-                    foreach (FailureMessageAccessor msgAccessor in failureMessages)
+                    foreach (var msgAccessor in failureMessages)
                     {
                         TaskDialog.Show("Failure!", msgAccessor.GetDescriptionText());
                     }
                 }
                 else
                 {
-                    TaskDialog.Show("Failure 1 of " + numberOfFailures, failureMessages.First<FailureMessageAccessor>().GetDescriptionText());
+                    TaskDialog.Show("Failure 1 of " + numberOfFailures, failureMessages.First().GetDescriptionText());
                 }
                 TaskDialog.Show("Preprocess failures", "Goodbye");
                 return FailureProcessingResult.Continue;

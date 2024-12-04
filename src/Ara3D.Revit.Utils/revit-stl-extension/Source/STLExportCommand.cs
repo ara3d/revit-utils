@@ -36,7 +36,7 @@ namespace BIM.STLExport
         /// <summary>
         /// The application object for the active instance of Autodesk Revit.
         /// </summary>
-        private Autodesk.Revit.UI.UIApplication m_Revit;
+        private UIApplication m_Revit;
 
         /// <summary>
         /// Implement the member of IExternalCommand Execute.
@@ -53,20 +53,20 @@ namespace BIM.STLExport
         /// <returns>
         /// A value that signifies if yout command was successful, failed or the user wishes to cancel.
         /// </returns>
-        public Autodesk.Revit.UI.Result Execute(ExternalCommandData commandData,
+        public Result Execute(ExternalCommandData commandData,
             ref string message, ElementSet elements)
         {
             m_Revit = commandData.Application;
 
             ///pop up the STL export form
-            using (STLExportForm exportForm = new STLExportForm(m_Revit))
+            using (var exportForm = new STLExportForm(m_Revit))
             {
                 if (DialogResult.Cancel == exportForm.ShowDialog())
                 {
-                    return Autodesk.Revit.UI.Result.Cancelled;
+                    return Result.Cancelled;
                 }
             }
-            return Autodesk.Revit.UI.Result.Succeeded;
+            return Result.Succeeded;
         }
     }
 }

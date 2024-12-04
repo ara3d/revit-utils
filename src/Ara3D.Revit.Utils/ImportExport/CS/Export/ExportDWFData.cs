@@ -53,15 +53,15 @@ namespace Revit.SDK.Samples.ImportExport.CS
         /// <summary>
         /// List of image quality for DWF export
         /// </summary>
-        List<Autodesk.Revit.DB.DWFImageQuality> m_ImageQualities;
+        List<DWFImageQuality> m_ImageQualities;
         /// <summary>
         /// Selected image quality for DWF export
         /// </summary>
-        Autodesk.Revit.DB.DWFImageQuality m_dwfImageQuality;
+        DWFImageQuality m_dwfImageQuality;
         /// <summary>
         /// Selected image format for DWF export
         /// </summary>
-        Autodesk.Revit.DB.DWFImageFormat m_dwfImageFormat;
+        DWFImageFormat m_dwfImageFormat;
         #endregion
 
         #region Class Properties
@@ -70,14 +70,8 @@ namespace Revit.SDK.Samples.ImportExport.CS
         /// </summary>
         public bool ExportObjectData
         {
-            get 
-            { 
-                return m_exportObjectData; 
-            }
-            set 
-            { 
-                m_exportObjectData = value; 
-            }
+            get => m_exportObjectData;
+            set => m_exportObjectData = value;
         }
 
         /// <summary>
@@ -85,14 +79,8 @@ namespace Revit.SDK.Samples.ImportExport.CS
         /// </summary>
         public bool ExportMergeFiles
         {
-            get
-            {
-                return m_exportMergeFiles;
-            }
-            set
-            {
-                m_exportMergeFiles = value;
-            }
+            get => m_exportMergeFiles;
+            set => m_exportMergeFiles = value;
         }  
 
         /// <summary>
@@ -100,59 +88,35 @@ namespace Revit.SDK.Samples.ImportExport.CS
         /// </summary>
         public bool ExportAreas
         {
-            get
-            {
-                return m_exportAreas;
-            }
-            set
-            {
-                m_exportAreas = value;
-            }
+            get => m_exportAreas;
+            set => m_exportAreas = value;
         }
 
         /// <summary>
         /// Selected image format for DWF export
         /// </summary>
-        public Autodesk.Revit.DB.DWFImageFormat DwfImageFormat
+        public DWFImageFormat DwfImageFormat
         {
-            get 
-            { 
-                return m_dwfImageFormat; 
-            }
-            set 
-            { 
-                m_dwfImageFormat = value; 
-            }
+            get => m_dwfImageFormat;
+            set => m_dwfImageFormat = value;
         }
 
         /// <summary>
         /// Selected image quality for DWF export
         /// </summary>
-        public Autodesk.Revit.DB.DWFImageQuality DwfImageQuality
+        public DWFImageQuality DwfImageQuality
         {
-            get 
-            { 
-                return m_dwfImageQuality; 
-            }
-            set 
-            { 
-                m_dwfImageQuality = value; 
-            }
+            get => m_dwfImageQuality;
+            set => m_dwfImageQuality = value;
         }
 
         /// <summary>
         /// List of image quality for DWF export
         /// </summary>
-        public List<Autodesk.Revit.DB.DWFImageQuality> ImageQualities
+        public List<DWFImageQuality> ImageQualities
         {
-            get 
-            { 
-                return m_ImageQualities; 
-            }
-            set 
-            { 
-                m_ImageQualities = value; 
-            }
+            get => m_ImageQualities;
+            set => m_ImageQualities = value;
         }
         #endregion
 
@@ -176,10 +140,10 @@ namespace Revit.SDK.Samples.ImportExport.CS
             m_exportObjectData = true;
             m_exportAreas = false;
             m_exportMergeFiles = true;
-            m_ImageQualities = new List<Autodesk.Revit.DB.DWFImageQuality>();
-            m_ImageQualities.Add(Autodesk.Revit.DB.DWFImageQuality.Low);
-            m_ImageQualities.Add(Autodesk.Revit.DB.DWFImageQuality.Medium);
-            m_ImageQualities.Add(Autodesk.Revit.DB.DWFImageQuality.High);
+            m_ImageQualities = new List<DWFImageQuality>();
+            m_ImageQualities.Add(DWFImageQuality.Low);
+            m_ImageQualities.Add(DWFImageQuality.Medium);
+            m_ImageQualities.Add(DWFImageQuality.High);
 
             // Export DWF
             if (m_exportFormat == ExportFormat.DWF)
@@ -201,13 +165,13 @@ namespace Revit.SDK.Samples.ImportExport.CS
         /// <returns></returns>
         public override bool Export()
         {
-            Transaction transaction = new Transaction(m_activeDoc, "Export_To_DWF");
+            var transaction = new Transaction(m_activeDoc, "Export_To_DWF");
             transaction.Start();
-            bool exported = false;
+            var exported = false;
             base.Export();
 
             //parameter : ViewSet views
-            ViewSet views = new ViewSet();
+            var views = new ViewSet();
             if (m_currentViewOnly)
             {
                 views.Insert(m_activeDoc.ActiveView);
@@ -220,7 +184,7 @@ namespace Revit.SDK.Samples.ImportExport.CS
             // Export DWFx
             if (m_exportFormat == ExportFormat.DWFx)
             {
-                DWFXExportOptions options = new DWFXExportOptions();
+                var options = new DWFXExportOptions();
                 options.ExportObjectData = m_exportObjectData;
                 options.ExportingAreas = m_exportAreas;
                 options.MergedViews = m_exportMergeFiles;
@@ -231,7 +195,7 @@ namespace Revit.SDK.Samples.ImportExport.CS
             // Export DWF
             else
             {
-                DWFExportOptions options = new DWFExportOptions();
+                var options = new DWFExportOptions();
                 options.ExportObjectData = m_exportObjectData;
                 options.ExportingAreas = m_exportAreas;
                 options.MergedViews = m_exportMergeFiles;

@@ -34,8 +34,8 @@ namespace BIM.STLExport
 
         public bool CancelProcess
         {
-            get { return m_CancelProcess; }
-            set { m_CancelProcess = value; }
+            get => m_CancelProcess;
+            set => m_CancelProcess = value;
         }
 
         /// <summary>
@@ -56,7 +56,7 @@ namespace BIM.STLExport
             m_CancelProcess = !m_CancelProcess;
 
             if (!m_CancelProcess)
-                this.Close();
+                Close();
         }
     }
 }

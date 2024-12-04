@@ -57,21 +57,21 @@ namespace Revit.SDK.Samples.PrintLog.CS
         /// Cancelled can be used to signify that the user cancelled the external operation 
         /// at some point. Failure should be returned if the application is unable to proceed with
         /// the operation.</returns>
-        public Autodesk.Revit.UI.Result Execute(ExternalCommandData commandData, 
-            ref string message, Autodesk.Revit.DB.ElementSet elements)
+        public Result Execute(ExternalCommandData commandData, 
+            ref string message, ElementSet elements)
         {
             // Filter all printable views in current document and print them,
             // the print will raise events registered in controlled application.
             // After run this external command please refer to log files under folder of this assembly.
-            Document document = commandData.Application.ActiveUIDocument.Document;
+            var document = commandData.Application.ActiveUIDocument.Document;
             try
             {
-                List<Autodesk.Revit.DB.Element> viewElems = new List<Autodesk.Revit.DB.Element>();
-                FilteredElementCollector collector = new FilteredElementCollector(document);
+                var viewElems = new List<Element>();
+                var collector = new FilteredElementCollector(document);
                 viewElems.AddRange(collector.OfClass(typeof(View)).ToElements());
                 //
                 // Filter all printable views 
-                ViewSet printableViews = new ViewSet();
+                var printableViews = new ViewSet();
                 foreach (View view in viewElems)
                 {
                     // skip view templates because they're invalid for print
@@ -82,8 +82,8 @@ namespace Revit.SDK.Samples.PrintLog.CS
                 }
                 // 
                 // Print to file to folder of assembly
-                String assemblyPath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-                PrintManager pm = document.PrintManager;
+                var assemblyPath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+                var pm = document.PrintManager;
                 pm.PrintToFile = true;
                 pm.PrintToFileName = assemblyPath + "\\PrintOut.prn";
                 pm.Apply();
@@ -94,11 +94,11 @@ namespace Revit.SDK.Samples.PrintLog.CS
             catch(Exception ex)
             {
                 message = ex.Message;
-                return Autodesk.Revit.UI.Result.Failed;
+                return Result.Failed;
             }
             //
             // return succeed by default
-            return Autodesk.Revit.UI.Result.Succeeded;
+            return Result.Succeeded;
         }
         #endregion
     }

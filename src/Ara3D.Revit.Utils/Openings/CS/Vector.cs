@@ -53,14 +53,8 @@ namespace Revit.SDK.Samples.Openings.CS
         /// </summary>
         public double X
         {
-            get
-            {
-                return m_x;
-            }
-            set
-            {
-                m_x = value;
-            }
+            get => m_x;
+            set => m_x = value;
         }
 
         /// <summary>
@@ -68,14 +62,8 @@ namespace Revit.SDK.Samples.Openings.CS
         /// </summary>
         public double Y
         {
-            get
-            {
-                return m_y;
-            }
-            set
-            {
-                m_y = value;
-            }
+            get => m_y;
+            set => m_y = value;
         }
 
         /// <summary>
@@ -83,14 +71,8 @@ namespace Revit.SDK.Samples.Openings.CS
         /// </summary>
         public double Z
         {
-            get
-            {
-                return m_z;
-            }
-            set
-            {
-                m_z = value;
-            }
+            get => m_z;
+            set => m_z = value;
         }
 
         /// <summary>
@@ -159,8 +141,8 @@ namespace Revit.SDK.Samples.Openings.CS
         /// </summary>
         public Vector GetNormal()
         {
-            Vector direct = new Vector();
-            double len = GetLength();
+            var direct = new Vector();
+            var len = GetLength();
             direct.X = m_x / len;
             direct.Y = m_y / len;
             direct.Z = m_z / len;
@@ -175,7 +157,7 @@ namespace Revit.SDK.Samples.Openings.CS
         /// <returns>add two vector</returns>
         public static Vector operator +(Vector lhs, Vector rhs)
         {
-            Vector result = new Vector(lhs);
+            var result = new Vector(lhs);
             result.X += rhs.X;
             result.Y += rhs.Y;
             result.Z += rhs.Z;
@@ -190,7 +172,7 @@ namespace Revit.SDK.Samples.Openings.CS
         /// <returns>subtraction of two vector</returns>
         public static Vector operator -(Vector lhs, Vector rhs)
         {
-            Vector result = new Vector(lhs);
+            var result = new Vector(lhs);
             result.X -= rhs.X;
             result.Y -= rhs.Y;
             result.Z -= rhs.Z;
@@ -204,7 +186,7 @@ namespace Revit.SDK.Samples.Openings.CS
         /// <returns>negative of vector</returns>
         public static Vector operator -(Vector lhs)
         {
-            Vector result = new Vector(lhs);
+            var result = new Vector(lhs);
             result.X = -lhs.X;
             result.Y = -lhs.Y;
             result.Z = -lhs.Z;
@@ -219,17 +201,17 @@ namespace Revit.SDK.Samples.Openings.CS
         /// <returns> normal vector of two vector</returns>
         public static Vector operator &(Vector lhs, Vector rhs)
         {
-            double v1 = lhs.X;
-            double v2 = lhs.Y;
-            double v3 = lhs.Z;
+            var v1 = lhs.X;
+            var v2 = lhs.Y;
+            var v3 = lhs.Z;
 
-            double u1 = rhs.X;
-            double u2 = rhs.Y;
-            double u3 = rhs.Z;
+            var u1 = rhs.X;
+            var u2 = rhs.Y;
+            var u3 = rhs.Z;
 
-            double x = v2 * u3 - v3 * u2;
-            double y = v3 * u1 - v1 * u3;
-            double z = v1 * u2 - v2 * u1;
+            var x = v2 * u3 - v3 * u2;
+            var y = v3 * u1 - v1 * u3;
+            var z = v1 * u2 - v2 * u1;
 
             return new Vector(x, y, z);
         }
@@ -307,7 +289,7 @@ namespace Revit.SDK.Samples.Openings.CS
         /// <returns> angle of two vector</returns>
         public static double GetAngleOf2Vectors(Vector lhs, Vector rhs, bool acuteAngleDesired)
         {
-            double angle = Math.Acos(lhs.GetNormal() * rhs.GetNormal());
+            var angle = Math.Acos(lhs.GetNormal() * rhs.GetNormal());
             if (acuteAngleDesired && angle > Math.PI / 2)
             {
                 angle = Math.PI - angle;
@@ -324,7 +306,7 @@ namespace Revit.SDK.Samples.Openings.CS
         {
             try
             {
-                Vector rhs = (Vector)obj;
+                var rhs = (Vector)obj;
                 return IsEqual(this, rhs);
             }
             catch

@@ -55,10 +55,10 @@ namespace Revit.SDK.Samples.ImportExport.CS
         {
 
             //Import	
-            Transaction t = new Transaction(m_activeDoc);
+            var t = new Transaction(m_activeDoc);
             t.SetName("Import");
             t.Start();
-            Document doc =m_commandData.Application.Application.OpenBuildingComponentDocument(m_importFileFullName);
+            var doc =m_commandData.Application.Application.OpenBuildingComponentDocument(m_importFileFullName);
             t.Commit();
 
             return doc == null ? false : true;

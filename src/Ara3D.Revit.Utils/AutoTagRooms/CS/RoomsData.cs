@@ -66,50 +66,32 @@ namespace Revit.SDK.Samples.AutoTagRooms.CS
         /// <summary>
         /// Get all the rooms in the current document
         /// </summary>
-        public ReadOnlyCollection<Room> Rooms
-        {
-            get
-            {
-                return new ReadOnlyCollection<Room>(m_rooms);
-            }
-        }
+        public ReadOnlyCollection<Room> Rooms => new(m_rooms);
 
         /// <summary>
         /// Get all the levels which have rooms in the current document
         /// </summary>
-        public ReadOnlyCollection<Level> Levels
-        {
-            get
-            {
-                return new ReadOnlyCollection<Level>(m_levels);
-            }
-        }
+        public ReadOnlyCollection<Level> Levels => new(m_levels);
 
         /// <summary>
         /// Get all the RoomTagTypes in the current document
         /// </summary>
-        public ReadOnlyCollection<RoomTagType> RoomTagTypes
-        {
-            get
-            {
-                return new ReadOnlyCollection<RoomTagType>(m_roomTagTypes);
-            }
-        }
+        public ReadOnlyCollection<RoomTagType> RoomTagTypes => new(m_roomTagTypes);
 
         /// <summary>
         /// Find all the rooms in the current document
         /// </summary>
         private void GetRooms()
         {
-            Document document = m_revit.ActiveUIDocument.Document;
+            var document = m_revit.ActiveUIDocument.Document;
             foreach (PlanTopology planTopology in document.PlanTopologies)
             {
                 if (planTopology.GetRoomIds().Count != 0 && planTopology.Level != null)
                 {
                     m_levels.Add(planTopology.Level);
-                    foreach (ElementId eid in planTopology.GetRoomIds())
+                    foreach (var eid in planTopology.GetRoomIds())
                     {
-                        Room tmpRoom = document.GetElement(eid) as Room;
+                        var tmpRoom = document.GetElement(eid) as Room;
 
                         if (document.GetElement(tmpRoom.LevelId) != null && m_roomWithTags.ContainsKey(tmpRoom.Id) == false)
                         {
@@ -126,10 +108,10 @@ namespace Revit.SDK.Samples.AutoTagRooms.CS
         /// </summary>
         private void GetRoomTagTypes()
         {
-            FilteredElementCollector filteredElementCollector = new FilteredElementCollector(m_revit.ActiveUIDocument.Document);
+            var filteredElementCollector = new FilteredElementCollector(m_revit.ActiveUIDocument.Document);
             filteredElementCollector.OfClass(typeof(FamilySymbol));
             filteredElementCollector.OfCategory(BuiltInCategory.OST_RoomTags);
-            m_roomTagTypes = filteredElementCollector.Cast<RoomTagType>().ToList<RoomTagType>();
+            m_roomTagTypes = filteredElementCollector.Cast<RoomTagType>().ToList();
         }
 
         /// <summary>
@@ -137,17 +119,17 @@ namespace Revit.SDK.Samples.AutoTagRooms.CS
         /// </summary>
         private void GetRoomWithTags()
         {
-            Document document = m_revit.ActiveUIDocument.Document;
-            IEnumerable<RoomTag> roomTags = from elem in ((new FilteredElementCollector(document)).WherePasses(new RoomTagFilter()).ToElements())
+            var document = m_revit.ActiveUIDocument.Document;
+            var roomTags = from elem in ((new FilteredElementCollector(document)).WherePasses(new RoomTagFilter()).ToElements())
                                             let roomTag = elem as RoomTag
                                             where (roomTag != null) && (roomTag.Room != null)
                                             select roomTag;
 
-            foreach (RoomTag roomTag in roomTags)
+            foreach (var roomTag in roomTags)
             {
                 if (m_roomWithTags.ContainsKey(roomTag.Room.Id))
                 {
-                    List<RoomTag> tmpList = m_roomWithTags[roomTag.Room.Id];
+                    var tmpList = m_roomWithTags[roomTag.Room.Id];
                     tmpList.Add(roomTag);
                 }
             }
@@ -160,23 +142,23 @@ namespace Revit.SDK.Samples.AutoTagRooms.CS
         /// <param name="tagType">The room tag type</param>
         public void AutoTagRooms(Level level, RoomTagType tagType)
         {
-            PlanTopology planTopology = m_revit.ActiveUIDocument.Document.get_PlanTopology(level);
+            var planTopology = m_revit.ActiveUIDocument.Document.get_PlanTopology(level);
 
-            SubTransaction subTransaction = new SubTransaction(m_revit.ActiveUIDocument.Document);
+            var subTransaction = new SubTransaction(m_revit.ActiveUIDocument.Document);
             subTransaction.Start();
-            foreach (ElementId eid in planTopology.GetRoomIds())
+            foreach (var eid in planTopology.GetRoomIds())
             {
-                Room tmpRoom = m_revit.ActiveUIDocument.Document.GetElement(eid) as Room;
+                var tmpRoom = m_revit.ActiveUIDocument.Document.GetElement(eid) as Room;
 
                 if (m_revit.ActiveUIDocument.Document.GetElement(tmpRoom.LevelId) != null && tmpRoom.Location != null)
                 {
                     // Create a specified type RoomTag to tag a room
-                    LocationPoint locationPoint = tmpRoom.Location as LocationPoint;
-                    Autodesk.Revit.DB.UV point = new Autodesk.Revit.DB.UV(locationPoint.Point.X, locationPoint.Point.Y);
-                    RoomTag newTag = m_revit.ActiveUIDocument.Document.Create.NewRoomTag(new LinkElementId(tmpRoom.Id), point, null);
+                    var locationPoint = tmpRoom.Location as LocationPoint;
+                    var point = new UV(locationPoint.Point.X, locationPoint.Point.Y);
+                    var newTag = m_revit.ActiveUIDocument.Document.Create.NewRoomTag(new LinkElementId(tmpRoom.Id), point, null);
                     newTag.RoomTagType = tagType;
 
-                    List<RoomTag> tagListInTheRoom = m_roomWithTags[newTag.Room.Id];
+                    var tagListInTheRoom = m_roomWithTags[newTag.Room.Id];
                     tagListInTheRoom.Add(newTag);
                 }
 
@@ -192,9 +174,9 @@ namespace Revit.SDK.Samples.AutoTagRooms.CS
         /// <returns></returns>
         public int GetTagNumber(Room room, RoomTagType tagType)
         {
-            int count = 0;
-            List<RoomTag> tagListInTheRoom = m_roomWithTags[room.Id];
-            foreach (RoomTag roomTag in tagListInTheRoom)
+            var count = 0;
+            var tagListInTheRoom = m_roomWithTags[room.Id];
+            foreach (var roomTag in tagListInTheRoom)
             {
                 if (roomTag.RoomTagType.Id == tagType.Id)
                 {

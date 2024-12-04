@@ -64,7 +64,7 @@ namespace Revit.SDK.Samples.Custom2DExporter.CS
          if (!view.CanBePrinted || view.IsTemplate)
             return false;
 
-         ICollection<ViewType> exportableTypes = GetExportableViewTypes();
+         var exportableTypes = GetExportableViewTypes();
          if (!exportableTypes.Contains(view.ViewType))
             return false;
 
@@ -79,8 +79,8 @@ namespace Revit.SDK.Samples.Custom2DExporter.CS
                                      out IList<XYZ> points,
                                      out ResultsSummary resultsSummary)
       {
-         TessellatedGeomAndText2DExportContext context = new TessellatedGeomAndText2DExportContext(out points);
-         CustomExporter exporter = new CustomExporter(exportableView.Document, context);
+         var context = new TessellatedGeomAndText2DExportContext(out points);
+         var exporter = new CustomExporter(exportableView.Document, context);
          exporter.IncludeGeometricObjects = includeGeometricObjects;
          exporter.Export2DIncludingAnnotationObjects = export2DIncludingAnnotationObjects;
          exporter.Export2DGeometricObjectsIncludingPatternLines = export2DGeometricObjectsIncludingPatternLines;
@@ -116,9 +116,9 @@ namespace Revit.SDK.Samples.Custom2DExporter.CS
       /// <param name="resultsSummary"></param>
       private static void ShowResults(ResultsSummary resultsSummary)
       {
-         TaskDialog td = new TaskDialog("Results of 2D export");
+         var td = new TaskDialog("Results of 2D export");
          td.MainInstruction = String.Format("2D exporter exported {0} elements", resultsSummary.numElements);
-         String details = String.Format("There were {0} text nodes exported.\n\n",
+         var details = String.Format("There were {0} text nodes exported.\n\n",
                                          resultsSummary.numTexts);
 
          if (resultsSummary.numTexts > 0 && resultsSummary.texts.Length > 0)
@@ -153,11 +153,11 @@ namespace Revit.SDK.Samples.Custom2DExporter.CS
       {
          try
          {
-            UIDocument uiDoc = commandData.Application.ActiveUIDocument;
-            Autodesk.Revit.DB.View activeView = uiDoc.ActiveView;
+            var uiDoc = commandData.Application.ActiveUIDocument;
+            var activeView = uiDoc.ActiveView;
             if (!isExportableView(activeView))
             {
-               TaskDialog td = new TaskDialog("Cannot export view.");
+               var td = new TaskDialog("Cannot export view.");
                td.MainInstruction = String.Format("Only plans, elevations and sections can be exported.");
 
                td.Show();
@@ -165,7 +165,7 @@ namespace Revit.SDK.Samples.Custom2DExporter.CS
                return Result.Succeeded;
             }
 
-            using (Export2DView exportForm = new Export2DView())
+            using (var exportForm = new Export2DView())
             {
                if (DialogResult.OK == exportForm.ShowDialog())
                {

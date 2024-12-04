@@ -87,11 +87,11 @@ namespace Revit.SDK.Samples.ViewFilters.CS
         public static bool Equals(ICollection<T> coll1, ICollection<T> coll2)
         {
             if (coll1.Count != coll2.Count) return false;
-            foreach (T val1 in coll1)
+            foreach (var val1 in coll1)
             {
                 if (!coll2.Contains(val1)) return false;
             }
-            foreach (T val2 in coll2)
+            foreach (var val2 in coll2)
             {
                 if (!coll1.Contains(val2)) return false;
             }

@@ -40,46 +40,22 @@ namespace Revit.SDK.Samples.Openings.CS
         /// <summary>
         /// Property to get origin of user coordinate system
         /// </summary>
-        public Vector Origin
-        {
-            get
-            {
-                return m_origin;
-            }
-        }
+        public Vector Origin => m_origin;
 
         /// <summary>
         /// Property to get X Axis of user coordinate system
         /// </summary>
-        public Vector XAxis
-        {
-            get
-            {
-                return m_xAxis;
-            }
-        }
+        public Vector XAxis => m_xAxis;
 
         /// <summary>
         /// Property to get Y Axis of user coordinate system
         /// </summary>
-        public Vector YAxis
-        {
-            get
-            {
-                return m_yAxis;
-            }
-        }
+        public Vector YAxis => m_yAxis;
 
         /// <summary>
         /// Property to get Z Axis of user coordinate system
         /// </summary>
-        public Vector ZAxis
-        {
-            get
-            {
-                return m_zAxis;
-            }
-        }
+        public Vector ZAxis => m_zAxis;
 
         /// <summary>
         /// The default constructor, 
@@ -99,9 +75,9 @@ namespace Revit.SDK.Samples.Openings.CS
         /// <param name="flag">select left handness or right handness</param>
         public UCS(Vector origin, Vector xAxis, Vector yAxis, bool flag)
         {
-            Vector x2 = xAxis / ~xAxis;
-            Vector y2 = yAxis / ~yAxis;
-            Vector z2 = x2 & y2;
+            var x2 = xAxis / ~xAxis;
+            var y2 = yAxis / ~yAxis;
+            var z2 = x2 & y2;
             if (~z2 < double.Epsilon)
             {
                 throw new InvalidOperationException();
@@ -124,7 +100,7 @@ namespace Revit.SDK.Samples.Openings.CS
         /// <param name="arg">a vector which need to transform</param>
         public Vector LC2GC(Vector arg)
         {
-            Vector result = new Vector();
+            var result = new Vector();
             result.X =
                 arg.X * m_xAxis.X + arg.Y * m_yAxis.X + arg.Z * m_zAxis.X + m_origin.X;
             result.Y =
@@ -140,8 +116,8 @@ namespace Revit.SDK.Samples.Openings.CS
         /// <param name="line">a line which need to transform</param>
         public Line3D GC2LC(Line3D line)
         {
-            Vector startPnt = GC2LC(line.StartPoint);
-            Vector endPnt = GC2LC(line.EndPoint);
+            var startPnt = GC2LC(line.StartPoint);
+            var endPnt = GC2LC(line.EndPoint);
             return new Line3D(startPnt, endPnt);
         }
 
@@ -151,7 +127,7 @@ namespace Revit.SDK.Samples.Openings.CS
         /// <param name="arg">a vector which need to transform</param>
         public Vector GC2LC(Vector arg)
         {
-            Vector result = new Vector();
+            var result = new Vector();
             arg = arg - m_origin;
             result.X = m_xAxis * arg;
             result.Y = m_yAxis * arg;

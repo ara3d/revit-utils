@@ -38,17 +38,17 @@ namespace Revit.SDK.Samples.InCanvasControlAPI.CS
       /// <param name="controlIndex">Id of the clicked In-Canvas control</param>
       public static void SelectMarker(Document document, int controlIndex)
       {
-         TemporaryGraphicsManager tempGraphicsManager = TemporaryGraphicsManager.GetTemporaryGraphicsManager(document);
-         IssueMarkerTracking issueMarkerTracking = IssueMarkerTrackingManager.GetInstance().GetTracking(document);
-         ResourceProvider provider = ResourceProvider.GetInstance();
+         var tempGraphicsManager = TemporaryGraphicsManager.GetTemporaryGraphicsManager(document);
+         var issueMarkerTracking = IssueMarkerTrackingManager.GetInstance().GetTracking(document);
+         var provider = ResourceProvider.GetInstance();
 
          // Check if the new selection is valid
-         IssueMarker newSelectedMarker = issueMarkerTracking.GetMarkerByIndex(controlIndex);
+         var newSelectedMarker = issueMarkerTracking.GetMarkerByIndex(controlIndex);
          if (newSelectedMarker == null)
             return;
 
          // clear previous selection
-         IssueMarker selectedMarker = issueMarkerTracking.GetMarkerByIndex(issueMarkerTracking.GetSelected());
+         var selectedMarker = issueMarkerTracking.GetMarkerByIndex(issueMarkerTracking.GetSelected());
          if (selectedMarker != null)
          {
             selectedMarker.InCanvasControlData.ImagePath = provider.IssueImage;

@@ -54,13 +54,13 @@ namespace Revit.SDK.Samples.AutoStamp.CS
         /// </summary>
         /// <param name="application">Controlled application of to be loaded to Revit process.</param>
         /// <returns>Return the status of the external application.</returns>
-        public Autodesk.Revit.UI.Result OnStartup(UIControlledApplication application)
+        public Result OnStartup(UIControlledApplication application)
         {
             // Register related events
             m_eventsReactor = new EventsReactor();
-            application.ControlledApplication.ViewPrinting += new EventHandler<Autodesk.Revit.DB.Events.ViewPrintingEventArgs>(m_eventsReactor.AppViewPrinting);
-            application.ControlledApplication.ViewPrinted += new EventHandler<Autodesk.Revit.DB.Events.ViewPrintedEventArgs>(m_eventsReactor.AppViewPrinted);
-            return Autodesk.Revit.UI.Result.Succeeded;
+            application.ControlledApplication.ViewPrinting += m_eventsReactor.AppViewPrinting;
+            application.ControlledApplication.ViewPrinted += m_eventsReactor.AppViewPrinted;
+            return Result.Succeeded;
         }
 
         /// <summary>
@@ -68,15 +68,15 @@ namespace Revit.SDK.Samples.AutoStamp.CS
         /// </summary>
         /// <param name="application">Controlled application to be shutdown.</param>
         /// <returns>Return the status of the external application.</returns>
-        public Autodesk.Revit.UI.Result OnShutdown(UIControlledApplication application)
+        public Result OnShutdown(UIControlledApplication application)
         {
             // just close log file
             m_eventsReactor.CloseLogFiles();
             //
             // unregister events
-            application.ControlledApplication.ViewPrinting -= new EventHandler<Autodesk.Revit.DB.Events.ViewPrintingEventArgs>(m_eventsReactor.AppViewPrinting);
-            application.ControlledApplication.ViewPrinted -= new EventHandler<Autodesk.Revit.DB.Events.ViewPrintedEventArgs>(m_eventsReactor.AppViewPrinted);
-            return Autodesk.Revit.UI.Result.Succeeded;
+            application.ControlledApplication.ViewPrinting -= m_eventsReactor.AppViewPrinting;
+            application.ControlledApplication.ViewPrinted -= m_eventsReactor.AppViewPrinted;
+            return Result.Succeeded;
         }
         #endregion
     }

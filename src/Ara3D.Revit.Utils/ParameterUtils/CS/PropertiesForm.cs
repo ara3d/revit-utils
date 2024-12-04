@@ -31,7 +31,7 @@ using System.Windows.Forms;
 
 namespace Revit.SDK.Samples.ParameterUtils.CS
 {
-    public partial class PropertiesForm : System.Windows.Forms.Form
+    public partial class PropertiesForm : Form
     {
         /// <summary>
         /// Default constructor, initialize all controls
@@ -58,10 +58,10 @@ namespace Revit.SDK.Samples.ParameterUtils.CS
             propertyListView.Columns.Add("Value");
 
             // loop all the strings, split them, and add them to rows of the list view
-            foreach (string row in information)
+            foreach (var row in information)
             {
                 if (row == null) continue;
-                ListViewItem lvi = new ListViewItem(row.Split('\t'));
+                var lvi = new ListViewItem(row.Split('\t'));
                 propertyListView.Items.Add(lvi);
             }
 
@@ -75,7 +75,7 @@ namespace Revit.SDK.Samples.ParameterUtils.CS
             propertyListView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
 
             // increase the width of columns by 40, make them a litter wider
-            int span = 40;
+            var span = 40;
             foreach (ColumnHeader ch in propertyListView.Columns)
             {
                 ch.Width += span;

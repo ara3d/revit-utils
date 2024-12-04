@@ -66,8 +66,8 @@ namespace Revit.SDK.Samples.AddSpaceAndZone.CS
         /// <param name="e"></param>
         private void addSpaceButton_Click(object sender, EventArgs e)
         {
-            SpaceSet set = new SpaceSet();
-            foreach (SpaceItem item in this.availableSpacesListView.SelectedItems)
+            var set = new SpaceSet();
+            foreach (SpaceItem item in availableSpacesListView.SelectedItems)
             {
                 set.Insert(item.Space);
             }
@@ -86,8 +86,8 @@ namespace Revit.SDK.Samples.AddSpaceAndZone.CS
         /// <param name="e"></param>
         private void removeSpaceButton_Click(object sender, EventArgs e)
         {
-            SpaceSet set = new SpaceSet();
-            foreach (SpaceItem item in this.currentSpacesListView.SelectedItems)
+            var set = new SpaceSet();
+            foreach (SpaceItem item in currentSpacesListView.SelectedItems)
             {
                 set.Insert(item.Space);
             }
@@ -103,7 +103,7 @@ namespace Revit.SDK.Samples.AddSpaceAndZone.CS
         /// <param name="e"></param>
         private void ZoneEditorForm_Load(object sender, EventArgs e)
         {
-            this.Text = "Edit Zone : " + m_zone.Name;
+            Text = "Edit Zone : " + m_zone.Name;
             UpdateSpaceList();
         }
 
@@ -112,26 +112,26 @@ namespace Revit.SDK.Samples.AddSpaceAndZone.CS
         /// </summary>
         private void UpdateSpaceList()
         {
-            this.availableSpacesListView.Items.Clear();
-            this.currentSpacesListView.Items.Clear();
+            availableSpacesListView.Items.Clear();
+            currentSpacesListView.Items.Clear();
            
             // AvailableSpacesListView
-            foreach (Space space in m_dataManager.GetSpaces())
+            foreach (var space in m_dataManager.GetSpaces())
             {
                 if (m_zone.Spaces.Contains(space) == false)
                 {
-                    this.availableSpacesListView.Items.Add(new SpaceItem(space));
+                    availableSpacesListView.Items.Add(new SpaceItem(space));
                 }
             }
 
             // CurrentSpacesListView
             foreach (Space space in m_zone.Spaces)
             {
-                this.currentSpacesListView.Items.Add(new SpaceItem(space));
+                currentSpacesListView.Items.Add(new SpaceItem(space));
             }
 
-            this.availableSpacesListView.Update();
-            this.currentSpacesListView.Update();
+            availableSpacesListView.Update();
+            currentSpacesListView.Update();
         }
 
         /// <summary>
@@ -141,7 +141,7 @@ namespace Revit.SDK.Samples.AddSpaceAndZone.CS
         /// <param name="e"></param>
         private void okButton_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
     }
 }

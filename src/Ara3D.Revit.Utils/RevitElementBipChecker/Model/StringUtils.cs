@@ -12,9 +12,9 @@ namespace RevitElementBipChecker.Model
     {
         public static string RemoveInvalid(this string str)
         {
-            string rExp = @"[^\w\d]";
-            string replace = Regex.Replace(str, rExp, "");
-            string trim = replace.Trim();
+            var rExp = @"[^\w\d]";
+            var replace = Regex.Replace(str, rExp, "");
+            var trim = replace.Trim();
             return trim.TrimWhitespace().FirstOrDefault();
         }
 

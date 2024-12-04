@@ -58,10 +58,10 @@ namespace Revit.SDK.Samples.AddSpaceAndZone.CS
         /// <param name="phase"></param>
         public void CreateZone(Level level, Phase phase)
         {
-            Zone zone = m_commandData.Application.ActiveUIDocument.Document.Create.NewZone(level, phase);
+            var zone = m_commandData.Application.ActiveUIDocument.Document.Create.NewZone(level, phase);
             if (zone != null)
             {
-                this.m_zoneDictionary[level.Id].Add(zone);
+                m_zoneDictionary[level.Id].Add(zone);
             }
         }
 
@@ -99,14 +99,8 @@ namespace Revit.SDK.Samples.AddSpaceAndZone.CS
         /// </summary>
         public Zone CurrentZone
         {
-            get
-            {
-                return CurrentZone;
-            }
-            set
-            {
-                m_currentZone = value;
-            }
+            get => CurrentZone;
+            set => m_currentZone = value;
         }
     }
 }

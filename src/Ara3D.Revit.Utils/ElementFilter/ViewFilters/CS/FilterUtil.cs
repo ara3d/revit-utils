@@ -50,12 +50,12 @@ namespace Revit.SDK.Samples.ViewFilters.CS
       /// Get all view filters(ParameterFilterElement) within current document
       /// </summary>
       /// <returns>All existing filters.</returns>
-      public static ICollection<ParameterFilterElement> GetViewFilters(Autodesk.Revit.DB.Document doc)
+      public static ICollection<ParameterFilterElement> GetViewFilters(Document doc)
       {
-         ElementClassFilter filter = new ElementClassFilter(typeof(ParameterFilterElement));
-         FilteredElementCollector collector = new FilteredElementCollector(doc);
+         var filter = new ElementClassFilter(typeof(ParameterFilterElement));
+         var collector = new FilteredElementCollector(doc);
          return collector.WherePasses(filter).ToElements()
-             .Cast<ParameterFilterElement>().ToList<ParameterFilterElement>();
+             .Cast<ParameterFilterElement>().ToList();
       }
 
       /// <summary>
@@ -68,35 +68,35 @@ namespace Revit.SDK.Samples.ViewFilters.CS
       {
          // Maybe FilterRule is inverse rule, we need to find its inner rule(FilterValueRule)
          // Note that the rule may be inversed more than once.
-         bool inverted = false;
-         FilterRule innerRule = ReflectToInnerRule(rule, out inverted);
+         var inverted = false;
+         var innerRule = ReflectToInnerRule(rule, out inverted);
          if (innerRule is FilterStringRule)
          {
-            FilterStringRule strRule = innerRule as FilterStringRule;
-            FilterStringRuleEvaluator evaluator = strRule.GetEvaluator();
+            var strRule = innerRule as FilterStringRule;
+            var evaluator = strRule.GetEvaluator();
             return new FilterRuleBuilder(param, GetEvaluatorCriteriaName(evaluator, inverted), strRule.RuleString);
          }
          else if (innerRule is FilterDoubleRule)
          {
-            FilterDoubleRule dbRule = innerRule as FilterDoubleRule;
-            FilterNumericRuleEvaluator evaluator = dbRule.GetEvaluator();
+            var dbRule = innerRule as FilterDoubleRule;
+            var evaluator = dbRule.GetEvaluator();
             return new FilterRuleBuilder(param, GetEvaluatorCriteriaName(evaluator, inverted), dbRule.RuleValue, dbRule.Epsilon);
          }
          else if (innerRule is FilterIntegerRule)
          {
-            FilterIntegerRule intRule = innerRule as FilterIntegerRule;
-            FilterNumericRuleEvaluator evaluator = intRule.GetEvaluator();
+            var intRule = innerRule as FilterIntegerRule;
+            var evaluator = intRule.GetEvaluator();
             return new FilterRuleBuilder(param, GetEvaluatorCriteriaName(evaluator, inverted), intRule.RuleValue);
          }
          else if (innerRule is FilterElementIdRule)
          {
-            FilterElementIdRule idRule = innerRule as FilterElementIdRule;
-            FilterNumericRuleEvaluator evaluator = idRule.GetEvaluator();
+            var idRule = innerRule as FilterElementIdRule;
+            var evaluator = idRule.GetEvaluator();
             return new FilterRuleBuilder(param, GetEvaluatorCriteriaName(evaluator, inverted), idRule.RuleValue);
          }
          // 
          // for other rule, not supported yet
-         throw new System.NotImplementedException("The filter rule is not recognizable and supported yet!");
+         throw new NotImplementedException("The filter rule is not recognizable and supported yet!");
       }
 
       /// <summary>
@@ -109,7 +109,7 @@ namespace Revit.SDK.Samples.ViewFilters.CS
       static string GetEvaluatorCriteriaName(FilterStringRuleEvaluator fsre, bool inverted)
       {
          // indicate if inverse criteria should be returned
-         bool isInverseRule = inverted;
+         var isInverseRule = inverted;
          if (fsre is FilterStringBeginsWith)
             return (isInverseRule ? RuleCriteraNames.NotBeginWith : RuleCriteraNames.BeginWith);
          else if (fsre is FilterStringContains)
@@ -140,7 +140,7 @@ namespace Revit.SDK.Samples.ViewFilters.CS
       static string GetEvaluatorCriteriaName(FilterNumericRuleEvaluator fsre, bool inverted)
       {
          // indicate if inverse criteria should be returned
-         bool isInverseRule = inverted;
+         var isInverseRule = inverted;
          if (fsre is FilterNumericEquals)
             return (isInverseRule ? RuleCriteraNames.NotEquals : RuleCriteraNames.Equals_);
          else if (fsre is FilterNumericGreater)
@@ -168,9 +168,9 @@ namespace Revit.SDK.Samples.ViewFilters.CS
          if (srcRule is FilterInverseRule)
          {
             inverted = true;
-            FilterRule innerRule = (srcRule as FilterInverseRule).GetInnerRule();
-            bool invertedAgain = false;
-            FilterRule returnRule = ReflectToInnerRule(innerRule, out invertedAgain);
+            var innerRule = (srcRule as FilterInverseRule).GetInnerRule();
+            var invertedAgain = false;
+            var returnRule = ReflectToInnerRule(innerRule, out invertedAgain);
             if (invertedAgain)
                inverted = false;
             return returnRule;
@@ -195,12 +195,12 @@ namespace Revit.SDK.Samples.ViewFilters.CS
          // for each FilterRule. We could alternatively create a single
          // ElementParameterFilter containing the entire list of FilterRules.
          IList<ElementFilter> elemFilters = new List<ElementFilter>();
-         foreach (FilterRule filterRule in filterRules)
+         foreach (var filterRule in filterRules)
          {
-            ElementParameterFilter elemParamFilter = new ElementParameterFilter(filterRule);
+            var elemParamFilter = new ElementParameterFilter(filterRule);
             elemFilters.Add(elemParamFilter);
          }
-         LogicalAndFilter elemFilter = new LogicalAndFilter(elemFilters);
+         var elemFilter = new LogicalAndFilter(elemFilters);
 
          return elemFilter;
       } // CreateElementFilterFromFilterRules
@@ -218,22 +218,22 @@ namespace Revit.SDK.Samples.ViewFilters.CS
          // The ElementFilter is assumed to have been created by CreateElementFilterFromFilterRules,
          // which creates a LogicalAndFilter with each child being an ElementParameterFilter containing
          // just one FilterRule.
-         LogicalAndFilter logicalAndFilter = elemFilter as LogicalAndFilter;
+         var logicalAndFilter = elemFilter as LogicalAndFilter;
          if (null == logicalAndFilter)
             return null; // Error
 
-         IList<ElementFilter> childElemFilters = logicalAndFilter.GetFilters();
-         int numChildElemFilters = childElemFilters.Count;
+         var childElemFilters = logicalAndFilter.GetFilters();
+         var numChildElemFilters = childElemFilters.Count;
          if (0 == numChildElemFilters)
             return null; // Error
 
          IList<FilterRule> filterRules = new List<FilterRule>();
-         foreach (ElementFilter childElemFilter in childElemFilters)
+         foreach (var childElemFilter in childElemFilters)
          {
-            ElementParameterFilter elemParamFilter = childElemFilter as ElementParameterFilter;
+            var elemParamFilter = childElemFilter as ElementParameterFilter;
             if (null == elemParamFilter)
                return null;
-            IList<FilterRule> rules = elemParamFilter.GetRules();
+            var rules = elemParamFilter.GetRules();
             if (1 != rules.Count)
                return null;
             filterRules.Add(rules[0]);

@@ -75,7 +75,7 @@ namespace Revit.SDK.Samples.AutoUpdate.CS
         /// some point.
         /// If false is returned then Revit should inform the user that the external application 
         /// failed to load and the release the internal reference.</returns>
-        public Autodesk.Revit.UI.Result OnStartup(UIControlledApplication application)
+        public Result OnStartup(UIControlledApplication application)
         {
             try
             {
@@ -85,15 +85,14 @@ namespace Revit.SDK.Samples.AutoUpdate.CS
 
                 // Register event. In this sample, we trigger this event from UI, so it must 
                 // be registered on ControlledApplication. 
-                application.ControlledApplication.DocumentOpened += new EventHandler
-                    <Autodesk.Revit.DB.Events.DocumentOpenedEventArgs>(application_DocumentOpened);            
+                application.ControlledApplication.DocumentOpened += application_DocumentOpened;            
             }
             catch (Exception)
             {
-                return Autodesk.Revit.UI.Result.Failed;
+                return Result.Failed;
             }
 
-            return Autodesk.Revit.UI.Result.Succeeded;
+            return Result.Succeeded;
         }
 
         /// <summary>
@@ -108,12 +107,12 @@ namespace Revit.SDK.Samples.AutoUpdate.CS
         /// some point.
         /// If false is returned then the Revit user should be warned of the failure of the external 
         /// application to shut down correctly.</returns>
-        public Autodesk.Revit.UI.Result OnShutdown(UIControlledApplication application)
+        public Result OnShutdown(UIControlledApplication application)
         {
             // remove the event.
             application.ControlledApplication.DocumentOpened -= application_DocumentOpened;
             CloseLogFile();
-            return Autodesk.Revit.UI.Result.Succeeded;
+            return Result.Succeeded;
         }
         #endregion
 
@@ -129,7 +128,7 @@ namespace Revit.SDK.Samples.AutoUpdate.CS
             DumpEventArgs(args);
 
             // get document from event args.
-            Document doc = args.Document;
+            var doc = args.Document;
 
             if (doc.IsFamilyDocument) 
             {
@@ -138,7 +137,7 @@ namespace Revit.SDK.Samples.AutoUpdate.CS
             try
             {
                //now event framework will not provide transaction,user need start by self(2009/11/18)
-               Transaction eventTransaction = new Transaction(doc, "Event handler modify project information");
+               var eventTransaction = new Transaction(doc, "Event handler modify project information");
                eventTransaction.Start();
                // assign specified value to ProjectInformation.Address property. 
                // User can change another properties of document or create(delete) something as he likes.
@@ -194,7 +193,7 @@ namespace Revit.SDK.Samples.AutoUpdate.CS
             m_txtListener.Close();
 
             // copy temp file to log file and delete the temp file.
-            String logFile = Path.Combine(m_directory, "AutoUpdate.log");
+            var logFile = Path.Combine(m_directory, "AutoUpdate.log");
             if (File.Exists(logFile)) File.Delete(logFile);
             File.Copy(m_tempFile, logFile);
             File.Delete(m_tempFile);

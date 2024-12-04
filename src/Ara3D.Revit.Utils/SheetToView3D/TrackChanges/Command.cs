@@ -18,29 +18,11 @@ public class Command : IExternalCommand
   #region Geometrical Comparison
   const double _eps = 1.0e-9;
 
-  public static double Eps
-  {
-    get
-    {
-      return _eps;
-    }
-  }
+  public static double Eps => _eps;
 
-  public static double MinLineLength
-  {
-    get
-    {
-      return _eps;
-    }
-  }
+  public static double MinLineLength => _eps;
 
-  public static double TolPointOnPlane
-  {
-    get
-    {
-      return _eps;
-    }
-  }
+  public static double TolPointOnPlane => _eps;
 
   public static bool IsZero(
     double a,
@@ -66,7 +48,7 @@ public class Command : IExternalCommand
 
   public static int Compare( XYZ p, XYZ q )
   {
-    int d = Compare( p.X, q.X );
+    var d = Compare( p.X, q.X );
 
     if( 0 == d )
     {
@@ -87,10 +69,10 @@ public class Command : IExternalCommand
   /// </summary>
   static byte[] GetBytes( string str )
   {
-    byte[] bytes = new byte[str.Length
-      * sizeof( char )];
+    var bytes = new byte[str.Length
+                         * sizeof( char )];
 
-    System.Buffer.BlockCopy( str.ToCharArray(),
+    Buffer.BlockCopy( str.ToCharArray(),
       0, bytes, 0, bytes.Length );
 
     return bytes;
@@ -104,15 +86,15 @@ public class Command : IExternalCommand
   public static string GetProjectIdentifier(
     Document doc )
   {
-    SHA256 hasher = SHA256Managed.Create();
+    var hasher = SHA256.Create();
 
-    string key = System.Environment.MachineName
-      + ":" + doc.PathName;
+    var key = Environment.MachineName
+              + ":" + doc.PathName;
 
-    byte[] hashValue = hasher.ComputeHash( GetBytes(
+    var hashValue = hasher.ComputeHash( GetBytes(
       key ) );
 
-    string hashb64 = Convert.ToBase64String(
+    var hashb64 = Convert.ToBase64String(
       hashValue );
 
     return hashb64.Replace( '/', '_' );
@@ -162,7 +144,7 @@ public class Command : IExternalCommand
   public static string PointArrayString( IList<XYZ> pts )
   {
     return string.Join( ", ",
-      pts.Select<XYZ, string>(
+      pts.Select(
         p => PointString( p ) ) );
   }
 
@@ -185,8 +167,8 @@ public class Command : IExternalCommand
   public static string LocationString(
     Location location )
   {
-    LocationPoint lp = location as LocationPoint;
-    LocationCurve lc = ( null == lp )
+    var lp = location as LocationPoint;
+    var lc = ( null == lp )
       ? location as LocationCurve
       : null;
 
@@ -204,15 +186,15 @@ public class Command : IExternalCommand
   public static string GetPropertiesJson(
     IList<Parameter> parameters )
   {
-    int n = parameters.Count;
-    List<string> a = new List<string>( n );
-    foreach( Parameter p in parameters )
+    var n = parameters.Count;
+    var a = new List<string>( n );
+    foreach( var p in parameters )
     {
       a.Add( string.Format( "\"{0}\":\"{1}\"",
         p.Definition.Name, p.AsValueString() ) );
     }
     a.Sort();
-    string s = string.Join( ",", a );
+    var s = string.Join( ",", a );
     return "{" + s + "}";
   }
 
@@ -235,20 +217,20 @@ public class Command : IExternalCommand
     // wall type name, which is equivalent to the
     // family name ...
 
-    FamilyInstance fi = e as FamilyInstance;
+    var fi = e as FamilyInstance;
 
-    string typeName = e.GetType().Name;
+    var typeName = e.GetType().Name;
 
-    string categoryName = ( null == e.Category )
+    var categoryName = ( null == e.Category )
       ? string.Empty
       : e.Category.Name + " ";
 
-    string familyName = ( null == fi )
+    var familyName = ( null == fi )
       ? string.Empty
       : fi.Symbol.Family.Name + " ";
 
-    string symbolName = ( null == fi
-      || e.Name.Equals( fi.Symbol.Name ) )
+    var symbolName = ( null == fi
+                       || e.Name.Equals( fi.Symbol.Name ) )
         ? string.Empty
         : fi.Symbol.Name + " ";
 
@@ -298,13 +280,13 @@ public class Command : IExternalCommand
 
     foreach( Face f in s.Faces )
     {
-      Mesh m = f.Triangulate();
+      var m = f.Triangulate();
 
       if (m != null)
       {
-        foreach( XYZ p in m.Vertices )
+        foreach( var p in m.Vertices )
         {
-          XYZ q = t.OfPoint( p );
+          var q = t.OfPoint( p );
           if( !vertexLookup.ContainsKey( q ) )
           {
             vertexLookup.Add( q, 1 );
@@ -331,12 +313,12 @@ public class Command : IExternalCommand
     if( null == geo )
     {
       Debug.Assert( null != geo, "null GeometryElement" );
-      throw new System.ArgumentException( "null GeometryElement" );
+      throw new ArgumentException( "null GeometryElement" );
     }
 
-    foreach( GeometryObject obj in geo )
+    foreach( var obj in geo )
     {
-      Solid solid = obj as Solid;
+      var solid = obj as Solid;
 
       if( null != solid )
       {
@@ -347,12 +329,12 @@ public class Command : IExternalCommand
       }
       else
       {
-        GeometryInstance inst = obj as GeometryInstance;
+        var inst = obj as GeometryInstance;
 
         if( null != inst )
         {
           //GeometryElement geoi = inst.GetInstanceGeometry();
-          GeometryElement geos = inst.GetSymbolGeometry();
+          var geos = inst.GetSymbolGeometry();
 
           //Debug.Assert( null == geoi || null == geos,
           //  "expected either symbol or instance geometry, not both" );
@@ -387,15 +369,15 @@ public class Command : IExternalCommand
   /// </summary>
   static Solid GetSolid2( Element e, Options opt )
   {
-    GeometryElement geo = e.get_Geometry( opt );
+    var geo = e.get_Geometry( opt );
 
-    Dictionary<XYZ, int> a
+    var a
       = new Dictionary<XYZ, int>(
         new XyzEqualityComparer() );
 
     Solid solid = null;
     GeometryInstance inst = null;
-    Transform t = Transform.Identity;
+    var t = Transform.Identity;
 
     // Some family elements have no own solids, so we
     // retrieve the geometry from the symbol instead; 
@@ -403,7 +385,7 @@ public class Command : IExternalCommand
     // and no contents in the instance geometry 
     // (e.g. in rst_basic_sample_project.rvt).
 
-    foreach( GeometryObject obj in geo )
+    foreach( var obj in geo )
     {
       solid = obj as Solid;
 
@@ -421,7 +403,7 @@ public class Command : IExternalCommand
       geo = inst.GetSymbolGeometry();
       t = inst.Transform;
 
-      foreach( GeometryObject obj in geo )
+      foreach( var obj in geo )
       {
         solid = obj as Solid;
 
@@ -443,16 +425,16 @@ public class Command : IExternalCommand
   /// </summary>
   static List<XYZ> GetCanonicVertices( Element e )
   {
-    GeometryElement geo = e.get_Geometry( new Options() );
-    Transform t = Transform.Identity;
+    var geo = e.get_Geometry( new Options() );
+    var t = Transform.Identity;
 
-    Dictionary<XYZ, int> vertexLookup
+    var vertexLookup
       = new Dictionary<XYZ, int>(
         new XyzEqualityComparer() );
 
     AddVertices( vertexLookup, t, geo );
 
-    List<XYZ> keys = new List<XYZ>( vertexLookup.Keys );
+    var keys = new List<XYZ>( vertexLookup.Keys );
 
     keys.Sort( Compare );
 
@@ -469,9 +451,9 @@ public class Command : IExternalCommand
   static IEnumerable<Element> GetTrackedElements(
     Document doc )
   {
-    Categories cats = doc.Settings.Categories;
+    var cats = doc.Settings.Categories;
 
-    List<ElementFilter> a = new List<ElementFilter>();
+    var a = new List<ElementFilter>();
 
     foreach( Category c in cats )
     {
@@ -484,13 +466,13 @@ public class Command : IExternalCommand
     ElementFilter isModelCategory
       = new LogicalOrFilter( a );
 
-    Options opt = new Options();
+    var opt = new Options();
 
     return new FilteredElementCollector( doc )
       .WhereElementIsNotElementType()
       .WhereElementIsViewIndependent()
       .WherePasses( isModelCategory )
-      .Where<Element>( e =>
+      .Where( e =>
         ( null != e.get_BoundingBox( null ) )
         && ( null != e.get_Geometry( opt ) ) );
   }
@@ -509,11 +491,11 @@ public class Command : IExternalCommand
   {
     string s = null;
 
-    BoundingBoxXYZ bb = e.get_BoundingBox( null );
+    var bb = e.get_BoundingBox( null );
 
     if( null != bb )
     {
-      List<string> properties = new List<string>();
+      var properties = new List<string>();
 
       properties.Add( ElementDescription( e )
         + " at " + LocationString( e.Location ) );
@@ -548,21 +530,21 @@ public class Command : IExternalCommand
   static Dictionary<int, string> GetSnapshot(
     IEnumerable<Element> a )
   {
-    Dictionary<int, string> d
+    var d
       = new Dictionary<int, string>();
 
-    SHA256 hasher = SHA256Managed.Create();
+    var hasher = SHA256.Create();
 
-    foreach( Element e in a )
+    foreach( var e in a )
     {
       //Debug.Print( e.Id.IntegerValue.ToString() 
       //  + " " + e.GetType().Name );
 
-      string s = GetElementState( e );
+      var s = GetElementState( e );
 
       if( null != s )
       {
-        string hashb64 = Convert.ToBase64String(
+        var hashb64 = Convert.ToBase64String(
           hasher.ComputeHash( GetBytes( s ) ) );
 
         d.Add( e.Id.IntegerValue, hashb64 );
@@ -587,12 +569,12 @@ public class Command : IExternalCommand
     Dictionary<int, string> start_state,
     Dictionary<int, string> end_state )
   {
-    int n1 = start_state.Keys.Count;
-    int n2 = end_state.Keys.Count;
+    var n1 = start_state.Keys.Count;
+    var n2 = end_state.Keys.Count;
 
-    List<int> keys = new List<int>( start_state.Keys );
+    var keys = new List<int>( start_state.Keys );
 
-    foreach( int id in end_state.Keys )
+    foreach( var id in end_state.Keys )
     {
       if( !keys.Contains( id ) )
       {
@@ -602,19 +584,19 @@ public class Command : IExternalCommand
 
     keys.Sort();
 
-    int n = keys.Count;
+    var n = keys.Count;
 
     Debug.Print(
       "{0} elements before, {1} elements after, {2} total",
       n1, n2, n );
 
-    int nAdded = 0;
-    int nDeleted = 0;
-    int nModified = 0;
-    int nIdentical = 0;
-    List<string> report = new List<string>();
+    var nAdded = 0;
+    var nDeleted = 0;
+    var nModified = 0;
+    var nIdentical = 0;
+    var report = new List<string>();
 
-    foreach( int id in keys )
+    foreach( var id in keys )
     {
       if( !start_state.ContainsKey( id ) )
       {
@@ -639,16 +621,16 @@ public class Command : IExternalCommand
       }
     }
 
-    string msg = string.Format(
+    var msg = string.Format(
       "Stopped tracking changes now.\r\n"
       + "{0} deleted, {1} added, {2} modified, "
       + "{3} identical elements:",
       nDeleted, nAdded, nModified, nIdentical );
 
-    string s = string.Join( "\r\n", report );
+    var s = string.Join( "\r\n", report );
 
     Debug.Print( msg + "\r\n" + s );
-    TaskDialog dlg = new TaskDialog( "Track Changes" );
+    var dlg = new TaskDialog( "Track Changes" );
     dlg.MainInstruction = msg;
     dlg.MainContent = s;
     dlg.Show();
@@ -670,12 +652,12 @@ public class Command : IExternalCommand
     ref string message,
     ElementSet elements )
   {
-    UIApplication uiapp = commandData.Application;
-    UIDocument uidoc = uiapp.ActiveUIDocument;
-    Application app = uiapp.Application;
-    Document doc = uidoc.Document;
+    var uiapp = commandData.Application;
+    var uidoc = uiapp.ActiveUIDocument;
+    var app = uiapp.Application;
+    var doc = uidoc.Document;
 
-    IEnumerable<Element> a = GetTrackedElements( doc );
+    var a = GetTrackedElements( doc );
 
     if( null == _start_state )
     {
@@ -685,7 +667,7 @@ public class Command : IExternalCommand
     }
     else
     {
-      Dictionary<int, string> end_state = GetSnapshot( a );
+      var end_state = GetSnapshot( a );
       ReportDifferences( doc, _start_state, end_state );
       _start_state = null;
     }

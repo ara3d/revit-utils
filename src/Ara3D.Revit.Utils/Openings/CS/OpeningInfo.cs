@@ -54,10 +54,7 @@ namespace Revit.SDK.Samples.Openings.CS
         /// </summary>
         public UIApplication Revit
         {
-            get
-            {
-                return m_revit;
-            }
+            get => m_revit;
             set
             {
                 if (value != m_revit)
@@ -68,25 +65,13 @@ namespace Revit.SDK.Samples.Openings.CS
         /// <summary>
         /// Property to get Opening store in OpeningInfo
         /// </summary>
-        public Opening Opening
-        {
-            get
-            {
-                return m_opening;
-            }
-        }
+        public Opening Opening => m_opening;
 
         /// <summary>
         /// Property to get Name and Id 
         /// eg: "Opening Cut (114389)"
         /// </summary>
-        public string NameAndId
-        {
-            get
-            {
-                return String.Concat(m_opening.Name, " (", m_opening.Id.ToString(), ")");
-            }
-        }
+        public string NameAndId => String.Concat(m_opening.Name, " (", m_opening.Id.ToString(), ")");
 
         /// <summary>
         /// Property to get bool the define whether opening is Shaft Opening
@@ -115,35 +100,17 @@ namespace Revit.SDK.Samples.Openings.CS
         /// Property to get OpeningProperty class 
         /// which can use in PropertyGrid control
         /// </summary>
-        public OpeningProperty Property
-        {
-            get
-            {
-                return m_property;
-            }
-        }
+        public OpeningProperty Property => m_property;
 
         /// <summary>
         /// Property to get Profile information of opening
         /// </summary>
-        public WireFrame Sketch
-        {
-            get
-            {
-                return m_sketch;
-            }
-        }
+        public WireFrame Sketch => m_sketch;
 
         /// <summary>
         /// Property to get BoundingBox of Opening
         /// </summary>
-        public BoundingBox BoundingBox
-        {
-            get
-            {
-                return m_boundingBox;
-            }
-        }
+        public BoundingBox BoundingBox => m_boundingBox;
 
         /// <summary>
         /// The default constructor, 
@@ -158,12 +125,12 @@ namespace Revit.SDK.Samples.Openings.CS
             m_revit = app;
 
             //get OpeningProperty which can use in PropertyGrid control
-            OpeningProperty openingProperty = new OpeningProperty(m_opening);
+            var openingProperty = new OpeningProperty(m_opening);
             m_property = openingProperty;
 
             //get BoundingBox of Opening
-            BoundingBoxXYZ boxXYZ = m_opening.get_BoundingBox(m_revit.ActiveUIDocument.Document.ActiveView);
-            BoundingBox boundingBox = new BoundingBox(boxXYZ);
+            var boxXYZ = m_opening.get_BoundingBox(m_revit.ActiveUIDocument.Document.ActiveView);
+            var boundingBox = new BoundingBox(boxXYZ);
             m_boundingBox = boundingBox;
 
             //get profile
@@ -175,16 +142,16 @@ namespace Revit.SDK.Samples.Openings.CS
         /// </summary>
         private void GetProfile()
         {
-            CurveArray curveArray = m_opening.BoundaryCurves;
+            var curveArray = m_opening.BoundaryCurves;
             if (null != curveArray)
             {
                 m_lines.Clear();
                 foreach (Curve curve in curveArray)
                 {
-                    List<XYZ> points = curve.Tessellate() as List<XYZ>;
+                    var points = curve.Tessellate() as List<XYZ>;
                     AddLine(points);
                 }
-                WireFrame wireFrameSketch = new WireFrame(new ReadOnlyCollection<Line3D>(m_lines));
+                var wireFrameSketch = new WireFrame(new ReadOnlyCollection<Line3D>(m_lines));
                 m_sketch = wireFrameSketch;
             }
             else if (m_opening.IsRectBoundary)
@@ -192,10 +159,10 @@ namespace Revit.SDK.Samples.Openings.CS
                 //if opening profile is RectBoundary, 
                 //just can get profile info from BoundaryRect Property
                 m_lines.Clear();
-                List<XYZ> boundRect = m_opening.BoundaryRect as List<XYZ>;
-                List<XYZ> RectPoints = GetPoints(boundRect);
+                var boundRect = m_opening.BoundaryRect as List<XYZ>;
+                var RectPoints = GetPoints(boundRect);
                 AddLine(RectPoints);
-                WireFrame wireFrameSketch = new WireFrame(new ReadOnlyCollection<Line3D>(m_lines));
+                var wireFrameSketch = new WireFrame(new ReadOnlyCollection<Line3D>(m_lines));
                 m_sketch = wireFrameSketch;
             }
             else
@@ -211,27 +178,27 @@ namespace Revit.SDK.Samples.Openings.CS
         /// coordinate of rectangular</param>
         private List<XYZ> GetPoints(List<XYZ> boundRect)
         {
-            List<XYZ> points = new List<XYZ>();
-            Autodesk.Revit.DB.XYZ p1 = boundRect[0];
+            var points = new List<XYZ>();
+            var p1 = boundRect[0];
             points.Add(p1);
 
-            Autodesk.Revit.DB.XYZ p2 = new Autodesk.Revit.DB.XYZ(
+            var p2 = new XYZ(
                 boundRect[0].X,
                 boundRect[0].Y,
                 boundRect[1].Z);
             points.Add(p2);
 
-            Autodesk.Revit.DB.XYZ p3 = boundRect[1];
+            var p3 = boundRect[1];
             points.Add(p3);
 
-            Autodesk.Revit.DB.XYZ p4 = new Autodesk.Revit.DB.XYZ (
+            var p4 = new XYZ (
                 boundRect[1].X,
                 boundRect[1].Y,
                 boundRect[0].Z);
             points.Add(p4);
 
             //make rectangle close
-            Autodesk.Revit.DB.XYZ p5 = boundRect[0];
+            var p5 = boundRect[0];
             points.Add(p5);
 
             return points;
@@ -248,18 +215,18 @@ namespace Revit.SDK.Samples.Openings.CS
                 return;
             }
 
-            Autodesk.Revit.DB.XYZ previousPoint;
+            XYZ previousPoint;
             previousPoint = points[0];
 
-            for (int i = 1; i < points.Count; i++)
+            for (var i = 1; i < points.Count; i++)
             {
-                Autodesk.Revit.DB.XYZ point;
+                XYZ point;
                 point = points[i];
 
-                Line3D line = new Line3D();
-                Vector pointStart = new Vector();
-                Vector pointEnd = new Vector();
-                for (int j = 0; j < 3; j++)
+                var line = new Line3D();
+                var pointStart = new Vector();
+                var pointEnd = new Vector();
+                for (var j = 0; j < 3; j++)
                 {
                     pointStart[j] = previousPoint[j];
                     pointEnd[j] = point[j];

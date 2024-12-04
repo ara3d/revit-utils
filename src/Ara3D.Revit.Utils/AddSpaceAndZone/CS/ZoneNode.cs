@@ -46,19 +46,13 @@ namespace Revit.SDK.Samples.AddSpaceAndZone.CS
             : base(zone.Name)
         {
             m_zone = zone;
-            base.Text = m_zone.Name;
-            base.ToolTipText = "Phase: " + m_zone.Phase.Name;
+            Text = m_zone.Name;
+            ToolTipText = "Phase: " + m_zone.Phase.Name;
         }
 
         /// <summary>
         /// Get the Zone element in the ZoneNode.
         /// </summary>
-        public Zone Zone
-        {
-            get
-            {
-                return m_zone;
-            }
-        }
+        public Zone Zone => m_zone;
     }
 }

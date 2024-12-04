@@ -56,13 +56,7 @@ namespace Revit.SDK.Samples.ModelLines.CS
       /// <summary>
       /// The type-number map, store the number of each model line type
       /// </summary>
-      public ReadOnlyCollection<ModelCurveCounter> InformationMap
-      {
-         get
-         {
-            return new ReadOnlyCollection<ModelCurveCounter>(m_informationMap);
-         }
-      }
+      public ReadOnlyCollection<ModelCurveCounter> InformationMap => new(m_informationMap);
 
       /// <summary>
       /// Get the id information of all ModelEllipses in revit,
@@ -73,11 +67,11 @@ namespace Revit.SDK.Samples.ModelLines.CS
          get
          {
             // Create a new list
-            List<IdInfo> idArray = new List<IdInfo>();
+            var idArray = new List<IdInfo>();
             // Add all ModelEllipses' id information into the list
             foreach (ModelCurve ellipse in m_ellipseArray)
             {
-               IdInfo info = new IdInfo("ModelEllipse", ellipse.Id);
+               var info = new IdInfo("ModelEllipse", ellipse.Id);
                idArray.Add(info);
             }
             // return a read only list
@@ -94,11 +88,11 @@ namespace Revit.SDK.Samples.ModelLines.CS
          get
          {
             // Create a new list
-            List<IdInfo> idArray = new List<IdInfo>();
+            var idArray = new List<IdInfo>();
             // Add all ModelHermiteSplines' id information into the list
             foreach (ModelCurve hermite in m_hermiteArray)
             {
-               IdInfo info = new IdInfo("ModelHermiteSpline", hermite.Id);
+               var info = new IdInfo("ModelHermiteSpline", hermite.Id);
                idArray.Add(info);
             }
             // return a read only list
@@ -116,11 +110,11 @@ namespace Revit.SDK.Samples.ModelLines.CS
          get
          {
             // Create a new list
-            List<IdInfo> idArray = new List<IdInfo>();
+            var idArray = new List<IdInfo>();
             // Add all ModelNurbSplines' id information into the list
             foreach (ModelCurve nurb in m_nurbArray)
             {
-               IdInfo info = new IdInfo("ModelNurbSpline", nurb.Id);
+               var info = new IdInfo("ModelNurbSpline", nurb.Id);
                idArray.Add(info);
             }
             // return a read only list
@@ -136,11 +130,11 @@ namespace Revit.SDK.Samples.ModelLines.CS
          get
          {
             // Create a new list
-            List<IdInfo> idArray = new List<IdInfo>();
+            var idArray = new List<IdInfo>();
             // Add all SketchPlane' id information into the list
-            foreach (SketchPlane sketch in m_sketchArray)
+            foreach (var sketch in m_sketchArray)
             {
-               IdInfo info = new IdInfo("SketchPlane", sketch.Id);
+               var info = new IdInfo("SketchPlane", sketch.Id);
                idArray.Add(info);
             }
             // return a read only list
@@ -194,7 +188,7 @@ namespace Revit.SDK.Samples.ModelLines.CS
          InitDisplayInformation();
 
          // Display the form and allow the user to create one of each model line in revit
-         using (ModelLinesForm displayForm = new ModelLinesForm(this))
+         using (var displayForm = new ModelLinesForm(this))
          {
             displayForm.ShowDialog();
          }
@@ -205,18 +199,18 @@ namespace Revit.SDK.Samples.ModelLines.CS
       /// </summary>
       /// <param name="normal"></param>
       /// <param name="origin"></param>
-      public void CreateSketchPlane(Autodesk.Revit.DB.XYZ normal, Autodesk.Revit.DB.XYZ origin)
+      public void CreateSketchPlane(XYZ normal, XYZ origin)
       {
          try
          {
             // First create a Geometry.Plane which need in NewSketchPlane() method
-            Plane geometryPlane = Plane.CreateByNormalAndOrigin(normal, origin);
+            var geometryPlane = Plane.CreateByNormalAndOrigin(normal, origin);
             if (null == geometryPlane)  // assert the creation is successful
             {
                throw new Exception("Create the geometry plane failed.");
             }
             // Then create a sketch plane using the Geometry.Plane
-            SketchPlane plane = SketchPlane.Create(m_revit.ActiveUIDocument.Document, geometryPlane);
+            var plane = SketchPlane.Create(m_revit.ActiveUIDocument.Document, geometryPlane);
             if (null == plane)          // assert the creation is successful
             {
                throw new Exception("Create the sketch plane failed.");
@@ -238,12 +232,12 @@ namespace Revit.SDK.Samples.ModelLines.CS
       /// <param name="sketchId">the id of the sketch plane</param>
       /// <param name="startPoint">the start point of the line</param>
       /// <param name="endPoint">the end point of the line</param>
-      public void CreateLine(ElementId sketchId, Autodesk.Revit.DB.XYZ startPoint, Autodesk.Revit.DB.XYZ endPoint)
+      public void CreateLine(ElementId sketchId, XYZ startPoint, XYZ endPoint)
       {
          try
          {
             // First get the sketch plane by the giving element id.
-            SketchPlane workPlane = GetSketchPlaneById(sketchId);
+            var workPlane = GetSketchPlaneById(sketchId);
 
             // Additional check: start point should not equal end point
             if (startPoint.Equals(endPoint))
@@ -252,13 +246,13 @@ namespace Revit.SDK.Samples.ModelLines.CS
             }
 
             // create geometry line
-            Line geometryLine = Line.CreateBound(startPoint, endPoint);
+            var geometryLine = Line.CreateBound(startPoint, endPoint);
             if (null == geometryLine)       // assert the creation is successful
             {
                throw new Exception("Create the geometry line failed.");
             }
             // create the ModelLine
-            ModelLine line = m_createDoc.NewModelCurve(geometryLine, workPlane) as ModelLine;
+            var line = m_createDoc.NewModelCurve(geometryLine, workPlane) as ModelLine;
             if (null == line)               // assert the creation is successful
             {
                throw new Exception("Create the ModelLine failed.");
@@ -284,12 +278,12 @@ namespace Revit.SDK.Samples.ModelLines.CS
       /// <param name="startPoint">the start point of the arc</param>
       /// <param name="endPoint">the end point of the arc</param>
       /// <param name="thirdPoint">the third point which is on the arc</param>
-      public void CreateArc(ElementId sketchId, Autodesk.Revit.DB.XYZ startPoint, Autodesk.Revit.DB.XYZ endPoint, Autodesk.Revit.DB.XYZ thirdPoint)
+      public void CreateArc(ElementId sketchId, XYZ startPoint, XYZ endPoint, XYZ thirdPoint)
       {
          try
          {
             // First get the sketch plane by the giving element id.
-            SketchPlane workPlane = GetSketchPlaneById(sketchId);
+            var workPlane = GetSketchPlaneById(sketchId);
 
             // Additional check: the start, end and third point should not be the same
             if (startPoint.Equals(endPoint) || startPoint.Equals(thirdPoint)
@@ -299,13 +293,13 @@ namespace Revit.SDK.Samples.ModelLines.CS
             }
 
             // create the geometry arc
-            Arc geometryArc = Arc.Create(startPoint, endPoint, thirdPoint);
+            var geometryArc = Arc.Create(startPoint, endPoint, thirdPoint);
             if (null == geometryArc)            // assert the creation is successful
             {
                throw new Exception("Create the geometry arc failed.");
             }
             // create the ModelArc
-            ModelArc arc = m_createDoc.NewModelCurve(geometryArc, workPlane) as ModelArc;
+            var arc = m_createDoc.NewModelCurve(geometryArc, workPlane) as ModelArc;
             if (null == arc)                    // assert the creation is successful
             {
                throw new Exception("Create the ModelArc failed.");
@@ -329,20 +323,20 @@ namespace Revit.SDK.Samples.ModelLines.CS
       /// <param name="sketchId">the id of the sketch plane</param>
       /// <param name="elementId">the element id which copy the curve from</param>
       /// <param name="offsetPoint">the offset direction from the copied line</param>
-      public void CreateOthers(ElementId sketchId, ElementId elementId, Autodesk.Revit.DB.XYZ offsetPoint)
+      public void CreateOthers(ElementId sketchId, ElementId elementId, XYZ offsetPoint)
       {
          // First get the sketch plane by the giving element id.
-         SketchPlane workPlane = GetSketchPlaneById(sketchId);
+         var workPlane = GetSketchPlaneById(sketchId);
 
          // Because the geometry of these lines can't be created by API,
          // use an existing geometry to create ModelEllipse, ModelHermiteSpline, ModelNurbSpline
          // and then move a bit to make the user see the creation distinctly
 
          // This method use NewModelCurveArray() method to create model lines
-         CurveArray curves = m_createApp.NewCurveArray();// create a geometry curve array
+         var curves = m_createApp.NewCurveArray();// create a geometry curve array
 
          // Get the Autodesk.Revit.DB.ElementId which used to get the corresponding element
-         ModelCurve selected = GetElementById(elementId) as ModelCurve;
+         var selected = GetElementById(elementId) as ModelCurve;
          if (null == selected)
          {
             throw new Exception("Don't have the element you select");
@@ -352,7 +346,7 @@ namespace Revit.SDK.Samples.ModelLines.CS
          curves.Append(selected.GeometryCurve);    // add the geometry ellipse
 
          // Create the model line
-         ModelCurveArray modelCurves = m_createDoc.NewModelCurveArray(curves, workPlane);
+         var modelCurves = m_createDoc.NewModelCurveArray(curves, workPlane);
          if (null == modelCurves || 1 != modelCurves.Size) // assert the creation is successful
          {
             throw new Exception("Create the ModelCurveArray failed.");
@@ -398,14 +392,14 @@ namespace Revit.SDK.Samples.ModelLines.CS
          // Search all elements in current document and find all model lines
          // ModelLine is not supported by ElementClassFilter/OfClass, 
          // so use its base type to find all CurveElement and then process the results further to find modelline
-         IEnumerable<ModelCurve> modelCurves = from elem in ((new FilteredElementCollector(m_revit.ActiveUIDocument.Document)).OfClass(typeof(CurveElement)).ToElements())
+         var modelCurves = from elem in ((new FilteredElementCollector(m_revit.ActiveUIDocument.Document)).OfClass(typeof(CurveElement)).ToElements())
                                                let modelCurve = elem as ModelCurve
                                                where modelCurve != null
                                                select modelCurve;
-         foreach (ModelCurve modelCurve in modelCurves)
+         foreach (var modelCurve in modelCurves)
          {
             // Get all the ModelLines references
-            String typeName = modelCurve.GetType().Name;
+            var typeName = modelCurve.GetType().Name;
             switch (typeName)
             {
                case "ModelLine":   // Get all the ModelLine references
@@ -436,10 +430,10 @@ namespace Revit.SDK.Samples.ModelLines.CS
       void GetSketchPlane()
       {
          // Search all elements in current document and find all sketch planes
-         IList<Element> elements = (new FilteredElementCollector(m_revit.ActiveUIDocument.Document)).OfClass(typeof(SketchPlane)).ToElements();
-         foreach (Element elem in elements)
+         var elements = (new FilteredElementCollector(m_revit.ActiveUIDocument.Document)).OfClass(typeof(SketchPlane)).ToElements();
+         foreach (var elem in elements)
          {
-            SketchPlane sketch = elem as SketchPlane;
+            var sketch = elem as SketchPlane;
             if (null != sketch)
             {
                // Add all the sketchPlane into the array
@@ -471,7 +465,7 @@ namespace Revit.SDK.Samples.ModelLines.CS
       public void RefreshInformationMap()
       {
          // Search the model line types in the map, and refresh the number of each type
-         foreach (ModelCurveCounter info in m_informationMap)
+         foreach (var info in m_informationMap)
          {
             switch (info.TypeName)
             {
@@ -502,7 +496,7 @@ namespace Revit.SDK.Samples.ModelLines.CS
       /// </summary>
       /// <param name="id">the element id value</param>
       /// <returns>the corresponding element</returns>
-      Autodesk.Revit.DB.Element GetElementById(ElementId id)
+      Element GetElementById(ElementId id)
       {
          // Get the corresponding element
          return m_revit.ActiveUIDocument.Document.GetElement(id);
@@ -517,7 +511,7 @@ namespace Revit.SDK.Samples.ModelLines.CS
       SketchPlane GetSketchPlaneById(ElementId id)
       {
          // First get the sketch plane by the giving element id.
-         SketchPlane workPlane = GetElementById(id) as SketchPlane;
+         var workPlane = GetElementById(id) as SketchPlane;
          if (null == workPlane)
          {
             throw new Exception("Don't have the work plane you select.");

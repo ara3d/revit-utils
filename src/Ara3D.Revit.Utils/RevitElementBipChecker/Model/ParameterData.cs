@@ -6,27 +6,27 @@ namespace RevitElementBipChecker.Model
     {
         public ParameterData(Parameter parameter,Document doc,bool isinstance=true)
         {
-            this.Parameter = parameter;
-            this.BuiltInParameter = (parameter.Definition as InternalDefinition).BuiltInParameter.ToString();
-            this.ParameterName = parameter.Definition.Name;
-            this.Id = parameter.Id.ToString();
-            this.ParameterGroup = parameter.Definition.ParameterGroup.ToString();
-            this.ParameterType = parameter.GetParameterType();
-            this.GroupName = LabelUtils.GetLabelFor(parameter.Definition.ParameterGroup);
-            this.Type = parameter.GetParameterType();
-            this.ReadWrite = parameter.IsReadWrite();
-            this.Value = parameter.GetValue();
-            this.StringValue = parameter.AsValueString() == null
+            Parameter = parameter;
+            BuiltInParameter = (parameter.Definition as InternalDefinition).BuiltInParameter.ToString();
+            ParameterName = parameter.Definition.Name;
+            Id = parameter.Id.ToString();
+            ParameterGroup = parameter.Definition.ParameterGroup.ToString();
+            ParameterType = parameter.GetParameterType();
+            GroupName = LabelUtils.GetLabelFor(parameter.Definition.ParameterGroup);
+            Type = parameter.GetParameterType();
+            ReadWrite = parameter.IsReadWrite();
+            Value = parameter.GetValue();
+            StringValue = parameter.AsValueString() == null
                 ? parameter.AsString()
                 : parameter.AsValueString() ;
-            this.Shared = parameter.Shared();
-            this.GUID = parameter.Guid();
-            this.TypeOrInstance = isinstance?"Instance":"Type";
-            this.AssGlobalPara = parameter.GetAssGlobalParameter(doc);
-            this.AssGlobalParaValue = parameter.GetAssGlobalParameterValue(doc);
+            Shared = parameter.Shared();
+            GUID = parameter.Guid();
+            TypeOrInstance = isinstance?"Instance":"Type";
+            AssGlobalPara = parameter.GetAssGlobalParameter(doc);
+            AssGlobalParaValue = parameter.GetAssGlobalParameterValue(doc);
         }
 
-        public Autodesk.Revit.DB.Parameter Parameter { get; set; }
+        public Parameter Parameter { get; set; }
         public string ParameterName { get; set; }
         public string Id { get; set; }
         public string TypeOrInstance { get; set; }

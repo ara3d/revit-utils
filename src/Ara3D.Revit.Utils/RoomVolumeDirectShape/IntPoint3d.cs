@@ -63,7 +63,7 @@ namespace RoomVolumeDirectShape
     /// </summary>
     public int CompareTo( IntPoint3d a )
     {
-      int d = X - a.X;
+      var d = X - a.X;
 
       if( 0 == d )
       {
@@ -91,7 +91,7 @@ namespace RoomVolumeDirectShape
     public string ToString(
       bool onlySpaceSeparator )
     {
-      string format_string = onlySpaceSeparator
+      var format_string = onlySpaceSeparator
         ? "{0} {1} {2}"
         : "({0},{1},{2})";
 

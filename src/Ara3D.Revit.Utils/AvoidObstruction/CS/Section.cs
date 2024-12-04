@@ -36,7 +36,7 @@ namespace Revit.SDK.Samples.AvoidObstruction.CS
         /// <summary>
         /// Pipe centerline's direction.
         /// </summary>
-        private Autodesk.Revit.DB.XYZ  m_dir;
+        private XYZ  m_dir;
 
         /// <summary>
         /// Extend factor in negative direction.
@@ -63,7 +63,7 @@ namespace Revit.SDK.Samples.AvoidObstruction.CS
         /// Private constructor, just be called in static factory method BuildSections.
         /// </summary>
         /// <param name="dir">Pipe's direction</param>
-        private Section(Autodesk.Revit.DB.XYZ  dir)
+        private Section(XYZ  dir)
         {
             m_dir = dir;
             m_startFactor = 0;
@@ -75,49 +75,28 @@ namespace Revit.SDK.Samples.AvoidObstruction.CS
         /// <summary>
         /// Pipe centerline's direction.
         /// </summary>
-        public Autodesk.Revit.DB.XYZ  PipeCenterLineDirection
-        {
-            get { return m_dir; }
-        }
+        public XYZ  PipeCenterLineDirection => m_dir;
 
         /// <summary>
         /// Pipes to avoid this obstruction, it is assigned when resolving this obstruction.
         /// Its count will be three if resolved, the three pipe constructs a "U" shape to round the obstruction.
         /// </summary>
-        public List<Pipe> Pipes
-        {
-            get { return m_pipes; }
-        }
+        public List<Pipe> Pipes => m_pipes;
 
         /// <summary>
         /// Start point of this obstruction.
         /// </summary>
-        public Autodesk.Revit.DB.XYZ  Start
-        {
-            get
-            {
-                return m_refs[0].GetReference().GlobalPoint + m_dir * m_startFactor;
-            }
-        }
+        public XYZ  Start => m_refs[0].GetReference().GlobalPoint + m_dir * m_startFactor;
 
         /// <summary>
         /// End point of this obstruction.
         /// </summary>
-        public Autodesk.Revit.DB.XYZ  End
-        {
-            get
-            {
-                return m_refs[m_refs.Count - 1].GetReference().GlobalPoint + m_dir * m_endFactor;
-            }
-        }
+        public XYZ  End => m_refs[m_refs.Count - 1].GetReference().GlobalPoint + m_dir * m_endFactor;
 
         /// <summary>
         /// References contained in this obstruction.
         /// </summary>
-        public List<ReferenceWithContext> Refs
-        {
-            get { return m_refs; }
-        }
+        public List<ReferenceWithContext> Refs => m_refs;
 
         /// <summary>
         /// Extend this obstruction's interval in one direction.
@@ -148,12 +127,12 @@ namespace Revit.SDK.Samples.AvoidObstruction.CS
         /// <param name="allrefs">References</param>
         /// <param name="dir">Pipe's direction</param>
         /// <returns>List of Section</returns>
-        public static List<Section> BuildSections(List<ReferenceWithContext> allrefs, Autodesk.Revit.DB.XYZ  dir)
+        public static List<Section> BuildSections(List<ReferenceWithContext> allrefs, XYZ  dir)
         {
-            List<ReferenceWithContext> buildStack = new List<ReferenceWithContext>();            
-            List<Section> sections = new List<Section>();
+            var buildStack = new List<ReferenceWithContext>();            
+            var sections = new List<Section>();
             Section current = null;
-            foreach (ReferenceWithContext geoRef in allrefs)
+            foreach (var geoRef in allrefs)
             {                
                 if (buildStack.Count == 0)
                 {
@@ -163,7 +142,7 @@ namespace Revit.SDK.Samples.AvoidObstruction.CS
 
                 current.Refs.Add(geoRef);
 
-                ReferenceWithContext tmp = Find(buildStack, geoRef);
+                var tmp = Find(buildStack, geoRef);
                 if (tmp != null)
                 {
                     buildStack.Remove(tmp);
@@ -183,7 +162,7 @@ namespace Revit.SDK.Samples.AvoidObstruction.CS
         /// <returns>One Reference has the same element's Id with entry</returns>
         private static ReferenceWithContext Find(List<ReferenceWithContext> arr, ReferenceWithContext entry)
         {
-            foreach (ReferenceWithContext tmp in arr)
+            foreach (var tmp in arr)
             {
                 if (tmp.GetReference().ElementId == entry.GetReference().ElementId)
                 {

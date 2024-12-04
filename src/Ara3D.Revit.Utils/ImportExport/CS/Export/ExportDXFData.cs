@@ -51,12 +51,12 @@ namespace Revit.SDK.Samples.ImportExport.CS
         /// <summary>
         /// List of Autodesk.Revit.DB.ACADVersion defined in Revit
         /// </summary>
-        private List<Autodesk.Revit.DB.ACADVersion> m_enumFileVersion;
+        private List<ACADVersion> m_enumFileVersion;
 
         /// <summary>
         /// File version option to export
         /// </summary>
-        private Autodesk.Revit.DB.ACADVersion m_exportFileVersion;
+        private ACADVersion m_exportFileVersion;
         #endregion
 
         #region Class Properties
@@ -65,51 +65,27 @@ namespace Revit.SDK.Samples.ImportExport.CS
         /// </summary>
         public ExportBaseOptionsData ExportOptionsData
         {
-            get 
-            { 
-                return m_exportOptionsData; 
-            }
-            set 
-            { 
-                m_exportOptionsData = value; 
-            }
+            get => m_exportOptionsData;
+            set => m_exportOptionsData = value;
         }
   
         /// <summary>
         /// String collection of AutoCAD versions
         /// </summary>
-        public ReadOnlyCollection<String> FileVersion
-        {
-            get 
-            { 
-                return new ReadOnlyCollection<String>(m_fileVersion); 
-            }
-        }
+        public ReadOnlyCollection<String> FileVersion => new(m_fileVersion);
 
         /// <summary>
         /// Collection of Autodesk.Revit.DB.ACADVersion defined in Revit
         /// </summary>
-        public ReadOnlyCollection<Autodesk.Revit.DB.ACADVersion> EnumFileVersion
-        {            
-            get 
-            {
-                return new ReadOnlyCollection<Autodesk.Revit.DB.ACADVersion>(m_enumFileVersion); 
-            }
-        }
+        public ReadOnlyCollection<ACADVersion> EnumFileVersion => new(m_enumFileVersion);
 
         /// <summary>
         /// File version option to export
         /// </summary>
-        public Autodesk.Revit.DB.ACADVersion ExportFileVersion
+        public ACADVersion ExportFileVersion
         {
-            get 
-            { 
-                return m_exportFileVersion; 
-            }
-            set 
-            { 
-                m_exportFileVersion = value; 
-            }
+            get => m_exportFileVersion;
+            set => m_exportFileVersion = value;
         }        
         #endregion
 
@@ -134,16 +110,16 @@ namespace Revit.SDK.Samples.ImportExport.CS
         {
             //AutoCAD versions
             m_fileVersion = new List<String>();
-            m_enumFileVersion = new List<Autodesk.Revit.DB.ACADVersion>();
+            m_enumFileVersion = new List<ACADVersion>();
             m_fileVersion.Add("AutoCAD 2013 DXF Files (*.dxf)");
-            m_enumFileVersion.Add(Autodesk.Revit.DB.ACADVersion.R2013);
+            m_enumFileVersion.Add(ACADVersion.R2013);
             m_fileVersion.Add("AutoCAD 2010 DXF Files (*.dxf)");
-            m_enumFileVersion.Add(Autodesk.Revit.DB.ACADVersion.R2010);
+            m_enumFileVersion.Add(ACADVersion.R2010);
             m_fileVersion.Add("AutoCAD 2007 DXF Files (*.dxf)");
-            m_enumFileVersion.Add(Autodesk.Revit.DB.ACADVersion.R2007);
+            m_enumFileVersion.Add(ACADVersion.R2007);
 
-            StringBuilder tmp = new StringBuilder();
-            foreach (String version in m_fileVersion)
+            var tmp = new StringBuilder();
+            foreach (var version in m_fileVersion)
             {
                 tmp.Append(version + "|*.dxf|");
             }
@@ -159,7 +135,7 @@ namespace Revit.SDK.Samples.ImportExport.CS
         {
             base.Export();
 
-            bool exported = false;
+            var exported = false;
 
             //parameter :  views
             IList<ElementId> views = new List<ElementId>();
@@ -177,7 +153,7 @@ namespace Revit.SDK.Samples.ImportExport.CS
             // Default values
             m_exportFileVersion = ACADVersion.R2010;
             //parameter : DXFExportOptions dxfExportOptions
-            DXFExportOptions dxfExportOptions = new DXFExportOptions();
+            var dxfExportOptions = new DXFExportOptions();
             dxfExportOptions.ExportingAreas = m_exportOptionsData.ExportAreas;
             dxfExportOptions.ExportOfSolids = m_exportOptionsData.ExportSolid;
             dxfExportOptions.FileVersion = m_exportFileVersion;

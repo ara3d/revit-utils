@@ -53,12 +53,12 @@ namespace Revit.SDK.Samples.ImportExport.CS
         /// <returns></returns>
         public override bool Export()
         {
-            Transaction transaction = new Transaction(m_activeDoc, "Export_To_GBXML");
+            var transaction = new Transaction(m_activeDoc, "Export_To_GBXML");
             transaction.Start();
             base.Export();
 
-            GBXMLExportOptions options = new GBXMLExportOptions();
-            bool exported = m_activeDoc.Export(m_exportFolder, m_exportFileName, options);
+            var options = new GBXMLExportOptions();
+            var exported = m_activeDoc.Export(m_exportFolder, m_exportFileName, options);
             transaction.Commit();
 
             return exported;

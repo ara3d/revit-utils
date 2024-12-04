@@ -33,7 +33,7 @@ namespace Revit.SDK.Samples.ProjectInfo.CS
     /// <summary>
     /// Form used to display project information
     /// </summary>
-    public partial class ProjectInfoForm : System.Windows.Forms.Form
+    public partial class ProjectInfoForm : Form
     {
         #region Fields
         /// <summary>

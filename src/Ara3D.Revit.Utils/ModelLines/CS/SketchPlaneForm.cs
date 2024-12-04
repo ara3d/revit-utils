@@ -79,8 +79,8 @@ namespace Revit.SDK.Samples.ModelLines.CS
             try
             {
                 // Get the necessary information and invoke the method to create sketch plane
-                Autodesk.Revit.DB.XYZ normal = normalUserControl.GetPointData();
-                Autodesk.Revit.DB.XYZ origin = originUserControl.GetPointData();
+                var normal = normalUserControl.GetPointData();
+                var origin = originUserControl.GetPointData();
                 m_dataBuffer.CreateSketchPlane(normal, origin);
             }
             catch (Exception ex)
@@ -90,8 +90,8 @@ namespace Revit.SDK.Samples.ModelLines.CS
             }
 
             // If the creation is successful, close this form
-            this.DialogResult = DialogResult.OK;
-            this.Close();
+            DialogResult = DialogResult.OK;
+            Close();
         }
 
         /// <summary>
@@ -99,8 +99,8 @@ namespace Revit.SDK.Samples.ModelLines.CS
         /// </summary>
         private void cancelButton_Click(object sender, EventArgs e)
         {
-            this.DialogResult = DialogResult.Cancel;
-            this.Close();
+            DialogResult = DialogResult.Cancel;
+            Close();
         }
     }
 }

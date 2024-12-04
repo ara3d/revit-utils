@@ -55,12 +55,12 @@ namespace Revit.SDK.Samples.ImportExport.CS
         {
             base.Export();
 
-            bool exported = false;
+            var exported = false;
             //parameter : ViewSet views
-            ViewSet views = new ViewSet();
+            var views = new ViewSet();
             views.Insert(m_activeDoc.ActiveView);
 
-            FBXExportOptions options = new FBXExportOptions();
+            var options = new FBXExportOptions();
             exported = m_activeDoc.Export(m_exportFolder, m_exportFileName, views, options);
 
             return exported;

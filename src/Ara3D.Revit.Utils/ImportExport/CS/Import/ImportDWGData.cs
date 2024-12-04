@@ -60,12 +60,12 @@ namespace Revit.SDK.Samples.ImportExport.CS
         /// <summary>
         /// All available import color modes
         /// </summary>
-        private List<Autodesk.Revit.DB.ImportColorMode> m_enumColorMode;
+        private List<ImportColorMode> m_enumColorMode;
 
         /// <summary>
         /// Import color mode
         /// </summary>
-        private Autodesk.Revit.DB.ImportColorMode m_importColorMode;
+        private ImportColorMode m_importColorMode;
 
         /// <summary>
         /// Custom scale for import
@@ -85,12 +85,12 @@ namespace Revit.SDK.Samples.ImportExport.CS
         /// <summary>
         /// All placement for layers to be imported
         /// </summary>
-        private List<Autodesk.Revit.DB.ImportPlacement> m_enumPlacement;
+        private List<ImportPlacement> m_enumPlacement;
 
         /// <summary>
         /// Placement for import
         /// </summary>
-        private Autodesk.Revit.DB.ImportPlacement m_importPlacement;
+        private ImportPlacement m_importPlacement;
 
         /// <summary>
         /// All units for layer to be imported
@@ -100,12 +100,12 @@ namespace Revit.SDK.Samples.ImportExport.CS
         /// <summary>
         /// All import unit for import layers
         /// </summary>
-        private List<Autodesk.Revit.DB.ImportUnit> m_enumUnit;
+        private List<ImportUnit> m_enumUnit;
 
         /// <summary>
         /// Import unit
         /// </summary>
-        private Autodesk.Revit.DB.ImportUnit m_importUnit;
+        private ImportUnit m_importUnit;
 
         /// <summary>
         /// All available layers only 
@@ -135,14 +135,8 @@ namespace Revit.SDK.Samples.ImportExport.CS
         /// </summary>
         public bool ImportThisViewOnly
         {
-            get
-            {
-                return m_importThisViewOnly;
-            }
-            set
-            {
-                m_importThisViewOnly = value;
-            }
+            get => m_importThisViewOnly;
+            set => m_importThisViewOnly = value;
         }
 
 
@@ -151,14 +145,8 @@ namespace Revit.SDK.Samples.ImportExport.CS
         /// </summary>
         public ViewSet Views
         {
-            get
-            {
-                return m_views;
-            }
-            set
-            {
-                m_views = value;
-            }
+            get => m_views;
+            set => m_views = value;
         }
 
 
@@ -167,54 +155,30 @@ namespace Revit.SDK.Samples.ImportExport.CS
         /// </summary>
         public View ImportView
         {
-            get
-            {
-                return m_importView;
-            }
-            set
-            {
-                m_importView = value;
-            }
+            get => m_importView;
+            set => m_importView = value;
         }
 
 
         /// <summary>
         /// All available color modes for import
         /// </summary>
-        public ReadOnlyCollection<String> ColorMode
-        {
-            get
-            {
-                return new ReadOnlyCollection<String>(m_colorMode);
-            }
-        }
+        public ReadOnlyCollection<String> ColorMode => new(m_colorMode);
 
 
         /// <summary>
         /// All available import color modes
         /// </summary>
-        public ReadOnlyCollection<Autodesk.Revit.DB.ImportColorMode> EnumColorMode
-        {
-            get
-            {
-                return new ReadOnlyCollection<Autodesk.Revit.DB.ImportColorMode>(m_enumColorMode);
-            }
-        }
+        public ReadOnlyCollection<ImportColorMode> EnumColorMode => new(m_enumColorMode);
 
 
         /// <summary>
         /// Import color mode
         /// </summary>
-        public Autodesk.Revit.DB.ImportColorMode ImportColorMode
+        public ImportColorMode ImportColorMode
         {
-            get
-            {
-                return m_importColorMode;
-            }
-            set
-            {
-                m_importColorMode = value;
-            }
+            get => m_importColorMode;
+            set => m_importColorMode = value;
         }
 
 
@@ -223,14 +187,8 @@ namespace Revit.SDK.Samples.ImportExport.CS
         /// </summary>
         public double ImportCustomScale
         {
-            get
-            {
-                return m_importCustomScale;
-            }
-            set
-            {
-                m_importCustomScale = value;
-            }
+            get => m_importCustomScale;
+            set => m_importCustomScale = value;
         }
 
 
@@ -239,119 +197,65 @@ namespace Revit.SDK.Samples.ImportExport.CS
         /// </summary>
         public bool ImportOrientToView
         {
-            get
-            {
-                return m_importOrientToView;
-            }
-            set
-            {
-                m_importOrientToView = value;
-            }
+            get => m_importOrientToView;
+            set => m_importOrientToView = value;
         }
 
 
         /// <summary>
         /// All placement for layers to be imported
         /// </summary>
-        public ReadOnlyCollection<String> Placement
-        {
-            get
-            {
-                return new ReadOnlyCollection<String>(m_placement);
-            }
-        }
+        public ReadOnlyCollection<String> Placement => new(m_placement);
 
 
         /// <summary>
         /// All ImportPlacements for all layers to be imported
         /// </summary>
-        public ReadOnlyCollection<Autodesk.Revit.DB.ImportPlacement> EnumPlacement
-        {
-            get
-            {
-                return new ReadOnlyCollection<Autodesk.Revit.DB.ImportPlacement>(m_enumPlacement);
-            }
-        }
+        public ReadOnlyCollection<ImportPlacement> EnumPlacement => new(m_enumPlacement);
 
 
         /// <summary>
         /// Import placement for import
         /// </summary>
-        public Autodesk.Revit.DB.ImportPlacement ImportPlacement
+        public ImportPlacement ImportPlacement
         {
-            get
-            {
-                return m_importPlacement;
-            }
-            set
-            {
-                m_importPlacement = value;
-            }
+            get => m_importPlacement;
+            set => m_importPlacement = value;
         }
 
 
         /// <summary>
         /// All units for layer to be imported
         /// </summary>
-        public ReadOnlyCollection<String> Unit
-        {
-            get
-            {
-                return new ReadOnlyCollection<string>(m_unit);
-            }
-        }
+        public ReadOnlyCollection<String> Unit => new(m_unit);
 
 
         /// <summary>
         /// All import unit for import layers
         /// </summary>
-        public ReadOnlyCollection<Autodesk.Revit.DB.ImportUnit> EnumUnit
-        {
-            get
-            {
-                return new ReadOnlyCollection<Autodesk.Revit.DB.ImportUnit>(m_enumUnit);
-            }
-        }
+        public ReadOnlyCollection<ImportUnit> EnumUnit => new(m_enumUnit);
 
 
         /// <summary>
         /// Get or set import unit
         /// </summary>
-        public Autodesk.Revit.DB.ImportUnit ImportUnit
+        public ImportUnit ImportUnit
         {
-            get
-            {
-                return m_importUnit;
-            }
-            set
-            {
-                m_importUnit = value;
-            }
+            get => m_importUnit;
+            set => m_importUnit = value;
         }
 
 
         /// <summary>
         /// All available layers only 
         /// </summary>
-        public ReadOnlyCollection<String> VisibleLayersOnly
-        {
-            get
-            {
-                return new ReadOnlyCollection<String>(m_visibleLayersOnly);
-            }
-        }
+        public ReadOnlyCollection<String> VisibleLayersOnly => new(m_visibleLayersOnly);
 
 
         /// <summary>
         /// All boolean values for available visible layers
         /// </summary>
-        public ReadOnlyCollection<bool> EnumVisibleLayersOnly
-        {
-            get
-            {
-                return new ReadOnlyCollection<bool>(m_enumVisibleLayersOnly);
-            }
-        }
+        public ReadOnlyCollection<bool> EnumVisibleLayersOnly => new(m_enumVisibleLayersOnly);
 
 
         /// <summary>
@@ -359,14 +263,8 @@ namespace Revit.SDK.Samples.ImportExport.CS
         /// </summary>
         public bool ImportVisibleLayersOnly
         {
-            get
-            {
-                return m_importVisibleLayersOnly;
-            }
-            set
-            {
-                m_importVisibleLayersOnly = value;
-            }
+            get => m_importVisibleLayersOnly;
+            set => m_importVisibleLayersOnly = value;
         }
 
         /// <summary>
@@ -374,14 +272,8 @@ namespace Revit.SDK.Samples.ImportExport.CS
         /// </summary>
         public bool Is3DView
         {
-            get 
-            { 
-                return m_is3DView; 
-            }
-            set 
-            { 
-                m_is3DView = value; 
-            }
+            get => m_is3DView;
+            set => m_is3DView = value;
         }
         #endregion
 
@@ -405,10 +297,10 @@ namespace Revit.SDK.Samples.ImportExport.CS
         /// <returns></returns>
         public override bool Import()
         {
-            bool imported = false;
+            var imported = false;
 
             //parameter: DWGImportOptions
-            DWGImportOptions dwgImportOption = new DWGImportOptions();
+            var dwgImportOption = new DWGImportOptions();
             dwgImportOption.ColorMode = m_importColorMode;
             dwgImportOption.CustomScale = m_importCustomScale;
             dwgImportOption.OrientToView = m_importOrientToView;
@@ -430,7 +322,7 @@ namespace Revit.SDK.Samples.ImportExport.CS
             ElementId elementId = null;
 
             //Import
-            Transaction t = new Transaction(m_activeDoc);
+            var t = new Transaction(m_activeDoc);
             t.SetName("Import");
             t.Start();
             imported = m_activeDoc.Import(m_importFileFullName, dwgImportOption, view, out elementId);
@@ -449,41 +341,41 @@ namespace Revit.SDK.Samples.ImportExport.CS
         {
             //ColorMode
             m_colorMode = new List<String>();
-            m_enumColorMode = new List<Autodesk.Revit.DB.ImportColorMode>();
+            m_enumColorMode = new List<ImportColorMode>();
             m_colorMode.Add("Black and white");
-            m_enumColorMode.Add(Autodesk.Revit.DB.ImportColorMode.BlackAndWhite);
+            m_enumColorMode.Add(ImportColorMode.BlackAndWhite);
             m_colorMode.Add("Preserve colors");
-            m_enumColorMode.Add(Autodesk.Revit.DB.ImportColorMode.Preserved);
+            m_enumColorMode.Add(ImportColorMode.Preserved);
             m_colorMode.Add("Invert colors");
-            m_enumColorMode.Add(Autodesk.Revit.DB.ImportColorMode.Inverted);
+            m_enumColorMode.Add(ImportColorMode.Inverted);
 
             //Placement
             m_placement = new List<String>();
-            m_enumPlacement = new List<Autodesk.Revit.DB.ImportPlacement>();
+            m_enumPlacement = new List<ImportPlacement>();
             m_placement.Add("Center-to-center");
-            m_enumPlacement.Add(Autodesk.Revit.DB.ImportPlacement.Centered);
+            m_enumPlacement.Add(ImportPlacement.Centered);
             m_placement.Add("Origin-to-origin");
-            m_enumPlacement.Add(Autodesk.Revit.DB.ImportPlacement.Origin);
+            m_enumPlacement.Add(ImportPlacement.Origin);
 
             //Unit
             m_unit = new List<String>();
-            m_enumUnit = new List<Autodesk.Revit.DB.ImportUnit>();
+            m_enumUnit = new List<ImportUnit>();
             m_unit.Add("Auto-Detect");
-            m_enumUnit.Add(Autodesk.Revit.DB.ImportUnit.Default);
-            m_unit.Add(Autodesk.Revit.DB.ImportUnit.Foot.ToString());
-            m_enumUnit.Add(Autodesk.Revit.DB.ImportUnit.Foot);
-            m_unit.Add(Autodesk.Revit.DB.ImportUnit.Inch.ToString());
-            m_enumUnit.Add(Autodesk.Revit.DB.ImportUnit.Inch);
-            m_unit.Add(Autodesk.Revit.DB.ImportUnit.Meter.ToString());
-            m_enumUnit.Add(Autodesk.Revit.DB.ImportUnit.Meter);
-            m_unit.Add(Autodesk.Revit.DB.ImportUnit.Decimeter.ToString());
-            m_enumUnit.Add(Autodesk.Revit.DB.ImportUnit.Decimeter);
-            m_unit.Add(Autodesk.Revit.DB.ImportUnit.Centimeter.ToString());
-            m_enumUnit.Add(Autodesk.Revit.DB.ImportUnit.Centimeter);
-            m_unit.Add(Autodesk.Revit.DB.ImportUnit.Millimeter.ToString());
-            m_enumUnit.Add(Autodesk.Revit.DB.ImportUnit.Millimeter);
+            m_enumUnit.Add(ImportUnit.Default);
+            m_unit.Add(ImportUnit.Foot.ToString());
+            m_enumUnit.Add(ImportUnit.Foot);
+            m_unit.Add(ImportUnit.Inch.ToString());
+            m_enumUnit.Add(ImportUnit.Inch);
+            m_unit.Add(ImportUnit.Meter.ToString());
+            m_enumUnit.Add(ImportUnit.Meter);
+            m_unit.Add(ImportUnit.Decimeter.ToString());
+            m_enumUnit.Add(ImportUnit.Decimeter);
+            m_unit.Add(ImportUnit.Centimeter.ToString());
+            m_enumUnit.Add(ImportUnit.Centimeter);
+            m_unit.Add(ImportUnit.Millimeter.ToString());
+            m_enumUnit.Add(ImportUnit.Millimeter);
             m_unit.Add("Custom");
-            m_enumUnit.Add(Autodesk.Revit.DB.ImportUnit.Default);
+            m_enumUnit.Add(ImportUnit.Default);
 
             //VisibleLayersOnly
             m_visibleLayersOnly = new List<String>();
@@ -495,7 +387,7 @@ namespace Revit.SDK.Samples.ImportExport.CS
 
             //Whether active view is 3D
             m_is3DView = false;
-            if (m_activeDoc.ActiveView.ViewType == Autodesk.Revit.DB.ViewType.ThreeD)
+            if (m_activeDoc.ActiveView.ViewType == ViewType.ThreeD)
             {
                 m_is3DView = true;
             }            
@@ -506,11 +398,11 @@ namespace Revit.SDK.Samples.ImportExport.CS
 
             m_importCustomScale = 0.0;
             m_importOrientToView = true;
-            m_importUnit = Autodesk.Revit.DB.ImportUnit.Default;
+            m_importUnit = ImportUnit.Default;
             m_importThisViewOnly = false;
             m_importView = m_activeDoc.ActiveView;
-            m_importColorMode = Autodesk.Revit.DB.ImportColorMode.Inverted;
-            m_importPlacement = Autodesk.Revit.DB.ImportPlacement.Centered;
+            m_importColorMode = ImportColorMode.Inverted;
+            m_importPlacement = ImportPlacement.Centered;
             m_importVisibleLayersOnly = false;
 
             m_filter = "DWG Files (*.dwg)|*.dwg";
@@ -523,30 +415,30 @@ namespace Revit.SDK.Samples.ImportExport.CS
         /// </summary>
         private void GetViews()
         {
-            FilteredElementCollector collector = new FilteredElementCollector(m_activeDoc);
-            FilteredElementIterator itor = collector.OfClass(typeof(View)).GetElementIterator();
+            var collector = new FilteredElementCollector(m_activeDoc);
+            var itor = collector.OfClass(typeof(View)).GetElementIterator();
             itor.Reset();
-            ViewSet views = new ViewSet();
-            ViewSet floorPlans = new ViewSet();
-            ViewSet ceilingPlans = new ViewSet();
-            ViewSet engineeringPlans = new ViewSet();
+            var views = new ViewSet();
+            var floorPlans = new ViewSet();
+            var ceilingPlans = new ViewSet();
+            var engineeringPlans = new ViewSet();
             while (itor.MoveNext())
             {
-                View view = itor.Current as View;
+                var view = itor.Current as View;
                 // skip view templates because they're invalid for import/export
                 if (view == null || view.IsTemplate)
                 {
                     continue;
                 }
-                else if (view.ViewType == Autodesk.Revit.DB.ViewType.FloorPlan)
+                else if (view.ViewType == ViewType.FloorPlan)
                 {
                     floorPlans.Insert(view);
                 }
-                else if (view.ViewType == Autodesk.Revit.DB.ViewType.CeilingPlan)
+                else if (view.ViewType == ViewType.CeilingPlan)
                 {
                     ceilingPlans.Insert(view);
                 }
-                else if (view.ViewType == Autodesk.Revit.DB.ViewType.EngineeringPlan)
+                else if (view.ViewType == ViewType.EngineeringPlan)
                 {
                     engineeringPlans.Insert(view);
                 }
@@ -571,10 +463,10 @@ namespace Revit.SDK.Samples.ImportExport.CS
                 }
             }
 
-            View activeView = m_activeDoc.ActiveView;
-            Autodesk.Revit.DB.ViewType viewType = activeView.ViewType;
-            if (viewType == Autodesk.Revit.DB.ViewType.FloorPlan ||
-                viewType == Autodesk.Revit.DB.ViewType.CeilingPlan)
+            var activeView = m_activeDoc.ActiveView;
+            var viewType = activeView.ViewType;
+            if (viewType == ViewType.FloorPlan ||
+                viewType == ViewType.CeilingPlan)
             {
                 m_views.Insert(activeView);
                 foreach (View view in views)
@@ -585,7 +477,7 @@ namespace Revit.SDK.Samples.ImportExport.CS
                     }
                 }
             }
-            else if (viewType == Autodesk.Revit.DB.ViewType.EngineeringPlan)
+            else if (viewType == ViewType.EngineeringPlan)
             {
                 if (views.Contains(activeView))
                 {
@@ -601,7 +493,7 @@ namespace Revit.SDK.Samples.ImportExport.CS
             }
             else//Get view of the lowest elevation
             {
-                int i = 0;
+                var i = 0;
                 double elevation = 0;
                 View viewLowestElevation = null;
                 foreach (View view in views)

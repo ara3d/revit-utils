@@ -88,11 +88,11 @@ namespace Revit.SDK.Samples.PathOfTravelCreation.CS
       {
          try
          {
-            UIDocument uiDoc = commandData.Application.ActiveUIDocument;
-            ViewPlan viewPlan = uiDoc.ActiveView as ViewPlan;
+            var uiDoc = commandData.Application.ActiveUIDocument;
+            var viewPlan = uiDoc.ActiveView as ViewPlan;
             if (null == viewPlan)
             {
-               TaskDialog td = new TaskDialog("Cannot create PathOfTravel.");
+               var td = new TaskDialog("Cannot create PathOfTravel.");
                td.MainInstruction = String.Format("PathOfTravel can only be created for plan views.");
 
                td.Show();
@@ -100,7 +100,7 @@ namespace Revit.SDK.Samples.PathOfTravelCreation.CS
                return Result.Succeeded;
             }
 
-            using (CreateForm createForm = new CreateForm())
+            using (var createForm = new CreateForm())
             {
                if (DialogResult.OK == createForm.ShowDialog())
                {
@@ -135,24 +135,24 @@ namespace Revit.SDK.Samples.PathOfTravelCreation.CS
       /// </summary>
       private void CreatePathsOfTravelInOneRoomMultiplePointsToOneDoor(UIDocument uiDoc)
       {
-         Document doc = uiDoc.Document;
-         ViewPlan viewPlan = uiDoc.ActiveView as ViewPlan;
-         ElementId levelId = viewPlan.GenLevel.Id;
+         var doc = uiDoc.Document;
+         var viewPlan = uiDoc.ActiveView as ViewPlan;
+         var levelId = viewPlan.GenLevel.Id;
 
          // select room
-         Reference reference = uiDoc.Selection.PickObject(ObjectType.Element, new RoomSelectionFilter(), "Select a room");
-         Room room = doc.GetElement(reference) as Room;
+         var reference = uiDoc.Selection.PickObject(ObjectType.Element, new RoomSelectionFilter(), "Select a room");
+         var room = doc.GetElement(reference) as Room;
 
          // select exit door
-         Reference roomReference = uiDoc.Selection.PickObject(ObjectType.Element, new DoorSelectionFilter(), "Select a target door");
-         Instance doorElement = doc.GetElement(roomReference) as Instance;
-         Transform trf = doorElement.GetTransform();
-         XYZ endPoint = trf.Origin;
+         var roomReference = uiDoc.Selection.PickObject(ObjectType.Element, new DoorSelectionFilter(), "Select a target door");
+         var doorElement = doc.GetElement(roomReference) as Instance;
+         var trf = doorElement.GetTransform();
+         var endPoint = trf.Origin;
 
-         ResultsSummary resultsSummary = new ResultsSummary();
+         var resultsSummary = new ResultsSummary();
          resultsSummary.numDoors = 1;
 
-         Stopwatch stopwatch = Stopwatch.StartNew();
+         var stopwatch = Stopwatch.StartNew();
 
          GeneratePathsOfTravelForOneRoomOneDoor(doc, viewPlan, room, endPoint, resultsSummary);
 
@@ -168,33 +168,33 @@ namespace Revit.SDK.Samples.PathOfTravelCreation.CS
       /// </summary>
       private void CreatePathsOfTravelRoomCenterpointsToSingleDoor(UIDocument uiDoc)
       {
-         Document doc = uiDoc.Document;
-         ViewPlan viewPlan = uiDoc.ActiveView as ViewPlan;
-         ElementId levelId = viewPlan.GenLevel.Id;
+         var doc = uiDoc.Document;
+         var viewPlan = uiDoc.ActiveView as ViewPlan;
+         var levelId = viewPlan.GenLevel.Id;
 
          // select exit door
-         Reference reference = uiDoc.Selection.PickObject(ObjectType.Element, new DoorSelectionFilter(), "Select a target door");
-         Instance doorElement = doc.GetElement(reference) as Instance;
-         Transform trf = doorElement.GetTransform();
-         XYZ endPoint = trf.Origin;
+         var reference = uiDoc.Selection.PickObject(ObjectType.Element, new DoorSelectionFilter(), "Select a target door");
+         var doorElement = doc.GetElement(reference) as Instance;
+         var trf = doorElement.GetTransform();
+         var endPoint = trf.Origin;
 
          // find all rooms
-         FilteredElementCollector fec = new FilteredElementCollector(doc);
-         fec.WherePasses(new Autodesk.Revit.DB.Architecture.RoomFilter());
+         var fec = new FilteredElementCollector(doc);
+         fec.WherePasses(new RoomFilter());
 
-         List<XYZ> startPoints = new List<XYZ>();
+         var startPoints = new List<XYZ>();
 
-         foreach (Room room in fec.Cast<Room>().Where<Room>(rm => rm.Level.Id == levelId))
+         foreach (var room in fec.Cast<Room>().Where(rm => rm.Level.Id == levelId))
          {
-            LocationPoint location = room.Location as LocationPoint;
+            var location = room.Location as LocationPoint;
             if (location == null)
                continue;
-            XYZ roomPoint = location.Point;
+            var roomPoint = location.Point;
             startPoints.Add(roomPoint);
          }
 
          // generate paths           
-         using (Transaction t = new Transaction(doc, "Generate paths of travel"))
+         using (var t = new Transaction(doc, "Generate paths of travel"))
          {
             t.Start();
             IList<PathOfTravelCalculationStatus> statuses;
@@ -210,8 +210,8 @@ namespace Revit.SDK.Samples.PathOfTravelCreation.CS
       /// </summary>
       private void CreatePathsOfTravelInAllRoomsAllDoorsMultiplePointsManyToMany(UIDocument uiDoc)
       {
-         Document doc = uiDoc.Document;
-         ViewPlan viewPlan = uiDoc.ActiveView as ViewPlan;
+         var doc = uiDoc.Document;
+         var viewPlan = uiDoc.ActiveView as ViewPlan;
 
          CreatePathsOfTravelInAllRoomsAllDoorsMultiplePointsManyToMany(doc, viewPlan, false);
 
@@ -274,28 +274,28 @@ namespace Revit.SDK.Samples.PathOfTravelCreation.CS
       /// <returns></returns>
       private static void AppendRoomNearCornerPoints(Room room, List<XYZ> nearCornerPoints)
       {
-         IList<IList<BoundarySegment>> segments = room.GetBoundarySegments(new SpatialElementBoundaryOptions());
+         var segments = room.GetBoundarySegments(new SpatialElementBoundaryOptions());
          if (segments == null || segments.Count == 0)
             return;
 
          // First region only
-         IList<BoundarySegment> firstSegments = segments[0];
-         int numSegments = firstSegments.Count;
+         var firstSegments = segments[0];
+         var numSegments = firstSegments.Count;
 
 
-         for (int i = 0; i < numSegments; i++)
+         for (var i = 0; i < numSegments; i++)
          {
-            BoundarySegment seg1 = firstSegments.ElementAt(i);
-            BoundarySegment seg2 = firstSegments.ElementAt(i == numSegments - 1 ? 0 : i + 1);
+            var seg1 = firstSegments.ElementAt(i);
+            var seg2 = firstSegments.ElementAt(i == numSegments - 1 ? 0 : i + 1);
 
-            Curve curve1 = seg1.GetCurve();
-            Curve curve2 = seg2.GetCurve();
+            var curve1 = seg1.GetCurve();
+            var curve2 = seg2.GetCurve();
 
-            Curve offsetCurve1 = curve1.CreateOffset(-1.5, XYZ.BasisZ);
-            Curve offsetCurve2 = curve2.CreateOffset(-1.5, XYZ.BasisZ);
+            var offsetCurve1 = curve1.CreateOffset(-1.5, XYZ.BasisZ);
+            var offsetCurve2 = curve2.CreateOffset(-1.5, XYZ.BasisZ);
 
             IntersectionResultArray intersections = null;
-            SetComparisonResult result = offsetCurve1.Intersect(offsetCurve2, out intersections);
+            var result = offsetCurve1.Intersect(offsetCurve2, out intersections);
 
             // First intersection only
             if (result == SetComparisonResult.Overlap && intersections.Size == 1)
@@ -319,7 +319,7 @@ namespace Revit.SDK.Samples.PathOfTravelCreation.CS
       /// <returns></returns>
       private static List<XYZ> GetRoomNearCornerPoints(Room room)
       {
-         List<XYZ> nearCornerPoints = new List<XYZ>();
+         var nearCornerPoints = new List<XYZ>();
 
          AppendRoomNearCornerPoints(room, nearCornerPoints);
 
@@ -336,31 +336,31 @@ namespace Revit.SDK.Samples.PathOfTravelCreation.CS
       /// <param name="mapAllStartsToAllEnds"></param>
       private static void CreatePathsOfTravelInAllRoomsAllDoorsMultiplePointsManyToMany(Document doc, ViewPlan viewPlan, bool mapAllStartsToAllEnds)
       {
-         ElementId levelId = viewPlan.GenLevel.Id;
+         var levelId = viewPlan.GenLevel.Id;
 
          // find rooms on level
-         FilteredElementCollector fec = new FilteredElementCollector(doc, viewPlan.Id);
-         fec.WherePasses(new Autodesk.Revit.DB.Architecture.RoomFilter());
+         var fec = new FilteredElementCollector(doc, viewPlan.Id);
+         fec.WherePasses(new RoomFilter());
 
 
          // find doors on level
-         FilteredElementCollector fec2 = new FilteredElementCollector(doc, viewPlan.Id);
+         var fec2 = new FilteredElementCollector(doc, viewPlan.Id);
          fec2.OfCategory(BuiltInCategory.OST_Doors);
 
 
          // setup results
-         ResultsSummary resultsSummary = new ResultsSummary();
+         var resultsSummary = new ResultsSummary();
 
-         List<XYZ> endPoints = new List<XYZ>();
+         var endPoints = new List<XYZ>();
 
          // Collect rooms
-         List<Room> rooms = fec.Cast<Room>().ToList<Room>();
+         var rooms = fec.Cast<Room>().ToList();
 
          // Loop on doors and collect target points (the door's origin)
-         foreach (Element element in fec2)
+         foreach (var element in fec2)
          {
-            Instance doorElement = (Instance)element;
-            Transform trf = doorElement.GetTransform();
+            var doorElement = (Instance)element;
+            var trf = doorElement.GetTransform();
             endPoints.Add(trf.Origin);
          }
 
@@ -368,7 +368,7 @@ namespace Revit.SDK.Samples.PathOfTravelCreation.CS
 
 
 
-         using (TransactionGroup group = new TransactionGroup(doc, "Generate all paths of travel"))
+         using (var group = new TransactionGroup(doc, "Generate all paths of travel"))
          {
             group.Start();
 
@@ -392,8 +392,8 @@ namespace Revit.SDK.Samples.PathOfTravelCreation.CS
       private static void GeneratePathsOfTravelForRoomsToEndpointsManyToMany(Document doc, ViewPlan viewPlan, List<Room> rooms, List<XYZ> endPoints, ResultsSummary resultsSummary,
                                                                               bool mapAllStartsToAllEnds)
       {
-         List<XYZ> allSourcePoints = new List<XYZ>();
-         foreach (Room room in rooms)
+         var allSourcePoints = new List<XYZ>();
+         foreach (var room in rooms)
          {
             AppendRoomNearCornerPoints(room, allSourcePoints);
          }
@@ -415,11 +415,11 @@ namespace Revit.SDK.Samples.PathOfTravelCreation.CS
          // This is for testing purposes, the API option to do this mapping is likely more efficient for this case.
          if (mapAllStartsToAllEnds)
          {
-            List<XYZ> allSourcePointsMappedToEnds = new List<XYZ>();
-            List<XYZ> allEndPointsMappedToEnds = new List<XYZ>();
-            foreach (XYZ source in allSourcePoints)
+            var allSourcePointsMappedToEnds = new List<XYZ>();
+            var allEndPointsMappedToEnds = new List<XYZ>();
+            foreach (var source in allSourcePoints)
             {
-               foreach (XYZ end in endPoints)
+               foreach (var end in endPoints)
                {
                   allSourcePointsMappedToEnds.Add(source);
                   allEndPointsMappedToEnds.Add(end);
@@ -450,9 +450,9 @@ namespace Revit.SDK.Samples.PathOfTravelCreation.CS
       private static void GeneratePathsOfTravel(Document doc, ViewPlan viewPlan, List<XYZ> startPoints, List<XYZ> endPoints, ResultsSummary resultsSummary, bool mapAllStartsToAllEnds)
       {
          // Performance monitoring
-         Stopwatch stopwatch = Stopwatch.StartNew();
+         var stopwatch = Stopwatch.StartNew();
 
-         using (Transaction t = new Transaction(doc, "Generate paths of travel"))
+         using (var t = new Transaction(doc, "Generate paths of travel"))
          {
             t.Start();
 
@@ -463,9 +463,9 @@ namespace Revit.SDK.Samples.PathOfTravelCreation.CS
             else
                pathsOfTravel = PathOfTravel.CreateMultiple(viewPlan, startPoints, endPoints, out statuses);
 
-            int i = 0;
+            var i = 0;
 
-            foreach (PathOfTravel pathOfTravel in pathsOfTravel)
+            foreach (var pathOfTravel in pathsOfTravel)
             {
                if (pathOfTravel == null)
                {
@@ -492,18 +492,18 @@ namespace Revit.SDK.Samples.PathOfTravelCreation.CS
       /// <param name="resultsSummary"></param>
       private static void GeneratePathsOfTravelForOneRoomManyDoors(Document doc, ViewPlan viewPlan, Room room, List<XYZ> endPoints, ResultsSummary resultsSummary)
       {
-         List<XYZ> sourcePoints = GetRoomNearCornerPoints(room);
+         var sourcePoints = GetRoomNearCornerPoints(room);
          resultsSummary.numSourcePoints += sourcePoints.Count;
 
          // generate paths
 
-         using (Transaction t = new Transaction(doc, "Generate paths of travel"))
+         using (var t = new Transaction(doc, "Generate paths of travel"))
          {
             t.Start();
             IList<PathOfTravelCalculationStatus> statuses;
-            IList<PathOfTravel> pathsOfTravel = PathOfTravel.CreateMapped(viewPlan, sourcePoints, endPoints, out statuses);
+            var pathsOfTravel = PathOfTravel.CreateMapped(viewPlan, sourcePoints, endPoints, out statuses);
 
-            foreach (PathOfTravel pOT in pathsOfTravel)
+            foreach (var pOT in pathsOfTravel)
             {
                if (pOT == null) resultsSummary.numFailures++;
                else resultsSummary.numSuccesses++;
@@ -551,17 +551,17 @@ namespace Revit.SDK.Samples.PathOfTravelCreation.CS
       /// <param name="resultsSummary"></param>
       private static void ShowResults(ResultsSummary resultsSummary)
       {
-         CultureInfo ci = new CultureInfo("en-us");
+         var ci = new CultureInfo("en-us");
 
-         int numOfPathsToCreate = resultsSummary.numSourcePoints * resultsSummary.numDoors;
+         var numOfPathsToCreate = resultsSummary.numSourcePoints * resultsSummary.numDoors;
 
-         double successRatePercent = (double)(resultsSummary.numSuccesses) / (double)(numOfPathsToCreate);
+         var successRatePercent = (double)(resultsSummary.numSuccesses) / (double)(numOfPathsToCreate);
 
-         TaskDialog td = new TaskDialog("Results of PathOfTravel creation");
+         var td = new TaskDialog("Results of PathOfTravel creation");
          td.MainInstruction = String.Format("Path of Travel succeeded on {0} of known points", successRatePercent.ToString("P01", ci));
-         String details = String.Format("There were {0} room source points found in room analysis (via offsetting boundaries). " +
-                                         "They would be connected to {2} door target points. {1} failed to generate a Path of Travel out of {4}  " +
-                                         "Processing took {3} milliseconds.",
+         var details = String.Format("There were {0} room source points found in room analysis (via offsetting boundaries). " +
+                                     "They would be connected to {2} door target points. {1} failed to generate a Path of Travel out of {4}  " +
+                                     "Processing took {3} milliseconds.",
                                          resultsSummary.numSourcePoints, resultsSummary.numFailures, resultsSummary.numDoors, resultsSummary.elapsedMilliseconds, numOfPathsToCreate);
          if (resultsSummary.numFailures > 0)
          {

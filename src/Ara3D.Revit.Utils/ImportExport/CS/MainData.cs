@@ -115,27 +115,15 @@ namespace Revit.SDK.Samples.ImportExport.CS
         /// <summary>
         /// Revit command data
         /// </summary>
-        public ExternalCommandData CommandData
-        {
-            get
-            {
-                return m_commandData;
-            }
-        }
+        public ExternalCommandData CommandData => m_commandData;
 
         /// <summary>
         /// Whether current view is a 3D view
         /// </summary>
         public bool Is3DView
         {
-            get
-            {
-                return m_is3DView;
-            }
-            set
-            {
-                m_is3DView = value;
-            }
+            get => m_is3DView;
+            set => m_is3DView = value;
         }
 
         /// <summary>
@@ -164,7 +152,7 @@ namespace Revit.SDK.Samples.ImportExport.CS
         /// <returns>The format to export</returns>
         private static ExportFormat GetSelectedExportFormat(string selectedFormat)
         {
-            ExportFormat format = ExportFormat.DWG;
+            var format = ExportFormat.DWG;
             switch (selectedFormat)
             {
                 case "DWG":
@@ -210,67 +198,67 @@ namespace Revit.SDK.Samples.ImportExport.CS
         /// <param name="selectedFormat">Selected format</param>
         public DialogResult Export(string selectedFormat)
         {
-            ExportFormat format = GetSelectedExportFormat(selectedFormat);
-            DialogResult dialogResult = DialogResult.OK;
+            var format = GetSelectedExportFormat(selectedFormat);
+            var dialogResult = DialogResult.OK;
 
             try
             {
                 switch (format)
                 {
                     case ExportFormat.DWG:
-                        ExportDWGData exportDWGData = new ExportDWGData(m_commandData, format);
-                        using (ExportWithViewsForm exportForm = new ExportWithViewsForm(exportDWGData))
+                        var exportDWGData = new ExportDWGData(m_commandData, format);
+                        using (var exportForm = new ExportWithViewsForm(exportDWGData))
                         {
                             dialogResult = exportForm.ShowDialog();
                         }
                         break;
                     case ExportFormat.DXF:
-                        ExportDXFData exportDXFData = new ExportDXFData(m_commandData, format);
-                        using (ExportWithViewsForm exportForm = new ExportWithViewsForm(exportDXFData))
+                        var exportDXFData = new ExportDXFData(m_commandData, format);
+                        using (var exportForm = new ExportWithViewsForm(exportDXFData))
                         {
                             dialogResult = exportForm.ShowDialog();
                         }
                         break;
                     case ExportFormat.SAT:
-                        ExportSATData exportSATData = new ExportSATData(m_commandData, format);
-                        using (ExportWithViewsForm exportForm = new ExportWithViewsForm(exportSATData))
+                        var exportSATData = new ExportSATData(m_commandData, format);
+                        using (var exportForm = new ExportWithViewsForm(exportSATData))
                         {
                             dialogResult = exportForm.ShowDialog();
                         }
                         break;
                     case ExportFormat.DWF:
                     case ExportFormat.DWFx:
-                        ExportDWFData exportDWFData = new ExportDWFData(m_commandData, format);
-                        using (ExportWithViewsForm exportForm = new ExportWithViewsForm(exportDWFData))
+                        var exportDWFData = new ExportDWFData(m_commandData, format);
+                        using (var exportForm = new ExportWithViewsForm(exportDWFData))
                         {
                             dialogResult = exportForm.ShowDialog();
                         }
                         break;
                     case ExportFormat.GBXML:
-                        ExportGBXMLData exportGBXMLData = new ExportGBXMLData(m_commandData, format);
+                        var exportGBXMLData = new ExportGBXMLData(m_commandData, format);
                         dialogResult = Export(exportGBXMLData);
                         break;
                     case ExportFormat.FBX:
-                        ExportFBXData exportFBXData = new ExportFBXData(m_commandData, format);
+                        var exportFBXData = new ExportFBXData(m_commandData, format);
                         dialogResult = Export(exportFBXData);
                         break;
                     case ExportFormat.DGN:
-                        ExportDGNData exportDGNData = new ExportDGNData(m_commandData, format);
-                        using (ExportWithViewsForm exportForm = new ExportWithViewsForm(exportDGNData))
+                        var exportDGNData = new ExportDGNData(m_commandData, format);
+                        using (var exportForm = new ExportWithViewsForm(exportDGNData))
                         {
                             dialogResult = exportForm.ShowDialog();
                         }
                         break;
                     case ExportFormat.Image:
-                        ExportIMGData exportIMGdata = new ExportIMGData(m_commandData, format);
-                        using (ExportWithViewsForm exportForm = new ExportWithViewsForm(exportIMGdata))
+                        var exportIMGdata = new ExportIMGData(m_commandData, format);
+                        using (var exportForm = new ExportWithViewsForm(exportIMGdata))
                         {
                             dialogResult = DialogResult.OK;
                         }
                         break;
                     case ExportFormat.PDF:
-                        ExportPDFData exportPDFData = new ExportPDFData(m_commandData, format);
-                        using (ExportWithViewsForm exportForm = new ExportWithViewsForm(exportPDFData))
+                        var exportPDFData = new ExportPDFData(m_commandData, format);
+                        using (var exportForm = new ExportWithViewsForm(exportPDFData))
                         {
                            dialogResult = exportForm.ShowDialog();
                         }
@@ -281,7 +269,7 @@ namespace Revit.SDK.Samples.ImportExport.CS
             }
             catch (Exception ex)
             {
-                String errorMessage = "Failed to export " + format + " format" + ex.ToString(); ;
+                var errorMessage = "Failed to export " + format + " format" + ex.ToString(); ;
                 TaskDialog.Show("Error", errorMessage, TaskDialogCommonButtons.Ok);
             }
 
@@ -294,10 +282,10 @@ namespace Revit.SDK.Samples.ImportExport.CS
         /// <param name="data"></param>
         private static DialogResult Export(ExportData data)
         {
-            String returnFilename = String.Empty;
-            int filterIndex = -1;
+            var returnFilename = String.Empty;
+            var filterIndex = -1;
 
-            DialogResult result = ShowSaveDialog(data, ref returnFilename, ref filterIndex);
+            var result = ShowSaveDialog(data, ref returnFilename, ref filterIndex);
             if (result != DialogResult.Cancel)
             {
                 data.ExportFileName = Path.GetFileName(returnFilename);
@@ -322,7 +310,7 @@ namespace Revit.SDK.Samples.ImportExport.CS
         public static DialogResult ShowSaveDialog(ExportData exportData, ref String returnFileName,
             ref int filterIndex)
         {
-            using (SaveFileDialog saveDialog = new SaveFileDialog())
+            using (var saveDialog = new SaveFileDialog())
             {
                 saveDialog.Title = exportData.Title;
                 saveDialog.InitialDirectory = exportData.ExportFolder;
@@ -331,7 +319,7 @@ namespace Revit.SDK.Samples.ImportExport.CS
                 saveDialog.FilterIndex = 1;
                 saveDialog.RestoreDirectory = true;
 
-                DialogResult result = saveDialog.ShowDialog();
+                var result = saveDialog.ShowDialog();
                 if (result != DialogResult.Cancel)
                 {
                     returnFileName = saveDialog.FileName;
@@ -349,7 +337,7 @@ namespace Revit.SDK.Samples.ImportExport.CS
         /// <returns>The format to import</returns>
         private static ImportFormat GetSelectedImportFormat(string selectedFormat)
         {
-            ImportFormat format = ImportFormat.DWG;
+            var format = ImportFormat.DWG;
             switch (selectedFormat)
             {
                 case "DWG":
@@ -378,26 +366,26 @@ namespace Revit.SDK.Samples.ImportExport.CS
         /// <returns></returns>
         public DialogResult Import(string selectedFormat)
         {
-            DialogResult dialogResult = DialogResult.OK;
-            ImportFormat format = GetSelectedImportFormat(selectedFormat);
+            var dialogResult = DialogResult.OK;
+            var format = GetSelectedImportFormat(selectedFormat);
 
             try
             {
                 switch (format)
                 {
                     case ImportFormat.DWG:
-                        ImportDWGData importDWGData = new ImportDWGData(m_commandData, format);
-                        using (ImportDWGForm importForm = new ImportDWGForm(importDWGData))
+                        var importDWGData = new ImportDWGData(m_commandData, format);
+                        using (var importForm = new ImportDWGForm(importDWGData))
                         {
                             dialogResult = importForm.ShowDialog();
                         }
                         break;
                     case ImportFormat.IMAGE:
-                        ImportImageData importIMAGEData = new ImportImageData(m_commandData, format);
+                        var importIMAGEData = new ImportImageData(m_commandData, format);
                         dialogResult = Import(importIMAGEData);
                         break;
                     case ImportFormat.GBXML:
-                        ImportGBXMLData importGBXMLData = new ImportGBXMLData(m_commandData, format);
+                        var importGBXMLData = new ImportGBXMLData(m_commandData, format);
                         dialogResult = Import(importGBXMLData);
                         break;
                     default:
@@ -406,7 +394,7 @@ namespace Revit.SDK.Samples.ImportExport.CS
             }
             catch (Exception)
             {
-                String errorMessage = "Failed to import " + format + " format";
+                var errorMessage = "Failed to import " + format + " format";
                 TaskDialog.Show("Error", errorMessage, TaskDialogCommonButtons.Ok);
             }
 
@@ -419,8 +407,8 @@ namespace Revit.SDK.Samples.ImportExport.CS
         /// <param name="data"></param>
         private static DialogResult Import(ImportData data)
         {
-            String returnFilename = String.Empty;
-            DialogResult result = ShowOpenDialog(data, ref returnFilename);
+            var returnFilename = String.Empty;
+            var result = ShowOpenDialog(data, ref returnFilename);
             if (result != DialogResult.Cancel)
             {
                 data.ImportFileFullName = returnFilename;
@@ -442,14 +430,14 @@ namespace Revit.SDK.Samples.ImportExport.CS
         /// <returns>Dialog result</returns>
         public static DialogResult ShowOpenDialog(ImportData importData, ref String returnFileName)
         {
-            using (OpenFileDialog importDialog = new OpenFileDialog())
+            using (var importDialog = new OpenFileDialog())
             {
                 importDialog.Title = importData.Title;
                 importDialog.InitialDirectory = importData.ImportFolder;
                 importDialog.Filter = importData.Filter;
                 importDialog.RestoreDirectory = true;
 
-                DialogResult result = importDialog.ShowDialog();
+                var result = importDialog.ShowDialog();
                 if (result != DialogResult.Cancel)
                 {
                     returnFileName = importDialog.FileName;

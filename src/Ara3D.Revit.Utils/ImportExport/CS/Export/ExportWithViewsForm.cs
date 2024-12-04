@@ -36,7 +36,7 @@ namespace Revit.SDK.Samples.ImportExport.CS
     /// <summary>
     /// It contains a dialog which provides the options of common information for export
     /// </summary>
-    public partial class ExportWithViewsForm : System.Windows.Forms.Form
+    public partial class ExportWithViewsForm : Form
     {
         // Data class object of ExportDataWithViews
         private ExportDataWithViews m_exportData;
@@ -62,16 +62,16 @@ namespace Revit.SDK.Samples.ImportExport.CS
             radioButtonCurrentView.Checked = true;
 
             // Initialize the title
-            this.Text = m_exportData.Title;
+            Text = m_exportData.Title;
             if (m_exportData.ExportFormat == ExportFormat.SAT)
             {
                 buttonOptions.Visible = false;
             }
             else if (m_exportData.ExportFormat == ExportFormat.Image)
             {
-                this.Hide();
-                ExportIMGData exportIMGData = m_exportData as ExportIMGData;
-                using (ExportIMGOptionsForm exportOptionsForm = new ExportIMGOptionsForm(m_exportData))
+                Hide();
+                var exportIMGData = m_exportData as ExportIMGData;
+                using (var exportOptionsForm = new ExportIMGOptionsForm(m_exportData))
                 {
                     exportOptionsForm.ShowDialog();
                 }
@@ -89,7 +89,7 @@ namespace Revit.SDK.Samples.ImportExport.CS
             // Export dwg
             if (m_exportData.ExportFormat == ExportFormat.DWG)
             {
-                bool contain3DView = false;
+                var contain3DView = false;
 
                 if (radioButtonCurrentView.Checked)
                 {
@@ -106,8 +106,8 @@ namespace Revit.SDK.Samples.ImportExport.CS
                     }
                 }
 
-                ExportDWGData exportDWGData = m_exportData as ExportDWGData;
-                using (ExportBaseOptionsForm exportOptionsForm = new ExportBaseOptionsForm(exportDWGData.ExportOptionsData,
+                var exportDWGData = m_exportData as ExportDWGData;
+                using (var exportOptionsForm = new ExportBaseOptionsForm(exportDWGData.ExportOptionsData,
                     contain3DView, "DWG"))
                 {
                     exportOptionsForm.ShowDialog();
@@ -116,7 +116,7 @@ namespace Revit.SDK.Samples.ImportExport.CS
             //Export dxf
             else if (m_exportData.ExportFormat == ExportFormat.DXF)
             {
-                bool contain3DView = false;
+                var contain3DView = false;
 
                 if (radioButtonCurrentView.Checked)
                 {
@@ -133,9 +133,9 @@ namespace Revit.SDK.Samples.ImportExport.CS
                     }
                 }
 
-                ExportDXFData exportDXFData = m_exportData as ExportDXFData;
+                var exportDXFData = m_exportData as ExportDXFData;
 
-                using (ExportBaseOptionsForm exportOptionsForm = new ExportBaseOptionsForm(exportDXFData.ExportOptionsData,
+                using (var exportOptionsForm = new ExportBaseOptionsForm(exportDXFData.ExportOptionsData,
                     contain3DView, "DXF"))
                 {
                     exportOptionsForm.ShowDialog();
@@ -145,8 +145,8 @@ namespace Revit.SDK.Samples.ImportExport.CS
             // Export dgn
             else if (m_exportData.ExportFormat == ExportFormat.DGN)
             {
-                ExportDGNData exportDGNData = m_exportData as ExportDGNData;
-                using (ExportDGNOptionsForm exportOptionsForm = new ExportDGNOptionsForm(exportDGNData))
+                var exportDGNData = m_exportData as ExportDGNData;
+                using (var exportOptionsForm = new ExportDGNOptionsForm(exportDGNData))
                 {
                     exportOptionsForm.ShowDialog();
                 }
@@ -154,8 +154,8 @@ namespace Revit.SDK.Samples.ImportExport.CS
             // Export PDF
             else if (m_exportData.ExportFormat == ExportFormat.PDF)
             {
-               ExportPDFData exportPDFData = m_exportData as ExportPDFData;
-               using (ExportPDFOptionsForm exportOptionsForm = new ExportPDFOptionsForm(exportPDFData))
+               var exportPDFData = m_exportData as ExportPDFData;
+               using (var exportOptionsForm = new ExportPDFOptionsForm(exportPDFData))
                {
                   exportOptionsForm.ShowDialog();
                }
@@ -164,8 +164,8 @@ namespace Revit.SDK.Samples.ImportExport.CS
             // Export DWF
             else
             {
-                ExportDWFData exportDWFData = m_exportData as ExportDWFData;
-                using (ExportDWFOptionForm exportOptionsForm = new ExportDWFOptionForm(exportDWFData))
+                var exportDWFData = m_exportData as ExportDWFData;
+                using (var exportOptionsForm = new ExportDWFOptionForm(exportDWFData))
                 {
                     exportOptionsForm.ShowDialog();
                 }
@@ -179,7 +179,7 @@ namespace Revit.SDK.Samples.ImportExport.CS
         /// <param name="e"></param>
         private void buttonSelectViews_Click(object sender, EventArgs e)
         {
-            using (SelectViewsForm selectViewsForm = new SelectViewsForm(m_exportData.SelectViewsData))
+            using (var selectViewsForm = new SelectViewsForm(m_exportData.SelectViewsData))
             {
                 m_exportData.SelectViewsData.SelectedViews.Clear();
                 selectViewsForm.ShowDialog();
@@ -201,21 +201,21 @@ namespace Revit.SDK.Samples.ImportExport.CS
         /// <param name="e"></param>
         private void buttonBrowser_Click(object sender, EventArgs e)
         {
-            String fileName = String.Empty;
-            int filterIndex = -1;
+            var fileName = String.Empty;
+            var filterIndex = -1;
 
-            DialogResult result = MainData.ShowSaveDialog(m_exportData, ref fileName, ref filterIndex);
+            var result = MainData.ShowSaveDialog(m_exportData, ref fileName, ref filterIndex);
             if (result != DialogResult.Cancel)
             {
                 textBoxSaveAs.Text = fileName;
                 if (m_exportData.ExportFormat == ExportFormat.DWG)
                 {
-                    ExportDWGData exportDWGData = m_exportData as ExportDWGData;
+                    var exportDWGData = m_exportData as ExportDWGData;
                     exportDWGData.ExportFileVersion = exportDWGData.EnumFileVersion[filterIndex - 1];
                 }
                 else if (m_exportData.ExportFormat == ExportFormat.DXF)
                 {
-                    ExportDXFData exportDXFData = m_exportData as ExportDXFData;
+                    var exportDXFData = m_exportData as ExportDXFData;
                     exportDXFData.ExportFileVersion = exportDXFData.EnumFileVersion[filterIndex - 1];
 
                 }
@@ -245,7 +245,7 @@ namespace Revit.SDK.Samples.ImportExport.CS
 
                 try
                 {
-                    bool exported = m_exportData.Export();
+                    var exported = m_exportData.Export();
                     if (!exported)
                     {
                         TaskDialog.Show("Export", "This project cannot be exported to " + m_exportData.ExportFileName +
@@ -257,8 +257,8 @@ namespace Revit.SDK.Samples.ImportExport.CS
                     TaskDialog.Show("Export Failed", ex.ToString(), TaskDialogCommonButtons.Ok);
                 }
 
-                this.DialogResult = DialogResult.OK;
-                this.Close();
+                DialogResult = DialogResult.OK;
+                Close();
             }
         }
 
@@ -268,7 +268,7 @@ namespace Revit.SDK.Samples.ImportExport.CS
         /// <returns></returns>
         private Boolean ValidateExportFolder()
         {
-            String fileNameFull = textBoxSaveAs.Text;
+            var fileNameFull = textBoxSaveAs.Text;
             //If the textBoxSaveAs is empty
             if (String.IsNullOrEmpty(fileNameFull))
             {
@@ -286,7 +286,7 @@ namespace Revit.SDK.Samples.ImportExport.CS
             }
 
             //Whether the folder exists
-            String folder = Path.GetDirectoryName(fileNameFull);
+            var folder = Path.GetDirectoryName(fileNameFull);
             if (!Directory.Exists(folder))
             {
                 TaskDialog.Show("Information", "The specified folder does not exist!", TaskDialogCommonButtons.Ok);

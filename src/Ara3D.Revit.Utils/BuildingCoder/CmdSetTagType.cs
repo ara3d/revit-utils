@@ -391,29 +391,29 @@ namespace BuildingCoder
         public static Tuple<double, double> GetTagExtents(
             IndependentTag tag)
         {
-            Document doc = tag.Document;
+            var doc = tag.Document;
 
             //Dimension to return
             double tagWidth;
             double tagHeight;
 
             //Tag's View and Element
-            View sec = doc.GetElement(tag.OwnerViewId) as View;
-            XYZ rightDirection = sec.RightDirection;
-            XYZ upDirection = sec.UpDirection;
-            Reference pipeReference = tag.GetTaggedReferences().First();
+            var sec = doc.GetElement(tag.OwnerViewId) as View;
+            var rightDirection = sec.RightDirection;
+            var upDirection = sec.UpDirection;
+            var pipeReference = tag.GetTaggedReferences().First();
             //Reference pipeReference = tag.GetTaggedReference(); //Older Revit Version
 
-            using (TransactionGroup transG = new TransactionGroup(doc))
+            using (var transG = new TransactionGroup(doc))
             {
                 transG.Start("Determine Tag Dimension");
 
-                using (Transaction trans = new Transaction(doc))
+                using (var trans = new Transaction(doc))
                 {
                     trans.Start("Determine Tag Dimension");
 
                     tag.LeaderEndCondition = LeaderEndCondition.Free;
-                    XYZ leaderEndPoint = tag.GetLeaderEnd(pipeReference);
+                    var leaderEndPoint = tag.GetLeaderEnd(pipeReference);
                     tag.TagHeadPosition = leaderEndPoint;
                     tag.SetLeaderElbow(pipeReference, leaderEndPoint);
 
@@ -421,7 +421,7 @@ namespace BuildingCoder
                 }
 
                 //Tag Dimension
-                BoundingBoxXYZ tagBox = tag.get_BoundingBox(sec);
+                var tagBox = tag.get_BoundingBox(sec);
                 tagWidth = (tagBox.Max - tagBox.Min).DotProduct(rightDirection);
                 tagHeight = (tagBox.Max - tagBox.Min).DotProduct(upDirection);
 

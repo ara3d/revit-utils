@@ -38,7 +38,7 @@ namespace Revit.SDK.Samples.ImportExport.CS
     /// <summary>
     /// Provide a dialog which provides the options for exporting dgn format
     /// </summary>
-    public partial class ExportDGNOptionsForm : System.Windows.Forms.Form
+    public partial class ExportDGNOptionsForm : Form
     {
         /// <summary>
         /// data class
@@ -111,7 +111,7 @@ namespace Revit.SDK.Samples.ImportExport.CS
             m_data.HideScopeBox = checkBoxHideScopeBoxes.Checked;
             m_data.HideReferencePlane = checkBoxHideReferencePlanes.Checked;
             m_data.HideUnreferenceViewTags = checkBoxHideUnrefereceViewTag.Checked;
-            this.Close();
+            Close();
         }
 
         /// <summary>
@@ -121,8 +121,8 @@ namespace Revit.SDK.Samples.ImportExport.CS
         /// <param name="e"></param>
         private void button2DSeedFile_Click(object sender, EventArgs e)
         {
-            String fileName = String.Empty;
-            DialogResult result = ShowOpenDialog(ref fileName);
+            var fileName = String.Empty;
+            var result = ShowOpenDialog(ref fileName);
             if (result != DialogResult.Cancel)
             {
                 textBox2DSeedFile.Text = fileName;
@@ -136,23 +136,23 @@ namespace Revit.SDK.Samples.ImportExport.CS
         /// <returns></returns>
         public static DialogResult ShowOpenDialog(ref String returnFileName)
         {
-            ProcessModule mainModule = Process.GetCurrentProcess().MainModule;
-            String folderRevit = Path.GetDirectoryName(mainModule.FileName);
-            String folderACADInterop = Path.Combine(folderRevit, "ACADInterop");
-            String initialDirectory = folderRevit;
+            var mainModule = Process.GetCurrentProcess().MainModule;
+            var folderRevit = Path.GetDirectoryName(mainModule.FileName);
+            var folderACADInterop = Path.Combine(folderRevit, "ACADInterop");
+            var initialDirectory = folderRevit;
             if (Directory.Exists(folderACADInterop))
             {
                 initialDirectory = folderACADInterop;
             }
 
-            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            using (var openFileDialog = new OpenFileDialog())
             {
                 openFileDialog.Title = "Specify seed file";
                 openFileDialog.InitialDirectory = initialDirectory;
                 openFileDialog.Filter = "DGN Files |*.dgn";
                 openFileDialog.RestoreDirectory = true;
 
-                DialogResult result = openFileDialog.ShowDialog();
+                var result = openFileDialog.ShowDialog();
                 if (result != DialogResult.Cancel)
                 {
                     returnFileName = openFileDialog.FileName;
@@ -164,8 +164,8 @@ namespace Revit.SDK.Samples.ImportExport.CS
 
         private void button3DSeedFile_Click(object sender, EventArgs e)
         {
-            String fileName = String.Empty;
-            DialogResult result = ShowOpenDialog(ref fileName);
+            var fileName = String.Empty;
+            var result = ShowOpenDialog(ref fileName);
             if (result != DialogResult.Cancel)
             {
                 textBox3DSeedFile.Text = fileName;

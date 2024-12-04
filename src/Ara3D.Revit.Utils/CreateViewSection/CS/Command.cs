@@ -45,12 +45,12 @@ namespace Revit.SDK.Samples.CreateViewSection.CS
     public class Command : IExternalCommand
     {
         // Private Members
-        Autodesk.Revit.UI.UIDocument m_project;  // Store the current document in revit   
+        UIDocument m_project;  // Store the current document in revit   
         String m_errorInformation;  // Store the error information
         const Double PRECISION = 0.0000000001;  // Define a precision of double data
 
         BoundingBoxXYZ m_box;       // Store the BoundingBoxXYZ reference used in creation
-        Autodesk.Revit.DB.Element m_currentComponent; // Store the selected element
+        Element m_currentComponent; // Store the selected element
         SelectType m_type;     // Indicate the type of the selected element.
         // 0 - wall, 1 - beam, 2 - floor, -1 - invalid
         const Double LENGTH = 10;   // Define half length and width of BoudingBoxXYZ
@@ -90,8 +90,8 @@ namespace Revit.SDK.Samples.CreateViewSection.CS
         /// Cancelled can be used to signify that the user cancelled the external operation 
         /// at some point. Failure should be returned if the application is unable to proceed with 
         /// the operation.</returns>
-        public Autodesk.Revit.UI.Result Execute(ExternalCommandData commandData,
-                                                    ref string message, Autodesk.Revit.DB.ElementSet elements)
+        public Result Execute(ExternalCommandData commandData,
+                                                    ref string message, ElementSet elements)
         {
             try
             {
@@ -101,25 +101,25 @@ namespace Revit.SDK.Samples.CreateViewSection.CS
                 if (!GetSelectedElement())
                 {
                     message = m_errorInformation;
-                    return Autodesk.Revit.UI.Result.Failed;
+                    return Result.Failed;
                 }
 
                 // Create a BoundingBoxXYZ instance which used in NewViewSection() method
                 if (!GenerateBoundingBoxXYZ())
                 {
                     message = m_errorInformation;
-                    return Autodesk.Revit.UI.Result.Failed;
+                    return Result.Failed;
                 }
 
                 // Create a section view. 
-                Transaction transaction = new Transaction(m_project.Document, "CreateSectionView");
+                var transaction = new Transaction(m_project.Document, "CreateSectionView");
                 transaction.Start();
                 //ViewSection section = m_project.Document.Create.NewViewSection(m_box);
-                ElementId DetailViewId = ElementId.InvalidElementId;
-                IList<Element> elems = new FilteredElementCollector(m_project.Document).OfClass(typeof(ViewFamilyType)).ToElements();
-                foreach (Element e in elems)
+                var DetailViewId = ElementId.InvalidElementId;
+                var elems = new FilteredElementCollector(m_project.Document).OfClass(typeof(ViewFamilyType)).ToElements();
+                foreach (var e in elems)
                 {
-                    ViewFamilyType v = e as ViewFamilyType;
+                    var v = e as ViewFamilyType;
 
                     if (v != null && v.ViewFamily == ViewFamily.Detail)
                     {
@@ -127,11 +127,11 @@ namespace Revit.SDK.Samples.CreateViewSection.CS
                         break;
                     }
                 }
-                ViewSection section = ViewSection.CreateDetail(m_project.Document, DetailViewId, m_box);
+                var section = ViewSection.CreateDetail(m_project.Document, DetailViewId, m_box);
                 if (null == section)
                 {
                     message = "Can't create the ViewSection.";
-                    return Autodesk.Revit.UI.Result.Failed;
+                    return Result.Failed;
                 }
 
                 // Modify some parameters to make it look better.
@@ -140,12 +140,12 @@ namespace Revit.SDK.Samples.CreateViewSection.CS
 
                 // If everything goes right, give successful information and return succeeded.
                 TaskDialog.Show("Revit", "Create view section succeeded.");
-                return Autodesk.Revit.UI.Result.Succeeded;
+                return Result.Succeeded;
             }
             catch (Exception e)
             {
                 message = e.Message;
-                return Autodesk.Revit.UI.Result.Failed;
+                return Result.Failed;
             }
         }
 
@@ -157,8 +157,8 @@ namespace Revit.SDK.Samples.CreateViewSection.CS
         Boolean GetSelectedElement()
         {
             // First get the selection, and make sure only one element in it.
-           ElementSet collection = new ElementSet();
-            foreach (ElementId elementId in m_project.Selection.GetElementIds())
+           var collection = new ElementSet();
+            foreach (var elementId in m_project.Selection.GetElementIds())
             {
                collection.Insert(m_project.Document.GetElement(elementId));
             }
@@ -170,7 +170,7 @@ namespace Revit.SDK.Samples.CreateViewSection.CS
             }
 
             // Get the selected element.
-            foreach (Autodesk.Revit.DB.Element e in collection)
+            foreach (Element e in collection)
             {
                 m_currentComponent = e;
             }
@@ -179,7 +179,7 @@ namespace Revit.SDK.Samples.CreateViewSection.CS
             if (m_currentComponent is Wall)
             {
                 // Check whether the wall is a linear wall
-                LocationCurve location = m_currentComponent.Location as LocationCurve;
+                var location = m_currentComponent.Location as LocationCurve;
                 if (null == location)
                 {
                     m_errorInformation = "The selected wall should be linear.";
@@ -197,7 +197,7 @@ namespace Revit.SDK.Samples.CreateViewSection.CS
                 }
             }
 
-            FamilyInstance beam = m_currentComponent as FamilyInstance;
+            var beam = m_currentComponent as FamilyInstance;
             if (null != beam && StructuralType.Beam == beam.StructuralType)
             {
                 m_type = SelectType.BEAM;       // when the element is a beam
@@ -222,20 +222,20 @@ namespace Revit.SDK.Samples.CreateViewSection.CS
         /// <returns>true if the instance can be created; otherwise, false.</returns>
         Boolean GenerateBoundingBoxXYZ()
         {
-            Transaction transaction = new Transaction(m_project.Document, "GenerateBoundingBox");
+            var transaction = new Transaction(m_project.Document, "GenerateBoundingBox");
             transaction.Start();
             // First new a BoundingBoxXYZ, and set the MAX and Min property.
             m_box = new BoundingBoxXYZ();
             m_box.Enabled = true;
-            Autodesk.Revit.DB.XYZ maxPoint = new Autodesk.Revit.DB.XYZ(LENGTH, LENGTH, 0);
-            Autodesk.Revit.DB.XYZ minPoint = new Autodesk.Revit.DB.XYZ(-LENGTH, -LENGTH, -HEIGHT);
+            var maxPoint = new XYZ(LENGTH, LENGTH, 0);
+            var minPoint = new XYZ(-LENGTH, -LENGTH, -HEIGHT);
             m_box.Max = maxPoint;
             m_box.Min = minPoint;
 
             // Set Transform property is the most important thing.
             // It define the Orgin and the directions(include RightDirection, 
             // UpDirection and ViewDirection) of the created view.
-            Transform transform = GenerateTransform();
+            var transform = GenerateTransform();
             if (null == transform)
             {
                 return false;
@@ -284,28 +284,28 @@ namespace Revit.SDK.Samples.CreateViewSection.CS
         Transform GenerateWallTransform()
         {
             Transform transform = null;
-            Wall wall = m_currentComponent as Wall;
+            var wall = m_currentComponent as Wall;
 
             // Because the architecture wall and curtain wall don't have analytical Model lines.
             // So Use Location property of wall object is better choice.
             // First get the location line of the wall
-            LocationCurve location = wall.Location as LocationCurve;
-            Line locationLine = location.Curve as Line;
+            var location = wall.Location as LocationCurve;
+            var locationLine = location.Curve as Line;
             transform = Transform.Identity;
 
             // Second find the middle point of the wall and set it as Origin property.
-            XYZ mPoint = XYZMath.FindMidPoint(locationLine.GetEndPoint(0), locationLine.GetEndPoint(1));
+            var mPoint = XYZMath.FindMidPoint(locationLine.GetEndPoint(0), locationLine.GetEndPoint(1));
             // midPoint is mid point of the wall location, but not the wall's.
             // The different is the elevation of the point. Then change it.
 
-            Autodesk.Revit.DB.XYZ midPoint = new XYZ(mPoint.X, mPoint.Y, mPoint.Z + GetWallMidOffsetFromLocation(wall));
+            var midPoint = new XYZ(mPoint.X, mPoint.Y, mPoint.Z + GetWallMidOffsetFromLocation(wall));
 
             transform.Origin = midPoint;
 
             // At last find out the directions of the created view, and set it as Basis property.
-            Autodesk.Revit.DB.XYZ basisZ = XYZMath.FindDirection(locationLine.GetEndPoint(0), locationLine.GetEndPoint(1));
-            Autodesk.Revit.DB.XYZ basisX = XYZMath.FindRightDirection(basisZ);
-            Autodesk.Revit.DB.XYZ basisY = XYZMath.FindUpDirection(basisZ);
+            var basisZ = XYZMath.FindDirection(locationLine.GetEndPoint(0), locationLine.GetEndPoint(1));
+            var basisX = XYZMath.FindRightDirection(basisZ);
+            var basisY = XYZMath.FindUpDirection(basisZ);
 
             transform.set_Basis(0, basisX);
             transform.set_Basis(1, basisY);
@@ -322,12 +322,12 @@ namespace Revit.SDK.Samples.CreateViewSection.CS
       Transform GenerateBeamTransform()
       {
          Transform transform = null;
-         FamilyInstance instance = m_currentComponent as FamilyInstance;
+         var instance = m_currentComponent as FamilyInstance;
 
          // First check whether the beam is horizontal.
          // In order to predigest the calculation, only allow it to be horizontal
-         double startOffset = instance.get_Parameter(BuiltInParameter.STRUCTURAL_BEAM_END0_ELEVATION).AsDouble();
-         double endOffset = instance.get_Parameter(BuiltInParameter.STRUCTURAL_BEAM_END1_ELEVATION).AsDouble();
+         var startOffset = instance.get_Parameter(BuiltInParameter.STRUCTURAL_BEAM_END0_ELEVATION).AsDouble();
+         var endOffset = instance.get_Parameter(BuiltInParameter.STRUCTURAL_BEAM_END1_ELEVATION).AsDouble();
          if (-PRECISION > startOffset - endOffset || PRECISION < startOffset - endOffset)
          {
             m_errorInformation = "Please select a horizontal beam.";
@@ -339,7 +339,7 @@ namespace Revit.SDK.Samples.CreateViewSection.CS
             m_errorInformation = "The program should never go here.";
             return transform;
          }
-         Curve curve = (instance.Location as LocationCurve).Curve;
+         var curve = (instance.Location as LocationCurve).Curve;
          if (null == curve)
          {
             m_errorInformation = "The program should never go here.";
@@ -350,15 +350,15 @@ namespace Revit.SDK.Samples.CreateViewSection.CS
          transform = Transform.Identity;
 
          // Third find the middle point of the line and set it as Origin property.
-         Autodesk.Revit.DB.XYZ startPoint = curve.GetEndPoint(0);
-         Autodesk.Revit.DB.XYZ endPoint = curve.GetEndPoint(1);
-         Autodesk.Revit.DB.XYZ midPoint = XYZMath.FindMidPoint(startPoint, endPoint);
+         var startPoint = curve.GetEndPoint(0);
+         var endPoint = curve.GetEndPoint(1);
+         var midPoint = XYZMath.FindMidPoint(startPoint, endPoint);
          transform.Origin = midPoint;
 
          // At last find out the directions of the created view, and set it as Basis property.   
-         Autodesk.Revit.DB.XYZ basisZ = XYZMath.FindDirection(startPoint, endPoint);
-         Autodesk.Revit.DB.XYZ basisX = XYZMath.FindRightDirection(basisZ);
-         Autodesk.Revit.DB.XYZ basisY = XYZMath.FindUpDirection(basisZ);
+         var basisZ = XYZMath.FindDirection(startPoint, endPoint);
+         var basisX = XYZMath.FindRightDirection(basisZ);
+         var basisY = XYZMath.FindUpDirection(basisZ);
 
          transform.set_Basis(0, basisX);
          transform.set_Basis(1, basisY);
@@ -375,18 +375,18 @@ namespace Revit.SDK.Samples.CreateViewSection.CS
       Transform GenerateFloorTransform()
       {
          Transform transform = null;
-         Floor floor = m_currentComponent as Floor;
+         var floor = m_currentComponent as Floor;
 
          // First get the Analytical Model lines
          AnalyticalPanel model = null;
-         Document document = floor.Document;
-         AnalyticalToPhysicalAssociationManager assocManager = AnalyticalToPhysicalAssociationManager.GetAnalyticalToPhysicalAssociationManager(document);
+         var document = floor.Document;
+         var assocManager = AnalyticalToPhysicalAssociationManager.GetAnalyticalToPhysicalAssociationManager(document);
          if (assocManager != null)
          {
-            ElementId associatedElementId = assocManager.GetAssociatedElementId(floor.Id);
+            var associatedElementId = assocManager.GetAssociatedElementId(floor.Id);
             if (associatedElementId != ElementId.InvalidElementId)
             {
-               Element associatedElement = document.GetElement(associatedElementId);
+               var associatedElement = document.GetElement(associatedElementId);
                if (associatedElement != null && associatedElement is AnalyticalPanel)
                {
                   model = associatedElement as AnalyticalPanel;
@@ -399,9 +399,9 @@ namespace Revit.SDK.Samples.CreateViewSection.CS
             return transform;
          }
 
-         CurveArray curves = m_project.Document.Application.Create.NewCurveArray();
+         var curves = m_project.Document.Application.Create.NewCurveArray();
          IList<Curve> curveList = model.GetOuterContour().ToList();
-         foreach (Curve curve in curveList)
+         foreach (var curve in curveList)
          {
             curves.Append(curve);
          }
@@ -416,13 +416,13 @@ namespace Revit.SDK.Samples.CreateViewSection.CS
          transform = Transform.Identity;
 
          // Third find the middle point of the floor and set it as Origin property.
-         Autodesk.Revit.DB.XYZ midPoint = XYZMath.FindMiddlePoint(curves);
+         var midPoint = XYZMath.FindMiddlePoint(curves);
          transform.Origin = midPoint;
 
          // At last find out the directions of the created view, and set it as Basis property.
-         Autodesk.Revit.DB.XYZ basisZ = XYZMath.FindFloorViewDirection(curves);
-         Autodesk.Revit.DB.XYZ basisX = XYZMath.FindRightDirection(basisZ);
-         Autodesk.Revit.DB.XYZ basisY = XYZMath.FindUpDirection(basisZ);
+         var basisZ = XYZMath.FindFloorViewDirection(curves);
+         var basisX = XYZMath.FindRightDirection(basisZ);
+         var basisY = XYZMath.FindUpDirection(basisZ);
 
          transform.set_Basis(0, basisX);
          transform.set_Basis(1, basisY);
@@ -433,14 +433,14 @@ namespace Revit.SDK.Samples.CreateViewSection.CS
       Double GetWallMidOffsetFromLocation(Wall wall)
         {
             // First get the "Base Offset" property.
-            Double baseOffset = wall.get_Parameter(BuiltInParameter.WALL_BASE_OFFSET).AsDouble();
+            var baseOffset = wall.get_Parameter(BuiltInParameter.WALL_BASE_OFFSET).AsDouble();
 
             // Second get the "Unconnected Height" property. 
-            Double height = wall.get_Parameter(BuiltInParameter.WALL_USER_HEIGHT_PARAM).AsDouble();
+            var height = wall.get_Parameter(BuiltInParameter.WALL_USER_HEIGHT_PARAM).AsDouble();
 
             // Get the middle of of wall elevation from the wall location.
             // The elevation of wall location equals the elevation of "Base Constraint" level
-            Double midOffset = baseOffset + height / 2;
+            var midOffset = baseOffset + height / 2;
             return midOffset;
         }
     }
@@ -452,43 +452,43 @@ namespace Revit.SDK.Samples.CreateViewSection.CS
     [Autodesk.Revit.Attributes.Regeneration(Autodesk.Revit.Attributes.RegenerationOption.Manual)]
     public class CreateDraftingView : IExternalCommand
     {
-        public Autodesk.Revit.UI.Result Execute(
+        public Result Execute(
           ExternalCommandData commandData,
           ref string message,
           ElementSet elements)
         {
             try
             {
-                Autodesk.Revit.DB.Document doc = commandData.Application.ActiveUIDocument.Document;
-                Transaction transaction = new Transaction(doc, "CreateDraftingView");
+                var doc = commandData.Application.ActiveUIDocument.Document;
+                var transaction = new Transaction(doc, "CreateDraftingView");
                 transaction.Start();
 
                 ViewFamilyType viewFamilyType = null;
-                FilteredElementCollector collector = new FilteredElementCollector(doc);
+                var collector = new FilteredElementCollector(doc);
                 var viewFamilyTypes = collector.OfClass(typeof(ViewFamilyType)).ToElements();
-                foreach (Element e in viewFamilyTypes)
+                foreach (var e in viewFamilyTypes)
                 {
-                   ViewFamilyType v = e as ViewFamilyType;
+                   var v = e as ViewFamilyType;
                    if (v.ViewFamily == ViewFamily.Drafting)
                    {
                       viewFamilyType = v;
                       break;
                    }
                 }
-                ViewDrafting drafting = ViewDrafting.Create(doc, viewFamilyType.Id);
+                var drafting = ViewDrafting.Create(doc, viewFamilyType.Id);
                 if (null == drafting)
                 {
                     message = "Can't create the ViewDrafting.";
-                    return Autodesk.Revit.UI.Result.Failed;
+                    return Result.Failed;
                 }
                 transaction.Commit();
                 TaskDialog.Show("Revit", "Create view drafting succeeded.");
-                return Autodesk.Revit.UI.Result.Succeeded;
+                return Result.Succeeded;
             }
             catch (Exception e)
             {
                 message = e.Message;
-                return Autodesk.Revit.UI.Result.Failed;
+                return Result.Failed;
             }
         }
     }

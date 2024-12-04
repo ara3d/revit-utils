@@ -38,7 +38,7 @@ namespace Revit.SDK.Samples.SharedCoordinateSystem.CS
     public class CoordinateSystemData
    {
       ExternalCommandData m_command; // the ExternalCommandData reference
-      Autodesk.Revit.UI.UIApplication m_application; //the revit application reference
+      UIApplication m_application; //the revit application reference
 
       const double Modulus = 0.0174532925199433; //a modulus for degree convert to pi 
       const int Precision = 3; //default precision 
@@ -53,72 +53,36 @@ namespace Revit.SDK.Samples.SharedCoordinateSystem.CS
       /// <summary>
       /// the value of the angle form true north
       /// </summary>
-      public double AngleOffset
-      {
-         get
-         {
-            return m_angle;
-         }
-      }
+      public double AngleOffset => m_angle;
 
       /// <summary>
       /// return the East to West offset
       /// </summary>
-      public double EastWestOffset
-      {
-         get
-         {
-            return m_eastWest;
-         }
-      }
+      public double EastWestOffset => m_eastWest;
 
       /// <summary>
       /// return the North to South offset
       /// </summary>
-      public double NorthSouthOffset
-      {
-         get
-         {
-            return m_northSouth;
-         }
-      }
+      public double NorthSouthOffset => m_northSouth;
 
       /// <summary>
       /// return the Elevation above ground level
       /// </summary>
-      public double PositionElevation
-      {
-         get
-         {
-            return m_elevation;
-         }
-      }
+      public double PositionElevation => m_elevation;
 
       /// <summary>
       /// get and set the current project location name of the project
       /// </summary>
       public string LocationName
       {
-         get
-         {
-            return m_currentLocationName;
-         }
-         set
-         {
-            m_currentLocationName = value;
-         }
+         get => m_currentLocationName;
+         set => m_currentLocationName = value;
       }
 
       /// <summary>
       /// get all the project locations' name of the project
       /// </summary>
-      public List<string> LocationNames
-      {
-         get
-         {
-            return m_locationnames;
-         }
-      }
+      public List<string> LocationNames => m_locationnames;
 
       /// <summary>
       /// constructor
@@ -136,7 +100,7 @@ namespace Revit.SDK.Samples.SharedCoordinateSystem.CS
       /// </summary>
       public void GatData()
       {
-         this.GetLocationData();
+         GetLocationData();
       }
 
       /// <summary>
@@ -145,18 +109,18 @@ namespace Revit.SDK.Samples.SharedCoordinateSystem.CS
       public void GetLocationData()
       {
          m_locationnames.Clear();
-         ProjectLocation currentLocation = m_application.ActiveUIDocument.Document.ActiveProjectLocation;
+         var currentLocation = m_application.ActiveUIDocument.Document.ActiveProjectLocation;
          //get the current location name
          m_currentLocationName = currentLocation.Name;
          //Retrieve all the project locations associated with this project
-         ProjectLocationSet locations = m_application.ActiveUIDocument.Document.ProjectLocations;
+         var locations = m_application.ActiveUIDocument.Document.ProjectLocations;
 
-         ProjectLocationSetIterator iter = locations.ForwardIterator();
+         var iter = locations.ForwardIterator();
          iter.Reset();
          while (iter.MoveNext())
          {
-            ProjectLocation locationTransform = iter.Current as ProjectLocation;
-            string transformName = locationTransform.Name;
+            var locationTransform = iter.Current as ProjectLocation;
+            var transformName = locationTransform.Name;
             m_locationnames.Add(transformName); //add the location's name to the list
          }
       }
@@ -169,7 +133,7 @@ namespace Revit.SDK.Samples.SharedCoordinateSystem.CS
       /// <param name="newLocationName">new location name</param>
       public void DuplicateLocation(string locationName, string newLocationName)
       {
-         ProjectLocationSet locationSet = m_application.ActiveUIDocument.Document.ProjectLocations;
+         var locationSet = m_application.ActiveUIDocument.Document.ProjectLocations;
          foreach (ProjectLocation projectLocation in locationSet)
          {
             if (projectLocation.Name == locationName ||
@@ -189,7 +153,7 @@ namespace Revit.SDK.Samples.SharedCoordinateSystem.CS
       /// <param name="locationName"></param>
       public void ChangeCurrentLocation(string locationName)
       {
-         ProjectLocationSet locations = m_application.ActiveUIDocument.Document.ProjectLocations;
+         var locations = m_application.ActiveUIDocument.Document.ProjectLocations;
          foreach (ProjectLocation projectLocation in locations)
          {
             //find the project location which is selected by user and
@@ -210,15 +174,15 @@ namespace Revit.SDK.Samples.SharedCoordinateSystem.CS
       /// <param name="locationName"></param>
       public void GetOffset(string locationName)
       {
-         ProjectLocationSet locationSet = m_application.ActiveUIDocument.Document.ProjectLocations;
+         var locationSet = m_application.ActiveUIDocument.Document.ProjectLocations;
          foreach (ProjectLocation projectLocation in locationSet)
          {
             if (projectLocation.Name == locationName ||
                         projectLocation.Name + " (current)" == locationName)
             {
-               Autodesk.Revit.DB.XYZ origin = new Autodesk.Revit.DB.XYZ (0, 0, 0);
+               var origin = new XYZ (0, 0, 0);
                //get the project position
-               ProjectPosition pp = projectLocation.GetProjectPosition(origin);
+               var pp = projectLocation.GetProjectPosition(origin);
                m_angle = (pp.Angle /= Modulus); //convert to unit degree  
                m_eastWest = pp.EastWest;     //East to West offset
                m_northSouth = pp.NorthSouth; //north to south offset
@@ -226,7 +190,7 @@ namespace Revit.SDK.Samples.SharedCoordinateSystem.CS
                break;
             }
          }
-         this.ChangePrecision();
+         ChangePrecision();
       }
 
 
@@ -241,15 +205,15 @@ namespace Revit.SDK.Samples.SharedCoordinateSystem.CS
       public void EditPosition(string locationName, double newAngle, double newEast,
                                        double newNorth, double newElevation)
       {
-         ProjectLocationSet locationSet = m_application.ActiveUIDocument.Document.ProjectLocations;
+         var locationSet = m_application.ActiveUIDocument.Document.ProjectLocations;
          foreach (ProjectLocation location in locationSet)
          {
             if (location.Name == locationName ||
                         location.Name + " (current)" == locationName)
             {
                //get the project position
-               Autodesk.Revit.DB.XYZ origin = new Autodesk.Revit.DB.XYZ (0, 0, 0);
-               ProjectPosition projectPosition = location.GetProjectPosition(origin);
+               var origin = new XYZ (0, 0, 0);
+               var projectPosition = location.GetProjectPosition(origin);
                //change the offset value of the project position
                projectPosition.Angle = newAngle * Modulus; //convert the unit 
                projectPosition.EastWest = newEast;

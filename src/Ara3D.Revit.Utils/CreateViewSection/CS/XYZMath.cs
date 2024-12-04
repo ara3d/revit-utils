@@ -46,12 +46,12 @@ namespace Revit.SDK.Samples.CreateViewSection.CS
         /// <param name="first">the start point of the line</param>
         /// <param name="second">the end point of the line</param>
         /// <returns>the middle point of the line</returns>
-        public static Autodesk.Revit.DB.XYZ FindMidPoint(Autodesk.Revit.DB.XYZ first, Autodesk.Revit.DB.XYZ second)
+        public static XYZ FindMidPoint(XYZ first, XYZ second)
         {
-            double x = (first.X + second.X) / 2;
-            double y = (first.Y + second.Y) / 2;
-            double z = (first.Z + second.Z) / 2;
-            Autodesk.Revit.DB.XYZ midPoint = new Autodesk.Revit.DB.XYZ (x, y, z);
+            var x = (first.X + second.X) / 2;
+            var y = (first.Y + second.Y) / 2;
+            var z = (first.Z + second.Z) / 2;
+            var midPoint = new XYZ (x, y, z);
             return midPoint;
         }
 
@@ -61,11 +61,11 @@ namespace Revit.SDK.Samples.CreateViewSection.CS
         /// <param name="first">the first point</param>
         /// <param name="second">the first point</param>
         /// <returns>the distance of two points</returns>
-        public static double FindDistance(Autodesk.Revit.DB.XYZ first, Autodesk.Revit.DB.XYZ second)
+        public static double FindDistance(XYZ first, XYZ second)
         {
-            double x = first.X - second.X;
-            double y = first.Y - second.Y;
-            double z = first.Z - second.Z;
+            var x = first.X - second.X;
+            var y = first.Y - second.Y;
+            var z = first.Z - second.Z;
             return Math.Sqrt(x * x + y * y + z * z);
         }
 
@@ -75,13 +75,13 @@ namespace Revit.SDK.Samples.CreateViewSection.CS
         /// <param name="first">the first point</param>
         /// <param name="second">the second point</param>
         /// <returns>the direction vector</returns>
-        public static Autodesk.Revit.DB.XYZ FindDirection(Autodesk.Revit.DB.XYZ first, Autodesk.Revit.DB.XYZ second)
+        public static XYZ FindDirection(XYZ first, XYZ second)
         {
-            double x = second.X - first.X;
-            double y = second.Y - first.Y;
-            double z = second.Z - first.Z;
-            double distance = FindDistance(first, second);
-            Autodesk.Revit.DB.XYZ direction = new Autodesk.Revit.DB.XYZ (x / distance, y / distance, z / distance);
+            var x = second.X - first.X;
+            var y = second.Y - first.Y;
+            var z = second.Z - first.Z;
+            var distance = FindDistance(first, second);
+            var direction = new XYZ (x / distance, y / distance, z / distance);
             return direction;
         }
 
@@ -91,17 +91,17 @@ namespace Revit.SDK.Samples.CreateViewSection.CS
         /// </summary>
         /// <param name="viewDirection">the view direction vector</param>
         /// <returns>the right direction vector</returns>
-        public static Autodesk.Revit.DB.XYZ FindRightDirection(Autodesk.Revit.DB.XYZ viewDirection)
+        public static XYZ FindRightDirection(XYZ viewDirection)
         {
             // Because this example only allow the beam to be horizontal,
             // the created viewSection should be vertical, 
             // the same thing can also be found when the user select wall or floor.
             // So only need to turn 90 degree around Z axes will get Right Direction.  
 
-            double x = -viewDirection.Y;
-            double y = viewDirection.X;
-            double z = viewDirection.Z;
-            Autodesk.Revit.DB.XYZ direction = new Autodesk.Revit.DB.XYZ (x, y, z);
+            var x = -viewDirection.Y;
+            var y = viewDirection.X;
+            var z = viewDirection.Z;
+            var direction = new XYZ (x, y, z);
             return direction;         
         }
 
@@ -111,13 +111,13 @@ namespace Revit.SDK.Samples.CreateViewSection.CS
         /// </summary>
         /// <param name="viewDirection">the view direction vector</param>
         /// <returns>the up direction vector</returns>
-        public static Autodesk.Revit.DB.XYZ FindUpDirection(Autodesk.Revit.DB.XYZ viewDirection)
+        public static XYZ FindUpDirection(XYZ viewDirection)
         {
             // Because this example only allow the beam to be horizontal,
             // the created viewSection should be vertical, 
             // the same thing can also be found when the user select wall or floor.
             // So UpDirection should be z axes.
-            Autodesk.Revit.DB.XYZ direction = new Autodesk.Revit.DB.XYZ (0, 0, 1);
+            var direction = new XYZ (0, 0, 1);
             return direction;
         }
 
@@ -127,27 +127,27 @@ namespace Revit.SDK.Samples.CreateViewSection.CS
         /// </summary>
         /// <param name="curveArray">the array of curve which form the profile</param>
         /// <returns>the middle point of the profile</returns>
-        public static Autodesk.Revit.DB.XYZ FindMiddlePoint(CurveArray curveArray)
+        public static XYZ FindMiddlePoint(CurveArray curveArray)
         {
             // First form a point array which include all the end points of the curves
-            List<Autodesk.Revit.DB.XYZ> array = new List<Autodesk.Revit.DB.XYZ>();
+            var array = new List<XYZ>();
             foreach (Curve curve in curveArray)
             {
-                Autodesk.Revit.DB.XYZ first = curve.GetEndPoint(0);
-                Autodesk.Revit.DB.XYZ second = curve.GetEndPoint(1);
+                var first = curve.GetEndPoint(0);
+                var second = curve.GetEndPoint(1);
                 array.Add(first);
                 array.Add(second);
             }
 
             // Second find the max and min value of three coordinate
-            double maxX = array[0].X;  // the max x coordinate in the array
-            double minX = array[0].X;  // the min x coordinate in the array
-            double maxY = array[0].Y;  // the max y coordinate in the array
-            double minY = array[0].Y;  // the min y coordinate in the array
-            double maxZ = array[0].Z;  // the max z coordinate in the array
-            double minZ = array[0].Z;  // the min z coordinate in the array
+            var maxX = array[0].X;  // the max x coordinate in the array
+            var minX = array[0].X;  // the min x coordinate in the array
+            var maxY = array[0].Y;  // the max y coordinate in the array
+            var minY = array[0].Y;  // the min y coordinate in the array
+            var maxZ = array[0].Z;  // the max z coordinate in the array
+            var minZ = array[0].Z;  // the min z coordinate in the array
 
-            foreach (Autodesk.Revit.DB.XYZ curve in array)
+            foreach (var curve in array)
             {
                 if (maxX < curve.X)
                 {
@@ -176,10 +176,10 @@ namespace Revit.SDK.Samples.CreateViewSection.CS
             }
 
             // Third form the middle point using the average of max and min values
-            double x = (maxX + minX) / 2;
-            double y = (maxY + minY) / 2;
-            double z = (maxZ + minZ) / 2;
-            Autodesk.Revit.DB.XYZ midPoint = new Autodesk.Revit.DB.XYZ (x, y, z);
+            var x = (maxX + minX) / 2;
+            var y = (maxY + minY) / 2;
+            var z = (maxZ + minZ) / 2;
+            var midPoint = new XYZ (x, y, z);
             return midPoint;
         }
 
@@ -189,20 +189,20 @@ namespace Revit.SDK.Samples.CreateViewSection.CS
         /// </summary>
         /// <param name="curveArray">the curve array which form wall's AnalyticalModel</param>
         /// <returns>the view direction vector</returns>
-        public static Autodesk.Revit.DB.XYZ FindWallViewDirection(CurveArray curveArray)
+        public static XYZ FindWallViewDirection(CurveArray curveArray)
         {
-            Autodesk.Revit.DB.XYZ direction = new Autodesk.Revit.DB.XYZ ();
+            var direction = new XYZ ();
             foreach (Curve curve in curveArray)
             {
-                Autodesk.Revit.DB.XYZ startPoint = curve.GetEndPoint(0);
-                Autodesk.Revit.DB.XYZ endPoint = curve.GetEndPoint(1);
-                double distanceX = startPoint.X - endPoint.X;
-                double distanceY = startPoint.Y - endPoint.Y;
+                var startPoint = curve.GetEndPoint(0);
+                var endPoint = curve.GetEndPoint(1);
+                var distanceX = startPoint.X - endPoint.X;
+                var distanceY = startPoint.Y - endPoint.Y;
                 if(-PRECISION > distanceX || PRECISION < distanceX
                     || -PRECISION > distanceY || PRECISION < distanceY)
                 {
-                    Autodesk.Revit.DB.XYZ first = new Autodesk.Revit.DB.XYZ (startPoint.X, startPoint.Y, 0);
-                    Autodesk.Revit.DB.XYZ second = new Autodesk.Revit.DB.XYZ (endPoint.X, endPoint.Y, 0);
+                    var first = new XYZ (startPoint.X, startPoint.Y, 0);
+                    var second = new XYZ (endPoint.X, endPoint.Y, 0);
                     direction = FindDirection(first, second);
                     break;
                 }
@@ -216,13 +216,13 @@ namespace Revit.SDK.Samples.CreateViewSection.CS
         /// </summary>
         /// <param name="curveArray">the curve array which form floor's AnalyticalModel</param>
         /// <returns>the view direction vector</returns>
-        public static Autodesk.Revit.DB.XYZ FindFloorViewDirection(CurveArray curveArray)
+        public static XYZ FindFloorViewDirection(CurveArray curveArray)
         {
             // Because the floor is always on the level,
             // so each curve can give the direction information.
-            Curve curve = curveArray.get_Item(0);
-            Autodesk.Revit.DB.XYZ first = curve.GetEndPoint(0);
-            Autodesk.Revit.DB.XYZ second = curve.GetEndPoint(1);
+            var curve = curveArray.get_Item(0);
+            var first = curve.GetEndPoint(0);
+            var second = curve.GetEndPoint(1);
             return FindDirection(first, second);
         }
     }

@@ -76,27 +76,15 @@ namespace Revit.SDK.Samples.ImportExport.CS
         /// <summary>
         /// Revit command data
         /// </summary>
-        public ExternalCommandData CommandData
-        {
-            get 
-            { 
-                return m_commandData; 
-            }
-        }
+        public ExternalCommandData CommandData => m_commandData;
 
         /// <summary>
         /// File Name or Prefix to be used
         /// </summary>
         public String ImportFileFullName
         {
-            get 
-            {
-                return m_importFileFullName; 
-            }
-            set 
-            {
-                m_importFileFullName = value; 
-            }
+            get => m_importFileFullName;
+            set => m_importFileFullName = value;
         }  
 
         /// <summary>
@@ -104,52 +92,29 @@ namespace Revit.SDK.Samples.ImportExport.CS
         /// </summary>
         public ImportFormat ImportFormat
         {
-            get 
-            { 
-                return m_importFormat; 
-            }
-            set 
-            { 
-                m_importFormat = value; 
-            }
+            get => m_importFormat;
+            set => m_importFormat = value;
         }
 
         /// <summary>
         /// The filter which will be used in file saving dialog
         /// </summary>
-        public String Filter
-        {
-            get 
-            { 
-                return m_filter; 
-            }
-        }
+        public String Filter => m_filter;
 
         /// <summary>
         /// Directory where to import the file
         /// </summary>
         public String ImportFolder
         {
-            get
-            {
-                return m_importFolder;
-            }
-            set
-            {
-                m_importFolder = value;
-            }
+            get => m_importFolder;
+            set => m_importFolder = value;
         }
 
         /// <summary>
         /// The title of importing dialog
         /// </summary>
-        public String Title
-        {
-            get
-            {
-                return m_title;
-            }
-        }
+        public String Title => m_title;
+
         #endregion
 
         #region Class Member Methods
@@ -173,7 +138,7 @@ namespace Revit.SDK.Samples.ImportExport.CS
         private void Initialize()
         {
             //The directory into which the file will be imported
-            String dllFilePath = Assembly.GetExecutingAssembly().Location;
+            var dllFilePath = Assembly.GetExecutingAssembly().Location;
             m_importFolder = Path.GetDirectoryName(dllFilePath);
             m_importFileFullName = String.Empty;
         }

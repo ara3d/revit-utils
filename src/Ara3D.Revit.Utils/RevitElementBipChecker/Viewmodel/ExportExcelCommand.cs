@@ -16,7 +16,7 @@ namespace RevitElementBipChecker.Viewmodel
         public BipCheckerViewmodel Viewmodel;
         public ExportExcelCommand(BipCheckerViewmodel vm)
         {
-            this.Viewmodel = vm;
+            Viewmodel = vm;
         }
         public bool CanExecute(object parameter)
         {
@@ -26,10 +26,10 @@ namespace RevitElementBipChecker.Viewmodel
         {
             try
             {
-                List<ParameterData> parameterDatas = Viewmodel.frmmain.lsBipChecker.Items.Cast<ParameterData>().ToList();
-                DataTable dataTable = parameterDatas.ToDataTable2();
+                var parameterDatas = Viewmodel.frmmain.lsBipChecker.Items.Cast<ParameterData>().ToList();
+                var dataTable = parameterDatas.ToDataTable2();
                 dataTable.Columns.RemoveAt(0);
-                dataTable.OpenExcel(out string path);
+                dataTable.OpenExcel(out var path);
                 Process.Start(path);
             }
             catch (System.IO.IOException)

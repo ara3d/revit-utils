@@ -68,11 +68,11 @@ namespace Revit.SDK.Samples.RoofsRooms.CS
         /// Cancelled can be used to signify that the user cancelled the external operation 
         /// at some point. Failure should be returned if the application is unable to proceed with 
         /// the operation.</returns>
-        public Autodesk.Revit.UI.Result Execute(ExternalCommandData commandData,
-            ref string message, Autodesk.Revit.DB.ElementSet elements)
+        public Result Execute(ExternalCommandData commandData,
+            ref string message, ElementSet elements)
         {
-            string assemblyLocation = Assembly.GetExecutingAssembly().Location;
-            string log = assemblyLocation + "." + DateTime.Now.ToString("yyyyMMdd") + ".log";
+            var assemblyLocation = Assembly.GetExecutingAssembly().Location;
+            var log = assemblyLocation + "." + DateTime.Now.ToString("yyyyMMdd") + ".log";
             if (File.Exists(log)) File.Delete(log);
             TraceListener txtListener = new TextWriterTraceListener(log);
             Trace.Listeners.Add(txtListener);
@@ -104,13 +104,13 @@ namespace Revit.SDK.Samples.RoofsRooms.CS
                     commandData.JournalData[DataKey] = message;
                 }
 
-                return Autodesk.Revit.UI.Result.Succeeded;
+                return Result.Succeeded;
             }
             catch (Exception ex)
             {
                 Trace.WriteLine(ex.ToString());
                 message = ex.ToString();
-                return Autodesk.Revit.UI.Result.Failed;
+                return Result.Failed;
             }
             finally
             {
@@ -127,10 +127,10 @@ namespace Revit.SDK.Samples.RoofsRooms.CS
         /// <param name="message">Error message to be dumped.</param>
         /// <param name="elements">Some elements to return.</param>
         /// <returns></returns>
-        private bool FindRoomBoundingRoofs(ref string message, Autodesk.Revit.DB.ElementSet elements)
+        private bool FindRoomBoundingRoofs(ref string message, ElementSet elements)
         {
             // Get all rooms
-            List<Element> rooms = GetRoomsElements();
+            var rooms = GetRoomsElements();
             if (rooms.Count == 0)
             {
                 message = "Unable to identify any rooms, please create room first!";
@@ -138,34 +138,34 @@ namespace Revit.SDK.Samples.RoofsRooms.CS
             }
 
             // Represents the criteria for boundary elements to be considered bounding roofs
-            LogicalOrFilter categoryFilter = new LogicalOrFilter(new ElementCategoryFilter(BuiltInCategory.OST_Roofs),
+            var categoryFilter = new LogicalOrFilter(new ElementCategoryFilter(BuiltInCategory.OST_Roofs),
                                                                     new ElementCategoryFilter(BuiltInCategory.OST_RoofSoffit));
 
             // Calculator for room/space geometry.
-            SpatialElementGeometryCalculator calculator = new SpatialElementGeometryCalculator(m_document);
+            var calculator = new SpatialElementGeometryCalculator(m_document);
 
             // Stores the resulting room->roof relationships
-            Dictionary<Element, List<ElementId>> roomsAndRoofs = new Dictionary<Element, List<ElementId>>();
+            var roomsAndRoofs = new Dictionary<Element, List<ElementId>>();
 
-            foreach (Element room in rooms)
+            foreach (var room in rooms)
             {
                 // Get room geometry & boundaries          
-                SpatialElementGeometryResults results = calculator.CalculateSpatialElementGeometry((SpatialElement)room);
+                var results = calculator.CalculateSpatialElementGeometry((SpatialElement)room);
 
                 // Get solid geometry so we can examine each face
-                Solid geometry = results.GetGeometry();
+                var geometry = results.GetGeometry();
 
                 foreach (Face face in geometry.Faces)
                 {
                     // Get list of roof boundary subfaces for a given face
-                    IList<SpatialElementBoundarySubface> boundaryFaces = results.GetBoundaryFaceInfo(face);
-                    foreach (SpatialElementBoundarySubface boundaryFace in boundaryFaces)
+                    var boundaryFaces = results.GetBoundaryFaceInfo(face);
+                    foreach (var boundaryFace in boundaryFaces)
                     {
                         // Get boundary element
-                        LinkElementId boundaryElementId = boundaryFace.SpatialBoundaryElement;
+                        var boundaryElementId = boundaryFace.SpatialBoundaryElement;
 
                         // Only considering local file room bounding elements
-                        ElementId localElementId = boundaryElementId.HostElementId;
+                        var localElementId = boundaryElementId.HostElementId;
 
                         // Evaluate if element meets criteria using PassesFilter()
                         if (localElementId != ElementId.InvalidElementId && categoryFilter.PassesFilter(m_document, localElementId))
@@ -173,14 +173,14 @@ namespace Revit.SDK.Samples.RoofsRooms.CS
                             // Room already has roofs, add more
                             if (roomsAndRoofs.ContainsKey(room))
                             {
-                                List<ElementId> roofs = roomsAndRoofs[room];
+                                var roofs = roomsAndRoofs[room];
                                 if (!roofs.Contains(localElementId))
                                     roofs.Add(localElementId);
                             }
                             // Room found first roof
                             else
                             {
-                                List<ElementId> roofs = new List<ElementId>();
+                                var roofs = new List<ElementId>();
                                 roofs.Add(localElementId);
                                 roomsAndRoofs.Add(room, roofs);
                             }
@@ -193,27 +193,27 @@ namespace Revit.SDK.Samples.RoofsRooms.CS
             // Format results
             if (roomsAndRoofs.Count > 0)
             {
-                String logs = String.Format("Rooms that have a bounding roof:");
+                var logs = String.Format("Rooms that have a bounding roof:");
                 message += logs + "\t\r\n";
                 Trace.WriteLine(logs);
-                foreach (KeyValuePair<Element, List<ElementId>> kvp in roomsAndRoofs)
+                foreach (var kvp in roomsAndRoofs)
                 {
                     // remove this room from all rooms list
                     rooms.Remove(kvp.Key);
 
-                    List<ElementId> roofs = kvp.Value;
+                    var roofs = kvp.Value;
                     String roofsString;
 
                     // Single roof boundary
                     if (roofs.Count == 1)
                     {
-                        Element roof = m_document.GetElement(roofs[0]);
+                        var roof = m_document.GetElement(roofs[0]);
                         roofsString = String.Format("Roof: Id = {0}, Name = {1}", roof.Id.ToString(), roof.Name);
                     }
                     // Multiple roofs
                     else
                     {
-                        roofsString = "Roofs ids = " + string.Join(", ", Array.ConvertAll<ElementId, string>(roofs.ToArray(), i => i.ToString()));
+                        roofsString = "Roofs ids = " + string.Join(", ", Array.ConvertAll(roofs.ToArray(), i => i.ToString()));
                     }
 
                     // Save results
@@ -229,10 +229,10 @@ namespace Revit.SDK.Samples.RoofsRooms.CS
             Trace.WriteLine("Geometry relationship checking finished...");
             if (rooms.Count != 0)
             {
-                String logs = String.Format("Below rooms don't have bounding roofs:");
+                var logs = String.Format("Below rooms don't have bounding roofs:");
                 message += logs + "\t\r\n";
                 Trace.WriteLine(logs);
-                foreach (Element room in rooms)
+                foreach (var room in rooms)
                 {
                     elements.Insert(room);
                     logs = String.Format("  Room Id: {0}, Room Name: {1}",
@@ -251,9 +251,9 @@ namespace Revit.SDK.Samples.RoofsRooms.CS
         /// <returns>Element list retrieved from current document.</returns>
         private List<Element> GetRoomsElements()
         {
-            List<Element> array = new List<Element>();
+            var array = new List<Element>();
             ElementFilter roomSpaceFilter = new LogicalOrFilter(new RoomFilter(), new SpaceFilter());
-            FilteredElementCollector collector = new FilteredElementCollector(m_document);
+            var collector = new FilteredElementCollector(m_document);
             array.AddRange(collector.WherePasses(roomSpaceFilter).ToElements());
             return array;
         }

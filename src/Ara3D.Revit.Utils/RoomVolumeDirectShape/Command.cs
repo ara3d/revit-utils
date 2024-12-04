@@ -43,13 +43,13 @@ namespace RoomVolumeDirectShape
     static string FormatDictAsJson(
       Dictionary<string, string> d )
     {
-      List<string> keys = new List<string>( d.Keys );
+      var keys = new List<string>( d.Keys );
       keys.Sort();
 
-      List<string> key_vals = new List<string>(
+      var key_vals = new List<string>(
         keys.Count );
 
-      foreach( string key in keys )
+      foreach( var key in keys )
       {
         key_vals.Add(
           string.Format( "\"{0}\" : \"{1}\"",
@@ -70,7 +70,7 @@ namespace RoomVolumeDirectShape
           "p", "expected non-null parameter" );
       }
 
-      char abbreviation = '?';
+      var abbreviation = '?';
 
       switch( p.StorageType )
       {
@@ -99,7 +99,7 @@ namespace RoomVolumeDirectShape
     /// </summary>
     static string ParameterToString( Parameter p )
     {
-      string s = "null";
+      var s = "null";
 
       if( p != null )
       {
@@ -140,9 +140,9 @@ namespace RoomVolumeDirectShape
 
       //IList<Parameter> ps = e.GetOrderedParameters();
 
-      ParameterSet pset = e.Parameters;
+      var pset = e.Parameters;
 
-      Dictionary<string, string> d
+      var d
         = new Dictionary<string, string>( pset.Size );
 
       foreach( Parameter p in pset )
@@ -153,11 +153,11 @@ namespace RoomVolumeDirectShape
         // etc., may be more relevant, as done by 
         // ParameterToString
 
-        string key = string.Format( "{0}({1})",
+        var key = string.Format( "{0}({1})",
           p.Definition.Name,
           ParameterStorageTypeChar( p ) );
 
-        string val = ParameterToString( p );
+        var val = ParameterToString( p );
 
         if( d.ContainsKey( key ) )
         {
@@ -176,7 +176,7 @@ namespace RoomVolumeDirectShape
 
     static string GetRoomPropertiesJson( Room r )
     {
-      Dictionary<string, string> param_values
+      var param_values
         = GetParamValues( r );
 
       // These room properties are all stored in 
@@ -210,10 +210,10 @@ namespace RoomVolumeDirectShape
 
       public int GetHashCode( XYZ a )
       {
-        string format = "0.####";
-        string s = a.X.ToString( format )
-          + "," + a.Y.ToString( format )
-          + "," + a.Z.ToString( format );
+        var format = "0.####";
+        var s = a.X.ToString( format )
+                + "," + a.Y.ToString( format )
+                + "," + a.Z.ToString( format );
         return s.GetHashCode();
       }
     }
@@ -233,26 +233,26 @@ namespace RoomVolumeDirectShape
     {
       TessellatedShapeBuilderResult result = null;
 
-      TessellatedShapeBuilder builder
+      var builder
         = new TessellatedShapeBuilder();
 
       // Need to include the key in the value, otherwise
       // no way to access it later, cf.
       // https://stackoverflow.com/questions/1619090/getting-a-keyvaluepair-directly-from-a-dictionary
 
-      Dictionary<XYZ, KeyValuePair<XYZ, int>> pts
+      var pts
         = new Dictionary<XYZ, KeyValuePair<XYZ, int>>(
           new XyzEqualityComparer() );
 
-      int nSolids = 0;
+      var nSolids = 0;
       //int nFaces = 0;
-      int nTriangles = 0;
+      var nTriangles = 0;
       //int nVertices = 0;
-      List<XYZ> vertices = new List<XYZ>( 3 );
+      var vertices = new List<XYZ>( 3 );
 
-      foreach( GeometryObject obj in geo )
+      foreach( var obj in geo )
       {
-        Solid solid = obj as Solid;
+        var solid = obj as Solid;
 
         if( null != solid )
         {
@@ -269,7 +269,7 @@ namespace RoomVolumeDirectShape
               SolidUtils.IsValidForTessellation( solid ),
               "expected a valid solid for room closed shell" );
 
-            SolidOrShellTessellationControls controls
+            var controls
               = new SolidOrShellTessellationControls()
               {
                 //
@@ -339,33 +339,33 @@ namespace RoomVolumeDirectShape
                 MinExternalAngleBetweenTriangles = 0.2 * Math.PI
               };
 
-            TriangulatedSolidOrShell shell
+            var shell
               = SolidUtils.TessellateSolidOrShell( solid, controls );
 
-            int n = shell.ShellComponentCount;
+            var n = shell.ShellComponentCount;
 
             Debug.Assert( 1 == n,
               "expected just one shell component in room closed shell" );
 
-            TriangulatedShellComponent component
+            var component
               = shell.GetShellComponent( 0 );
 
-            int coordsBase = coords.Count;
-            int indicesBase = indices.Count;
+            var coordsBase = coords.Count;
+            var indicesBase = indices.Count;
 
             n = component.VertexCount;
 
-            for( int i = 0; i < n; ++i )
+            for( var i = 0; i < n; ++i )
             {
-              XYZ v = component.GetVertex( i );
+              var v = component.GetVertex( i );
               coords.Add( new IntPoint3d( v ) );
             }
 
             n = component.TriangleCount;
 
-            for( int i = 0; i < n; ++i )
+            for( var i = 0; i < n; ++i )
             {
-              TriangleInShellComponent t
+              var t
                 = component.GetTriangle( i );
 
               vertices.Clear();
@@ -379,7 +379,7 @@ namespace RoomVolumeDirectShape
                 coordsBase + t.VertexIndex1,
                 coordsBase + t.VertexIndex2 ) );
 
-              TessellatedFace tf = new TessellatedFace(
+              var tf = new TessellatedFace(
                 vertices, materialId );
 
               if( builder.DoesFaceHaveEnoughLoopsAndVertices( tf ) )
@@ -532,16 +532,16 @@ namespace RoomVolumeDirectShape
               + "in millimetres:", n );
 
             Debug.Print( string.Join( " ", coords
-              .TakeWhile<IntPoint3d>( ( p, i ) => coordsBase <= i )
-              .Select<IntPoint3d, string>( p => p.ToString() ) ) );
+              .TakeWhile( ( p, i ) => coordsBase <= i )
+              .Select( p => p.ToString() ) ) );
 
             n = indices.Count - indicesBase;
 
             Debug.Print( "{0} glTF triangles:", n );
 
             Debug.Print( string.Join( " ", indices
-              .TakeWhile<TriangleIndices>( ( ti, i ) => indicesBase <= i )
-              .Select<TriangleIndices, string>( ti => ti.ToString() ) ) );
+              .TakeWhile( ( ti, i ) => indicesBase <= i )
+              .Select( ti => ti.ToString() ) ) );
           }
         }
       }
@@ -553,15 +553,15 @@ namespace RoomVolumeDirectShape
       ref string message,
       ElementSet elements )
     {
-      UIApplication uiapp = commandData.Application;
-      UIDocument uidoc = uiapp.ActiveUIDocument;
-      Application app = uiapp.Application;
-      Document doc = uidoc.Document;
+      var uiapp = commandData.Application;
+      var uidoc = uiapp.ActiveUIDocument;
+      var app = uiapp.Application;
+      var doc = uidoc.Document;
 
-      string id_addin = uiapp.ActiveAddInId.GetGUID()
+      var id_addin = uiapp.ActiveAddInId.GetGUID()
         .ToString();
 
-      IEnumerable<Room> rooms
+      var rooms
         = new FilteredElementCollector( doc )
         .WhereElementIsNotElementType()
         .OfClass( typeof( SpatialElement ) )
@@ -570,37 +570,37 @@ namespace RoomVolumeDirectShape
 
       // Collect room data for glTF export
 
-      List<GltfNodeData> room_data = new List<GltfNodeData>(
-        rooms.Count<Room>() );
+      var room_data = new List<GltfNodeData>(
+        rooms.Count() );
 
       // Collect geometry data for glTF: a list of 
       // vertex coordinates in millimetres, and a list 
       // of triangle vertex indices into the coord list.
 
-      List<IntPoint3d> gltf_coords = new List<IntPoint3d>();
-      List<TriangleIndices> gltf_indices = new List<TriangleIndices>();
+      var gltf_coords = new List<IntPoint3d>();
+      var gltf_indices = new List<TriangleIndices>();
 
-      using( Transaction tx = new Transaction( doc ) )
+      using( var tx = new Transaction( doc ) )
       {
         tx.Start( "Generate Direct Shape Elements "
           + "Representing Room Volumes" );
 
-        foreach( Room r in rooms )
+        foreach( var r in rooms )
         {
           Debug.Print( "Processing "
             + r.Name + "..." );
 
           // Collect data for current room
 
-          GltfNodeData rd = new GltfNodeData( r );
+          var rd = new GltfNodeData( r );
 
-          GeometryElement geo = r.ClosedShell;
+          var geo = r.ClosedShell;
 
           Debug.Assert(
-            geo.First<GeometryObject>() is Solid,
+            geo.First() is Solid,
             "expected a solid for room closed shell" );
 
-          Solid solid = geo.First<GeometryObject>() as Solid;
+          var solid = geo.First() as Solid;
 
           #region Fix the shape
 #if FIX_THE_SHAPE_SOMEHOW
@@ -655,7 +655,7 @@ namespace RoomVolumeDirectShape
           #endregion // Fix the shape
 
           IList<GeometryObject> shape
-            = geo.ToList<GeometryObject>();
+            = geo.ToList();
 
           // Previous counts define offsets 
           // to new binary data
@@ -679,8 +679,8 @@ namespace RoomVolumeDirectShape
             = gltf_indices.Count 
               - rd.TriangleVertexIndicesBegin;
 
-          IEnumerable<IntPoint3d> pts
-            = gltf_coords.Skip<IntPoint3d>( 
+          var pts
+            = gltf_coords.Skip( 
               rd.CoordinatesBegin );
 
           rd.Min = new IntPoint3d(
@@ -692,12 +692,12 @@ namespace RoomVolumeDirectShape
             pts.Max<IntPoint3d, int>( p => p.Y ),
             pts.Max<IntPoint3d, int>( p => p.Z ) );
 
-          Dictionary<string, string> param_values
+          var param_values
             = GetParamValues( r );
 
-          string json = FormatDictAsJson( param_values );
+          var json = FormatDictAsJson( param_values );
 
-          DirectShape ds = DirectShape.CreateElement(
+          var ds = DirectShape.CreateElement(
             doc, _id_category_for_direct_shape );
 
           ds.ApplicationId = id_addin;
@@ -720,14 +720,14 @@ namespace RoomVolumeDirectShape
 
       //string path = Path.GetTempPath();
 
-      string path = "C:/tmp";
+      var path = "C:/tmp";
 
       path = Path.Combine( path, doc.Title + "_gltf" );
 
-      using( StreamWriter s = new StreamWriter( 
+      using( var s = new StreamWriter( 
         path + ".txt" ) )
       {
-        int n = room_data.Count;
+        var n = room_data.Count;
 
         s.WriteLine( "{0} room{1}", n, ( ( 1 == n ) ? "" : "s" ) );
         s.WriteLine( "{0},{1},{2},{3},{4},{5},{6},{7},{8}",
@@ -741,25 +741,25 @@ namespace RoomVolumeDirectShape
           "indices begin", // "TriangleVertexIndicesBegin",
           "count" ); // "TriangleVertexIndexCount"
 
-        foreach( GltfNodeData rd in room_data )
+        foreach( var rd in room_data )
         {
           s.WriteLine( rd.ToString() );
         }
       }
 
-      using( FileStream f = File.Create( path + ".bin" ) )
+      using( var f = File.Create( path + ".bin" ) )
       {
-        using( BinaryWriter writer = new BinaryWriter( f ) )
+        using( var writer = new BinaryWriter( f ) )
         {
-          foreach( IntPoint3d p in gltf_coords )
+          foreach( var p in gltf_coords )
           {
             writer.Write( (float) p.X );
             writer.Write( (float) p.Y );
             writer.Write( (float) p.Z );
           }
-          foreach( TriangleIndices ti in gltf_indices )
+          foreach( var ti in gltf_indices )
           {
-            foreach( int i in ti.Indices )
+            foreach( var i in ti.Indices )
             {
               Debug.Assert( ushort.MaxValue > i,
                 "expected vertex index to fit into unsigned short" );

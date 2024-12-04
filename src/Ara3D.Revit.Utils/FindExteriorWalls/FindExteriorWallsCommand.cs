@@ -37,7 +37,7 @@ namespace FindExteriorWalls
                 if (!selectedWalls.Any()) return Result.Cancelled;
 
                 // result list
-                List<Wall> exteriorWalls = new List<Wall>();
+                var exteriorWalls = new List<Wall>();
 
                 // step one - find by ray
                 for (var i = 0; i < selectedWalls.Count; i++)
@@ -45,19 +45,19 @@ namespace FindExteriorWalls
                     if (selectedWalls[i] == null) continue;
                     var wall = selectedWalls[i];
                     var wallCurve = ((LocationCurve)wall.Location).Curve;
-                    bool isExterior = true;
+                    var isExterior = true;
                     // split wall curve for 3 part for greater accuracy
-                    for (int k = 1; k <= 3; k++)
+                    for (var k = 1; k <= 3; k++)
                     {
                         Curve tempCurve = Line.CreateBound(wallCurve.GetEndPoint(0), wallCurve.GetCenterPoint());
                         if (k == 2)
                             tempCurve = wallCurve;
                         if(k == 3)
                             tempCurve = Line.CreateBound(wallCurve.GetCenterPoint(), wallCurve.GetEndPoint(1));
-                        int intesectionsOnLeft = 0;
-                        int intersectionOnRight = 0;
-                        Line leftLine = tempCurve.GetPerpendicularLine(wall, 0);
-                        Line rightLine = tempCurve.GetPerpendicularLine(wall, 1);
+                        var intesectionsOnLeft = 0;
+                        var intersectionOnRight = 0;
+                        var leftLine = tempCurve.GetPerpendicularLine(wall, 0);
+                        var rightLine = tempCurve.GetPerpendicularLine(wall, 1);
                         for (var j = 0; j < selectedWalls.Count; j++)
                         {
                             if (selectedWalls[j] == null || i == j) continue;
@@ -85,8 +85,8 @@ namespace FindExteriorWalls
                             exteriorWalls.Add(wall);
                 }
                 // step two - find by end intersections
-                bool hasIntersections = true;
-                int overflow = 0;
+                var hasIntersections = true;
+                var overflow = 0;
                 while (hasIntersections)
                 {
                     hasIntersections = false;
@@ -133,7 +133,7 @@ namespace FindExteriorWalls
 
         private List<Wall> GetIntersectedByEndsWalls(List<Wall> selectedWalls, List<Wall> exteriorWalls, Wall currentWall)
         {
-            List<Wall> intersectedWalls = new List<Wall>();
+            var intersectedWalls = new List<Wall>();
             // find by location curve
             var intersectedWithFirstEnd = GetWallsIntersectedWithCurveByEnd(exteriorWalls, currentWall, 0);
             var intersectedWithSecondEnd = GetWallsIntersectedWithCurveByEnd(exteriorWalls, currentWall, 1);
@@ -168,9 +168,9 @@ namespace FindExteriorWalls
                 }
             }
 
-            foreach (Wall e in intersectedWithFirstEnd)
+            foreach (var e in intersectedWithFirstEnd)
                 intersectedWalls.Add(e);
-            foreach (Wall e in intersectedWithSecondEnd)
+            foreach (var e in intersectedWithSecondEnd)
                 intersectedWalls.Add(e);
 
             return intersectedWalls;
@@ -178,7 +178,7 @@ namespace FindExteriorWalls
 
         private static List<Wall> GetWallsIntersectedWithCurveByEnd(List<Wall> exteriorWalls, Wall currentWall, int endIndex)
         {
-            List<Wall> intersectedWalls = new List<Wall>();
+            var intersectedWalls = new List<Wall>();
             var currentCurve = ((LocationCurve)currentWall.Location).Curve;
             foreach (var exteriorWall in exteriorWalls)
             {

@@ -36,7 +36,7 @@ namespace Revit.SDK.Samples.VisibilityControl.CS
     /// <summary>
     /// the user interface form
     /// </summary>
-    public partial class VisibilityCtrlForm : System.Windows.Forms.Form
+    public partial class VisibilityCtrlForm : Form
     {
         // an object control visibility by category
         private VisibilityCtrl m_visibilityCtrl;
@@ -70,8 +70,8 @@ namespace Revit.SDK.Samples.VisibilityControl.CS
             allCategoriesListView.Columns.Add("name");
             foreach (string name in m_visibilityCtrl.AllCategories.Keys)
             {
-                bool check = m_visibilityCtrl.AllCategories[name].ToString().Equals("True") ? true : false;
-                ListViewItem item = new ListViewItem(name);
+                var check = m_visibilityCtrl.AllCategories[name].ToString().Equals("True") ? true : false;
+                var item = new ListViewItem(name);
                 item.Checked = check;
                 allCategoriesListView.Items.Add(item);
             }
@@ -79,7 +79,7 @@ namespace Revit.SDK.Samples.VisibilityControl.CS
             allCategoriesListView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
 
             // append the ItemCheck event handler method
-            allCategoriesListView.ItemCheck += new ItemCheckEventHandler(allCategoriesListView_ItemCheck);
+            allCategoriesListView.ItemCheck += allCategoriesListView_ItemCheck;
         }
 
         /// <summary>
@@ -89,8 +89,8 @@ namespace Revit.SDK.Samples.VisibilityControl.CS
         /// <param name="e"></param>
         private void allCategoriesListView_ItemCheck(object sender, ItemCheckEventArgs e)
         {
-            bool visible = e.NewValue == CheckState.Checked ? true : false;
-            string name = allCategoriesListView.Items[e.Index].Text;
+            var visible = e.NewValue == CheckState.Checked ? true : false;
+            var name = allCategoriesListView.Items[e.Index].Text;
 
             // change the visibility of the category
             if (!m_visibilityCtrl.SetVisibility(visible, name))
@@ -121,7 +121,7 @@ namespace Revit.SDK.Samples.VisibilityControl.CS
             }
 
             // close the form
-            this.Close();
+            Close();
         }
 
         private void checkAllButton_Click(object sender, EventArgs e)

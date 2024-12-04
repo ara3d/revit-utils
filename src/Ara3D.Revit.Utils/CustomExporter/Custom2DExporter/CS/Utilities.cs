@@ -16,13 +16,13 @@ namespace Revit.SDK.Samples.Custom2DExporter.CS
       /// <param name="from"></param>
       public static void addTo(IList<XYZ> to, IList<XYZ> from)
       {
-         int cnt = from.Count;
-         for (int ii = 0; ii < cnt; ii++)
+         var cnt = from.Count;
+         for (var ii = 0; ii < cnt; ii++)
          {
             if (ii < cnt - 1)
             {
-               XYZ p0 = from[ii];
-               XYZ p1 = from[ii + 1];
+               var p0 = from[ii];
+               var p1 = from[ii + 1];
                to.Add(p0);
                to.Add(p1);
             }
@@ -31,7 +31,7 @@ namespace Revit.SDK.Samples.Custom2DExporter.CS
 
       static Plane getAppropriatePlane(View view)
       {
-         Plane plane = Plane.CreateByNormalAndOrigin(view.ViewDirection, view.Origin);
+         var plane = Plane.CreateByNormalAndOrigin(view.ViewDirection, view.Origin);
          return plane;
       }
 
@@ -44,13 +44,13 @@ namespace Revit.SDK.Samples.Custom2DExporter.CS
       /// <param name="tolerance">The smallest curve length allowed to be drawn. Lines smaller than this are not drawn.</param>
       static void drawLines(View view, IList<XYZ> points, double tolerance)
       {
-         Plane plane = getAppropriatePlane(view);
+         var plane = getAppropriatePlane(view);
          if (plane != null)
          {
-            for (int ii = 0; ii < points.Count; ii++)
+            for (var ii = 0; ii < points.Count; ii++)
             {
                UV uvStart, uvEnd;
-               double distance = double.MaxValue;
+               var distance = double.MaxValue;
                plane.Project(points[ii], out uvStart, out distance);
                plane.Project(points[ii + 1], out uvEnd, out distance);
 
@@ -65,8 +65,8 @@ namespace Revit.SDK.Samples.Custom2DExporter.CS
                   continue;
                }
 
-               Line geomLine = Line.CreateBound(projectionStart, projectionEnd);
-               DetailLine line = view.Document.Create.NewDetailCurve(view, geomLine) as DetailLine;
+               var geomLine = Line.CreateBound(projectionStart, projectionEnd);
+               var line = view.Document.Create.NewDetailCurve(view, geomLine) as DetailLine;
 
                ii++;
             }
@@ -79,10 +79,10 @@ namespace Revit.SDK.Samples.Custom2DExporter.CS
       /// <param name="view">The view</param>
       static void hideAllInView(View view)
       {
-         FilteredElementCollector viewElems = new FilteredElementCollector(view.Document, view.Id);
-         ICollection<ElementId> elementIds = viewElems.ToElementIds();
+         var viewElems = new FilteredElementCollector(view.Document, view.Id);
+         var elementIds = viewElems.ToElementIds();
          ICollection<ElementId> hideElemIds = new List<ElementId>();
-         foreach (ElementId id in elementIds)
+         foreach (var id in elementIds)
          {
             if (view.Document.GetElement(id).CanBeHidden(view))
                hideElemIds.Add(id);
@@ -99,8 +99,8 @@ namespace Revit.SDK.Samples.Custom2DExporter.CS
       /// <param name="points">The points which define the lines (start, end) points</param>
       public static void displayExport(View view, IList<XYZ> points)
       {
-         Document doc = view.Document;
-         using (Transaction tran = new Transaction(view.Document, "ExportViewGeometry"))
+         var doc = view.Document;
+         using (var tran = new Transaction(view.Document, "ExportViewGeometry"))
          {
             tran.Start("Draw Exported Lines and turn off everything but Lines");
             hideAllInView(view);

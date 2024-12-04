@@ -57,18 +57,18 @@ namespace Revit.SDK.Samples.AllViews.CS
         /// Cancelled can be used to signify that the user cancelled the external operation 
         /// at some point. Failure should be returned if the application is unable to proceed with 
         /// the operation.</returns>
-       public Autodesk.Revit.UI.Result Execute(Autodesk.Revit.UI.ExternalCommandData commandData,
-         ref string message, Autodesk.Revit.DB.ElementSet elements)
+       public Result Execute(ExternalCommandData commandData,
+         ref string message, ElementSet elements)
        {
            if (null == commandData)
            {
                throw new ArgumentNullException("commandData");
            }
 
-           Document doc = commandData.Application.ActiveUIDocument.Document;
-           ViewsMgr view = new ViewsMgr(doc);
+           var doc = commandData.Application.ActiveUIDocument.Document;
+           var view = new ViewsMgr(doc);
 
-           AllViewsForm dlg = new AllViewsForm(view);
+           var dlg = new AllViewsForm(view);
 
            try
            {
@@ -80,10 +80,10 @@ namespace Revit.SDK.Samples.AllViews.CS
            catch (Exception e)
            {
                message = e.Message;
-               return Autodesk.Revit.UI.Result.Failed;
+               return Result.Failed;
            }
 
-           return Autodesk.Revit.UI.Result.Succeeded;
+           return Result.Succeeded;
       }
 
       #endregion IExternalCommand Members Implementation
@@ -141,20 +141,20 @@ namespace Revit.SDK.Samples.AllViews.CS
          m_VP = null;
          form.invalidViewport = true;
 
-         FilteredElementCollector fec = new FilteredElementCollector(m_doc);
+         var fec = new FilteredElementCollector(m_doc);
          fec.OfClass(typeof(Autodesk.Revit.DB.View));
-         var viewSheets = fec.Cast<Autodesk.Revit.DB.View>().Where<Autodesk.Revit.DB.View>(vp => !vp.IsTemplate && vp.ViewType == ViewType.DrawingSheet);
+         var viewSheets = fec.Cast<Autodesk.Revit.DB.View>().Where(vp => !vp.IsTemplate && vp.ViewType == ViewType.DrawingSheet);
 
          foreach (var view in viewSheets)
          {
             if (view.Name.Equals(selectSheetName))
             {
-               ViewSheet viewSheet = (ViewSheet)view;
+               var viewSheet = (ViewSheet)view;
                foreach (var vp in viewSheet.GetAllViewports())
                {
-                  Viewport VP = (Viewport)(m_doc.GetElement(vp));
+                  var VP = (Viewport)(m_doc.GetElement(vp));
 
-                  Autodesk.Revit.DB.View associatedView = m_doc.GetElement(VP.ViewId) as Autodesk.Revit.DB.View;
+                  var associatedView = m_doc.GetElement(VP.ViewId) as Autodesk.Revit.DB.View;
 
                   if (associatedView.Name.Equals(selectAssociatedViewName))
                   {
@@ -184,7 +184,7 @@ namespace Revit.SDK.Samples.AllViews.CS
       public void SetLabelOffset(AllViewsForm form,
          double labelOffsetX, double labelOffsetY)
       {
-         using (Transaction t = new Transaction(m_doc, "Change label offset"))
+         using (var t = new Transaction(m_doc, "Change label offset"))
          {
             t.Start();
 
@@ -203,7 +203,7 @@ namespace Revit.SDK.Samples.AllViews.CS
       /// <param name="labelLineLength">Label line length.</param>
       public void SetLabelLength(AllViewsForm form, double labelLineLength)
       {
-         using (Transaction t = new Transaction(m_doc, "Change label length"))
+         using (var t = new Transaction(m_doc, "Change label length"))
          {
             t.Start();
 
@@ -222,7 +222,7 @@ namespace Revit.SDK.Samples.AllViews.CS
       /// <param name="rotation">Label line rotation.</param>
       public void SetRotation(AllViewsForm form, ViewportRotation rotation)
       {
-         using (Transaction t = new Transaction(m_doc, "Change label orientation"))
+         using (var t = new Transaction(m_doc, "Change label orientation"))
          {
             t.Start();
 
@@ -237,38 +237,20 @@ namespace Revit.SDK.Samples.AllViews.CS
         /// <summary>
         /// Tree node store all views' names.
         /// </summary>
-        public TreeNode AllViewsNames
-        {
-            get
-            {
-                return m_allViewsNames;
-            }
-        }
+        public TreeNode AllViewsNames => m_allViewsNames;
 
         /// <summary>
         /// List of all title blocks' names.
         /// </summary>
-        public ArrayList AllTitleBlocksNames
-        {
-            get
-            {
-                return m_allTitleBlocksNames;
-            }
-        }
+        public ArrayList AllTitleBlocksNames => m_allTitleBlocksNames;
 
         /// <summary>
         /// The selected sheet's name.
         /// </summary>
         public string SheetName
         {
-            get
-            {
-                return m_sheetName;
-            }
-            set
-            {
-                m_sheetName = value;
-            }
+            get => m_sheetName;
+            set => m_sheetName = value;
         }
 
         /// <summary>
@@ -288,12 +270,12 @@ namespace Revit.SDK.Samples.AllViews.CS
         /// <param name="doc">the active document</param>
         private void GetAllViews(Document doc)
         {
-            FilteredElementCollector collector = new FilteredElementCollector(doc);
-            FilteredElementIterator itor = collector.OfClass(typeof(Autodesk.Revit.DB.View)).GetElementIterator();
+            var collector = new FilteredElementCollector(doc);
+            var itor = collector.OfClass(typeof(Autodesk.Revit.DB.View)).GetElementIterator();
             itor.Reset();
             while (itor.MoveNext())
             {
-                Autodesk.Revit.DB.View view = itor.Current as Autodesk.Revit.DB.View;
+                var view = itor.Current as Autodesk.Revit.DB.View;
                 // skip view templates because they're invisible in project browser
                 if (null == view || view.IsTemplate)
                 {
@@ -301,7 +283,7 @@ namespace Revit.SDK.Samples.AllViews.CS
                 }
                 else
                 {
-                    ElementType objType = doc.GetElement(view.GetTypeId()) as ElementType;
+                    var objType = doc.GetElement(view.GetTypeId()) as ElementType;
                     if (null == objType || objType.Name.Equals("Schedule")
                         || objType.Name.Equals("Drawing Sheet"))
                     {
@@ -332,7 +314,7 @@ namespace Revit.SDK.Samples.AllViews.CS
                 }
             }
 
-            TreeNode categoryNode = new TreeNode(type);
+            var categoryNode = new TreeNode(type);
             categoryNode.Tag = type;
             if (type.Equals("Building Elevation"))
             {
@@ -351,7 +333,7 @@ namespace Revit.SDK.Samples.AllViews.CS
         /// </summary>
         public void SelectViews()
         {
-            ArrayList names = new ArrayList();
+            var names = new ArrayList();
             foreach (TreeNode t in AllViewsNames.Nodes)
             {
                 foreach (TreeNode n in t.Nodes)
@@ -380,7 +362,7 @@ namespace Revit.SDK.Samples.AllViews.CS
       /// Generate sheet in active document.
       /// </summary>
       /// <param name="doc">the currently active document</param>
-      public Autodesk.Revit.UI.Result GenerateSheet(Document doc)
+      public Result GenerateSheet(Document doc)
       {
          if (null == doc)
          {
@@ -392,15 +374,15 @@ namespace Revit.SDK.Samples.AllViews.CS
                 throw new InvalidOperationException("No view be selected, generate sheet be canceled.");
          }
 
-         Result result = Result.Succeeded;
+         var result = Result.Succeeded;
 
-         using (Transaction newTran = new Transaction(doc, "AllViews_Sample"))
+         using (var newTran = new Transaction(doc, "AllViews_Sample"))
          {
             newTran.Start();
 
             try
             {
-                  ViewSheet sheet = ViewSheet.Create(doc, m_titleBlock.Id);
+                  var sheet = ViewSheet.Create(doc, m_titleBlock.Id);
                   sheet.Name = SheetName;
                   PlaceViews(m_selectedViews, sheet);
             }
@@ -450,7 +432,7 @@ namespace Revit.SDK.Samples.AllViews.CS
         /// <param name="doc">the currently active document</param>
         private void GetTitleBlocks(Document doc)
         {
-            FilteredElementCollector filteredElementCollector = new FilteredElementCollector(doc);
+            var filteredElementCollector = new FilteredElementCollector(doc);
             filteredElementCollector.OfClass(typeof(FamilySymbol));
             filteredElementCollector.OfCategory(BuiltInCategory.OST_TitleBlocks);
             m_allTitleBlocks = filteredElementCollector.ToElements();
@@ -459,9 +441,9 @@ namespace Revit.SDK.Samples.AllViews.CS
                 throw new InvalidOperationException("There is no title block to generate sheet.");
             }
 
-            foreach (Element element in m_allTitleBlocks)
+            foreach (var element in m_allTitleBlocks)
             {
-                FamilySymbol f = element as FamilySymbol;
+                var f = element as FamilySymbol;
                 AllTitleBlocksNames.Add(f.Family.Name + ":" + f.Name);
                 if (null == m_titleBlock)
                 {
@@ -481,15 +463,15 @@ namespace Revit.SDK.Samples.AllViews.CS
             double yDistance = 0;
             CalculateDistance(sheet.Outline, views.Size, ref xDistance, ref yDistance);
 
-            Autodesk.Revit.DB.UV origin = GetOffSet(sheet.Outline, xDistance, yDistance);
+            var origin = GetOffSet(sheet.Outline, xDistance, yDistance);
             //Autodesk.Revit.DB.UV temp = new Autodesk.Revit.DB.UV (origin.U, origin.V);
-            double tempU = origin.U;
-            double tempV = origin.V;
-            int n = 1;
+            var tempU = origin.U;
+            var tempV = origin.V;
+            var n = 1;
             foreach (Autodesk.Revit.DB.View v in views)
             {
-                Autodesk.Revit.DB.UV location = new Autodesk.Revit.DB.UV(tempU, tempV);
-                Autodesk.Revit.DB.View view = v;
+                var location = new UV(tempU, tempV);
+                var view = v;
                 Rescale(view, xDistance, yDistance);
                 try
                 {
@@ -521,9 +503,9 @@ namespace Revit.SDK.Samples.AllViews.CS
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <returns></returns>
-        private Autodesk.Revit.DB.UV GetOffSet(BoundingBoxUV bBox, double x, double y)
+        private UV GetOffSet(BoundingBoxUV bBox, double x, double y)
         {
-            return new Autodesk.Revit.DB.UV(bBox.Min.U + x * GOLDENSECTION, bBox.Min.V + y * GOLDENSECTION);
+            return new UV(bBox.Min.U + x * GOLDENSECTION, bBox.Min.V + y * GOLDENSECTION);
         }
 
         /// <summary>
@@ -535,11 +517,11 @@ namespace Revit.SDK.Samples.AllViews.CS
         /// <param name="y">Distance in y axis between each view</param>
         private void CalculateDistance(BoundingBoxUV bBox, int amount, ref double x, ref double y)
         {
-            double xLength = (bBox.Max.U - bBox.Min.U) * (1 - TITLEBAR);
-            double yLength = (bBox.Max.V - bBox.Min.V);
+            var xLength = (bBox.Max.U - bBox.Min.U) * (1 - TITLEBAR);
+            var yLength = (bBox.Max.V - bBox.Min.V);
 
             //calculate appropriate rows numbers.
-            double result = Math.Sqrt(amount);
+            var result = Math.Sqrt(amount);
 
             while (0 < (result - (int)result))
             {
@@ -547,7 +529,7 @@ namespace Revit.SDK.Samples.AllViews.CS
                 result = Math.Sqrt(amount);
             }
             m_rows = result;
-            double area = xLength * yLength / amount;
+            var area = xLength * yLength / amount;
 
             //calculate appropriate distance between the views.
             if (bBox.Max.U > bBox.Max.V)
@@ -571,7 +553,7 @@ namespace Revit.SDK.Samples.AllViews.CS
         static private void Rescale(Autodesk.Revit.DB.View view, double x, double y)
         {
             double Rescale = 2;
-            Autodesk.Revit.DB.UV outline = new Autodesk.Revit.DB.UV(view.Outline.Max.U - view.Outline.Min.U,
+            var outline = new UV(view.Outline.Max.U - view.Outline.Min.U,
                 view.Outline.Max.V - view.Outline.Min.V);
 
             if (outline.U > outline.V)

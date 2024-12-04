@@ -194,7 +194,7 @@ namespace Revit.SDK.Samples.ModelLines.CS
         void ReBindElementIdComboBox(LineType type)
         {
             // Store the selected index property
-            int selectedIndex = elementIdComboBox.SelectedIndex;
+            var selectedIndex = elementIdComboBox.SelectedIndex;
             switch (type)
             {
                 case LineType.ModelEllipse:     // if it is model ellipse
@@ -225,15 +225,15 @@ namespace Revit.SDK.Samples.ModelLines.CS
         void createButton_Click(object sender, EventArgs e)
         {
             // Define some local data
-            Autodesk.Revit.DB.XYZ firstPoint;     // Store the data of first point for line or arc       
-            Autodesk.Revit.DB.XYZ secondPoint;    // Store the data of second point for line or arc
-            Autodesk.Revit.DB.XYZ thirdPoint;     // Store the data of third point only for arc
-            Autodesk.Revit.DB.XYZ offsetPoint;    // Store the data of offset point for other lines
+            XYZ firstPoint;     // Store the data of first point for line or arc       
+            XYZ secondPoint;    // Store the data of second point for line or arc
+            XYZ thirdPoint;     // Store the data of third point only for arc
+            XYZ offsetPoint;    // Store the data of offset point for other lines
             ElementId modelLineId;    // Store the selected element id using in creation
             ElementId sketchPlaneId;  // Store the selected sketch id using in creation
 
             // First, get the create curve type.
-            LineType createType = GetCurveType();
+            var createType = GetCurveType();
 
             // Second, check data integrity          
             if (!AssertDataIntegrity(createType)) // Check whether the data are integrity 
@@ -286,7 +286,7 @@ namespace Revit.SDK.Samples.ModelLines.CS
             }
 
             // Refresh the form display.
-            this.Refresh();
+            Refresh();
         }
 
         /// <summary>
@@ -294,7 +294,7 @@ namespace Revit.SDK.Samples.ModelLines.CS
         /// </summary>
         private void closeButton_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
 
         /// <summary>
@@ -413,7 +413,7 @@ namespace Revit.SDK.Samples.ModelLines.CS
         private void createSketchPlaneButton_Click(object sender, EventArgs e)
         {
             // Display a form to collect some necessary data
-            using (SketchPlaneForm displayForm = new SketchPlaneForm(m_dataBuffer))
+            using (var displayForm = new SketchPlaneForm(m_dataBuffer))
             {
                 displayForm.ShowDialog();
             }
@@ -424,7 +424,7 @@ namespace Revit.SDK.Samples.ModelLines.CS
             sketchPlaneComboBox.SelectedIndex = sketchPlaneComboBox.Items.Count - 1;
 
             // Refresh the form display.
-            this.Refresh();
+            Refresh();
         }
 
         #endregion

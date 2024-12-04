@@ -77,10 +77,8 @@ namespace Revit.SDK.Samples.ViewFilters.CS
         /// <summary>
         /// Get ElementId of current parameter 
         /// </summary>
-        public ElementId ParamId
-        {
-            get { return new ElementId(Parameter); }
-        }
+        public ElementId ParamId => new(Parameter);
+
         #endregion
 
         #region Class Public Methods
@@ -160,7 +158,7 @@ namespace Revit.SDK.Samples.ViewFilters.CS
         /// <returns>API FilterRule converted from current FilterRuleBuilder.</returns>
         public FilterRule AsFilterRule()
         {
-            ElementId paramId = new ElementId(Parameter);
+            var paramId = new ElementId(Parameter);
             if (ParamType == StorageType.String)
             {
                 switch(RuleCriteria)
@@ -247,7 +245,7 @@ namespace Revit.SDK.Samples.ViewFilters.CS
             }
             //
             // Throw exception for others
-            throw new System.NotImplementedException("This filter rule or criteria is not implemented yet.");
+            throw new NotImplementedException("This filter rule or criteria is not implemented yet.");
         }
         #endregion
 
@@ -276,7 +274,7 @@ namespace Revit.SDK.Samples.ViewFilters.CS
         /// <summary>
         /// Reserves current active document
         /// </summary>
-        Autodesk.Revit.DB.Document m_doc;
+        Document m_doc;
 
         /// <summary>
         /// BuiltInCategories of filter
@@ -293,18 +291,15 @@ namespace Revit.SDK.Samples.ViewFilters.CS
         /// <summary>
         /// Get BuiltInCategories of filter
         /// </summary>
-        public List<BuiltInCategory> FilterCategories
-        {
-            get { return m_filterCategories; }
-        }
+        public List<BuiltInCategory> FilterCategories => m_filterCategories;
 
         /// <summary>
         /// Get BuiltInCategory Ids of filter
         /// </summary>
         public IList<ElementId> GetCategoryIds()
         {
-            List<ElementId> catIds = new List<ElementId>();
-            foreach (BuiltInCategory cat in m_filterCategories)
+            var catIds = new List<ElementId>();
+            foreach (var cat in m_filterCategories)
                 catIds.Add(new ElementId(cat));
             return catIds;
         }
@@ -325,8 +320,8 @@ namespace Revit.SDK.Samples.ViewFilters.CS
                 return false;
             m_filterCategories = newCats; // update categories
 
-            List<ElementId> newCatIds = new List<ElementId>();
-            foreach (BuiltInCategory cat in newCats)
+            var newCatIds = new List<ElementId>();
+            foreach (var cat in newCats)
             {
                 newCatIds.Add(new ElementId(cat));
             }
@@ -334,9 +329,9 @@ namespace Revit.SDK.Samples.ViewFilters.CS
             // Check if need to update file rules:
             // . if filer rule is empty, do nothing
             // . if some parameters of rules cannot be supported by new categories, clean all old rules
-            ICollection<ElementId> supportParams =
+            var supportParams =
                 ParameterFilterUtilities.GetFilterableParametersInCommon(m_doc, newCatIds);
-            foreach (FilterRuleBuilder rule in m_filterRules)
+            foreach (var rule in m_filterRules)
             {
                 if (!supportParams.Contains(new ElementId(rule.Parameter)))
                 {
@@ -350,10 +345,7 @@ namespace Revit.SDK.Samples.ViewFilters.CS
         /// <summary>
         /// Get FilterRuleBuilder of API filter's rules
         /// </summary>
-        public List<FilterRuleBuilder> RuleData
-        {
-            get { return m_filterRules; }
-        }
+        public List<FilterRuleBuilder> RuleData => m_filterRules;
 
         /// <summary>
         /// Create sample custom FilterData with specified categories and FilterRuleBuilder
@@ -361,7 +353,7 @@ namespace Revit.SDK.Samples.ViewFilters.CS
         /// <param name="doc">Revit active document.</param>
         /// <param name="categories">BuilInCategories of filter.</param>
         /// <param name="filterRules">FilterRuleBuilder set of filter.</param>
-        public FilterData(Autodesk.Revit.DB.Document doc,
+        public FilterData(Document doc,
             ICollection<BuiltInCategory> categories, ICollection<FilterRuleBuilder> filterRules)
         {
             m_doc = doc;
@@ -377,12 +369,12 @@ namespace Revit.SDK.Samples.ViewFilters.CS
         /// <param name="doc">Revit active document.</param>
         /// <param name="categories">BuilInCategory ids of filter.</param>
         /// <param name="filterRules">FilterRuleBuilder set of filter.</param>
-        public FilterData(Autodesk.Revit.DB.Document doc,
+        public FilterData(Document doc,
             ICollection<ElementId> categories, ICollection<FilterRuleBuilder> filterRules)
         {
             m_doc = doc;
             m_filterCategories = new List<BuiltInCategory>();
-            foreach (ElementId catId in categories)
+            foreach (var catId in categories)
                 m_filterCategories.Add((BuiltInCategory)catId.IntegerValue);
             m_filterRules = new List<FilterRuleBuilder>();
             m_filterRules.AddRange(filterRules);

@@ -37,7 +37,7 @@ namespace Revit.SDK.Samples.EventsMonitor.CS
     /// If you just want to learn how to use Revit events, 
     /// please pay more attention to EventManager class.
     /// </summary>
-    public partial class EventsSettingForm : System.Windows.Forms.Form
+    public partial class EventsSettingForm : Form
     {
         #region Class Member Variable
         /// <summary>
@@ -60,10 +60,7 @@ namespace Revit.SDK.Samples.EventsMonitor.CS
                 }
                 return m_appSelection;
             }
-            set
-            {
-                m_appSelection = value;
-            }
+            set => m_appSelection = value;
         }
 
         #endregion
@@ -89,12 +86,12 @@ namespace Revit.SDK.Samples.EventsMonitor.CS
         {
             // clear lists.
             m_appSelection.Clear();
-            foreach (object item in AppEventsCheckedList.CheckedItems)
+            foreach (var item in AppEventsCheckedList.CheckedItems)
             {
                 m_appSelection.Add(item.ToString());
             }
-            this.DialogResult = DialogResult.OK;
-            this.Hide();
+            DialogResult = DialogResult.OK;
+            Hide();
         }
 
         /// <summary>
@@ -104,7 +101,7 @@ namespace Revit.SDK.Samples.EventsMonitor.CS
         /// <param name="e"></param>
         private void ToggleForm_FormClosed(object sender, FormClosedEventArgs e)
         {
-            this.Hide();
+            Hide();
         }
 
         /// <summary>
@@ -114,7 +111,7 @@ namespace Revit.SDK.Samples.EventsMonitor.CS
         /// <param name="e"></param>
         private void checkAllButton_Click(object sender, EventArgs e)
         {
-                for (int i = 0; i < AppEventsCheckedList.Items.Count; i++)
+                for (var i = 0; i < AppEventsCheckedList.Items.Count; i++)
                 {
                     AppEventsCheckedList.SetItemChecked(i, true);
                 }
@@ -128,7 +125,7 @@ namespace Revit.SDK.Samples.EventsMonitor.CS
         /// <param name="e"></param>
         private void checkNoneButton_Click(object sender, EventArgs e)
         {
-                for (int i = 0; i < AppEventsCheckedList.Items.Count; i++)
+                for (var i = 0; i < AppEventsCheckedList.Items.Count; i++)
                 {
                     AppEventsCheckedList.SetItemChecked(i, false);
                 }
@@ -141,8 +138,8 @@ namespace Revit.SDK.Samples.EventsMonitor.CS
         /// <param name="e"></param>
         private void cancelButton_Click(object sender, EventArgs e)
         {
-            this.DialogResult = DialogResult.Cancel;
-            this.Hide();
+            DialogResult = DialogResult.Cancel;
+            Hide();
         }
 
         #endregion

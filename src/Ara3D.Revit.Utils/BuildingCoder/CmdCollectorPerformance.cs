@@ -1017,7 +1017,7 @@ namespace BuildingCoder
         // https://forums.autodesk.com/t5/revit-api-forum/filter-fabrication-rectangular-ducts-and-the-tag-associated-with/m-p/10971268
         private bool IsRectangularFabricationPart(Element e)
         {
-            FabricationPart f = e as FabricationPart;
+            var f = e as FabricationPart;
             return (null != f)
                 && ((int) BuiltInCategory.OST_FabricationDuctwork 
                     == f.Category.Id.IntegerValue)
@@ -1027,15 +1027,15 @@ namespace BuildingCoder
 
         private bool IsRectangularFabricationPartTag(IndependentTag t)
         {
-            bool rc = false;
+            var rc = false;
             double tagValue;
-            Element f = t.GetTaggedLocalElements().First();
+            var f = t.GetTaggedLocalElements().First();
             if(IsRectangularFabricationPart(f))
             {
-                Parameter p = f.LookupParameter("Length");
+                var p = f.LookupParameter("Length");
                 if( null != p)
                 {
-                    double length = p.AsDouble();
+                    var length = p.AsDouble();
                     rc = double.TryParse(t.TagText, out tagValue)
                         && (Math.Round(length, 4) == Math.Round(tagValue, 4));
                 }
@@ -1110,7 +1110,7 @@ namespace BuildingCoder
 
             // Return a count of all pipe instances
 
-            int nPipes = new FilteredElementCollector(doc)
+            var nPipes = new FilteredElementCollector(doc)
                 .OfClass(typeof(Pipe))
                 .GetElementCount();
 
@@ -1148,7 +1148,7 @@ namespace BuildingCoder
             Document doc,
             PartType parttype )
         {
-            BuiltInParameter bip = BuiltInParameter.FAMILY_CONTENT_PART_TYPE;
+            var bip = BuiltInParameter.FAMILY_CONTENT_PART_TYPE;
 
             return new FilteredElementCollector(doc)
                 .WhereElementIsElementType()

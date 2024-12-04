@@ -35,7 +35,7 @@ namespace Revit.SDK.Samples.DeleteObject.CS
     [Autodesk.Revit.Attributes.Transaction(Autodesk.Revit.Attributes.TransactionMode.Manual)]
     [Autodesk.Revit.Attributes.Regeneration(Autodesk.Revit.Attributes.RegenerationOption.Manual)]
     [Autodesk.Revit.Attributes.Journaling(Autodesk.Revit.Attributes.JournalingMode.NoCommandData)]
-    public class Command : Autodesk.Revit.UI.IExternalCommand
+    public class Command : IExternalCommand
     {
         ///<summary>
         /// Implement this method as an external command for Revit.
@@ -53,15 +53,15 @@ namespace Revit.SDK.Samples.DeleteObject.CS
         /// Cancelled can be used to signify that the user cancelled the external operation 
         /// at some point. Failure should be returned if the application is unable to proceed with 
         /// the operation.</returns>
-        public Autodesk.Revit.UI.Result Execute(
-            Autodesk.Revit.UI.ExternalCommandData commandData,
-            ref string message, Autodesk.Revit.DB.ElementSet elements)
+        public Result Execute(
+            ExternalCommandData commandData,
+            ref string message, ElementSet elements)
         {
-            Autodesk.Revit.UI.UIApplication revit = commandData.Application;
-            Transaction trans = new Transaction(revit.ActiveUIDocument.Document, "Revit.SDK.Samples.DeleteObject");
+            var revit = commandData.Application;
+            var trans = new Transaction(revit.ActiveUIDocument.Document, "Revit.SDK.Samples.DeleteObject");
             trans.Start();
-            ElementSet collection = new ElementSet();
-            foreach (ElementId elementId in revit.ActiveUIDocument.Selection.GetElementIds())
+            var collection = new ElementSet();
+            foreach (var elementId in revit.ActiveUIDocument.Selection.GetElementIds())
             {
                collection.Insert(revit.ActiveUIDocument.Document.GetElement(elementId));
             }
@@ -70,20 +70,20 @@ namespace Revit.SDK.Samples.DeleteObject.CS
             {
                 message = "Please select object(s) before delete.";
                 trans.RollBack();
-                return Autodesk.Revit.UI.Result.Cancelled;
+                return Result.Cancelled;
             }
 
-            bool error = true;
+            var error = true;
             try
             {
                 error = true;
 
                 // delete selection
-                IEnumerator e = collection.GetEnumerator();
-                bool MoreValue = e.MoveNext();
+                var e = collection.GetEnumerator();
+                var MoreValue = e.MoveNext();
                 while (MoreValue)
                 {
-                    Element component = e.Current as Element;
+                    var component = e.Current as Element;
                     revit.ActiveUIDocument.Document.Delete(component.Id);
                     MoreValue = e.MoveNext();
                 }
@@ -99,7 +99,7 @@ namespace Revit.SDK.Samples.DeleteObject.CS
                 }
                 message = "object(s) can't be deleted.";
                 trans.RollBack();
-                return Autodesk.Revit.UI.Result.Failed;
+                return Result.Failed;
             }
             finally
             {
@@ -110,7 +110,7 @@ namespace Revit.SDK.Samples.DeleteObject.CS
                 }
             }
             trans.Commit();
-            return Autodesk.Revit.UI.Result.Succeeded;
+            return Result.Succeeded;
         }
     }
 }

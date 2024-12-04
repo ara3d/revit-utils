@@ -69,8 +69,8 @@ namespace Revit.SDK.Samples.ChangesMonitor.CS
         /// </summary>
         public static DataTable ChangesInfoTable
         {
-            get { return m_ChangesInfoTable; }
-            set { m_ChangesInfoTable = value; }
+            get => m_ChangesInfoTable;
+            set => m_ChangesInfoTable = value;
         }
 
         /// <summary>
@@ -78,8 +78,8 @@ namespace Revit.SDK.Samples.ChangesMonitor.CS
         /// </summary>
         public static ChangesInformationForm InfoForm
         {
-            get { return ExternalApplication.m_InfoForm; }
-            set { ExternalApplication.m_InfoForm = value; }
+            get => m_InfoForm;
+            set => m_InfoForm = value;
         }
         #endregion
         
@@ -104,7 +104,7 @@ namespace Revit.SDK.Samples.ChangesMonitor.CS
             m_InfoForm = new ChangesInformationForm(ChangesInfoTable);
 
             // register the DocumentChanged event
-            m_CtrlApp.DocumentChanged += new EventHandler<Autodesk.Revit.DB.Events.DocumentChangedEventArgs>(CtrlApp_DocumentChanged);
+            m_CtrlApp.DocumentChanged += CtrlApp_DocumentChanged;
 
             // show dialog
             m_InfoForm.Show();
@@ -142,23 +142,23 @@ namespace Revit.SDK.Samples.ChangesMonitor.CS
         void CtrlApp_DocumentChanged(object sender, Autodesk.Revit.DB.Events.DocumentChangedEventArgs e)
         {
             // get the current document.
-            Document doc = e.GetDocument();
+            var doc = e.GetDocument();
 
             // dump the element information
-            ICollection<ElementId> addedElem = e.GetAddedElementIds();
-            foreach (ElementId id in addedElem)
+            var addedElem = e.GetAddedElementIds();
+            foreach (var id in addedElem)
             {
                 AddChangeInfoRow(id, doc, "Added");
             }
 
-            ICollection<ElementId> deletedElem = e.GetDeletedElementIds();
-            foreach (ElementId id in deletedElem)
+            var deletedElem = e.GetDeletedElementIds();
+            foreach (var id in deletedElem)
             {
                 AddChangeInfoRow(id, doc, "Deleted");
             }
 
-            ICollection<ElementId> modifiedElem = e.GetModifiedElementIds();
-            foreach (ElementId id in modifiedElem)
+            var modifiedElem = e.GetModifiedElementIds();
+            foreach (var id in modifiedElem)
             {
                 AddChangeInfoRow(id, doc, "Modified");
             }
@@ -176,9 +176,9 @@ namespace Revit.SDK.Samples.ChangesMonitor.CS
         private void AddChangeInfoRow(ElementId id, Document doc, string changeType)
         {
             // retrieve the changed element
-            Element elem = doc.GetElement(id);
+            var elem = doc.GetElement(id);
 
-            DataRow newRow = m_ChangesInfoTable.NewRow();
+            var newRow = m_ChangesInfoTable.NewRow();
 
             // set the relative information of this event into the table.
             if (elem == null)
@@ -209,30 +209,30 @@ namespace Revit.SDK.Samples.ChangesMonitor.CS
         private DataTable CreateChangeInfoTable()
         {
             // create a new dataTable
-            DataTable changesInfoTable = new DataTable("ChangesInfoTable");
+            var changesInfoTable = new DataTable("ChangesInfoTable");
 
             // Create a "ChangeType" column. It will be "Added", "Deleted" and "Modified".
-            DataColumn styleColumn = new DataColumn("ChangeType", typeof(System.String));
+            var styleColumn = new DataColumn("ChangeType", typeof(String));
             styleColumn.Caption = "ChangeType";
             changesInfoTable.Columns.Add(styleColumn);
 
             // Create a "Id" column. It will be the Element ID
-            DataColumn idColum = new DataColumn("Id", typeof(System.String));
+            var idColum = new DataColumn("Id", typeof(String));
             idColum.Caption = "Id";
             changesInfoTable.Columns.Add(idColum);
 
             // Create a "Name" column. It will be the Element Name
-            DataColumn nameColum = new DataColumn("Name", typeof(System.String));
+            var nameColum = new DataColumn("Name", typeof(String));
             nameColum.Caption = "Name";
             changesInfoTable.Columns.Add(nameColum);
 
             // Create a "Category" column. It will be the Category Name of the element.
-            DataColumn categoryColum = new DataColumn("Category", typeof(System.String));
+            var categoryColum = new DataColumn("Category", typeof(String));
             categoryColum.Caption = "Category";
             changesInfoTable.Columns.Add(categoryColum);
 
             // Create a "Document" column. It will be the document which own the changed element.
-            DataColumn docColum = new DataColumn("Document", typeof(System.String));
+            var docColum = new DataColumn("Document", typeof(String));
             docColum.Caption = "Document";
             changesInfoTable.Columns.Add(docColum);
 

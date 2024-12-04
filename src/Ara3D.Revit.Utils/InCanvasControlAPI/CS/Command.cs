@@ -56,16 +56,16 @@ namespace Revit.SDK.Samples.InCanvasControlAPI.CS
       {
          try
          {
-            Document document = commandData.Application.ActiveUIDocument.Document;
-            Selection choices = commandData.Application.ActiveUIDocument.Selection;
-            IssueMarkerTracking tracking = IssueMarkerTrackingManager.GetInstance().GetTracking(document);
+            var document = commandData.Application.ActiveUIDocument.Document;
+            var choices = commandData.Application.ActiveUIDocument.Selection;
+            var tracking = IssueMarkerTrackingManager.GetInstance().GetTracking(document);
 
             // Pick one object from Revit.
-            Reference hasPickOne = choices.PickObject(ObjectType.Element, "Select an element to create a control on.");
+            var hasPickOne = choices.PickObject(ObjectType.Element, "Select an element to create a control on.");
 
             if (hasPickOne != null && tracking.GetMarkerByElementId(hasPickOne.ElementId) == null)
             {
-               IssueMarker marker = IssueMarker.Create(document, hasPickOne.ElementId);
+               var marker = IssueMarker.Create(document, hasPickOne.ElementId);
 
                // Register the marker in tracking.
                tracking.SubscribeMarker(marker);

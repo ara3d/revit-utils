@@ -57,37 +57,37 @@ namespace Revit.SDK.Samples.LevelsProperty.CS
         /// Cancelled can be used to signify that the user cancelled the external operation 
         /// at some point. Failure should be returned if the application is unable to proceed with 
         /// the operation.</returns>
-        public Autodesk.Revit.UI.Result Execute(ExternalCommandData revit, ref String message, Autodesk.Revit.DB.ElementSet elements)
+        public Result Execute(ExternalCommandData revit, ref String message, ElementSet elements)
         {
             m_revit = revit;
-            UnitTypeId = m_revit.Application.ActiveUIDocument.Document.GetUnits().GetFormatOptions(Autodesk.Revit.DB.SpecTypeId.Length).GetUnitTypeId();
-            Transaction documentTransaction = new Transaction(revit.Application.ActiveUIDocument.Document, "Document");
+            UnitTypeId = m_revit.Application.ActiveUIDocument.Document.GetUnits().GetFormatOptions(SpecTypeId.Length).GetUnitTypeId();
+            var documentTransaction = new Transaction(revit.Application.ActiveUIDocument.Document, "Document");
             documentTransaction.Start();
             try
             {
                 //Get every level by iterating through all elements
                 systemLevelsDatum = new List<LevelsDataSource>();
-                FilteredElementCollector collector = new FilteredElementCollector(m_revit.Application.ActiveUIDocument.Document);
+                var collector = new FilteredElementCollector(m_revit.Application.ActiveUIDocument.Document);
                 ICollection<Element> collection = collector.OfClass(typeof(Level)).ToElements();
-                foreach (Element element in collection)
+                foreach (var element in collection)
                 {
-                     Level systemLevel = element as Level;
-                     LevelsDataSource levelsDataSourceRow = new LevelsDataSource();
+                     var systemLevel = element as Level;
+                     var levelsDataSourceRow = new LevelsDataSource();
 
                      levelsDataSourceRow.LevelIDValue = systemLevel.Id;
                      levelsDataSourceRow.Name = systemLevel.Name;
 
-                     Parameter elevationPara = systemLevel.get_Parameter(BuiltInParameter.LEVEL_ELEV);
+                     var elevationPara = systemLevel.get_Parameter(BuiltInParameter.LEVEL_ELEV);
                      
-                     double temValue = Unit.CovertFromAPI(UnitTypeId, elevationPara.AsDouble());
-                     double temValue2 = double.Parse(temValue.ToString("#.0"));
+                     var temValue = Unit.CovertFromAPI(UnitTypeId, elevationPara.AsDouble());
+                     var temValue2 = double.Parse(temValue.ToString("#.0"));
                      
                      levelsDataSourceRow.Elevation = temValue2;
 
                      systemLevelsDatum.Add(levelsDataSourceRow);
                 }
 
-                using (LevelsForm displayForm = new LevelsForm(this))
+                using (var displayForm = new LevelsForm(this))
                 {
                     displayForm.ShowDialog();
                 }
@@ -96,28 +96,22 @@ namespace Revit.SDK.Samples.LevelsProperty.CS
             {
                 message = ex.Message;
                 documentTransaction.RollBack();
-                return Autodesk.Revit.UI.Result.Failed;
+                return Result.Failed;
             }
             documentTransaction.Commit();
-            return Autodesk.Revit.UI.Result.Succeeded;
+            return Result.Succeeded;
         }
 
         ExternalCommandData m_revit;
-        public Autodesk.Revit.DB.ForgeTypeId UnitTypeId;
-        System.Collections.Generic.List<LevelsDataSource> systemLevelsDatum;
+        public ForgeTypeId UnitTypeId;
+        List<LevelsDataSource> systemLevelsDatum;
         /// <summary>
         /// Store all levels' datum in system
         /// </summary>
-        public System.Collections.Generic.List<LevelsDataSource> SystemLevelsDatum
+        public List<LevelsDataSource> SystemLevelsDatum
         {
-            get
-            {
-                return systemLevelsDatum;
-            }
-            set
-            {
-                systemLevelsDatum = value;
-            }
+            get => systemLevelsDatum;
+            set => systemLevelsDatum = value;
         }
         #endregion
 
@@ -131,13 +125,13 @@ namespace Revit.SDK.Samples.LevelsProperty.CS
         /// <param name="levelName">Pass a Level's Name</param>
         /// <param name="levelElevation">Pass a Level's Elevation</param>
         /// <returns>True if succeed, else return false</returns>
-        public bool SetLevel(Autodesk.Revit.DB.ElementId levelID, String levelName, double levelElevation)
+        public bool SetLevel(ElementId levelID, String levelName, double levelElevation)
         {
             try
             {
-                Level systemLevel = m_revit.Application.ActiveUIDocument.Document.GetElement(levelID) as Level;
+                var systemLevel = m_revit.Application.ActiveUIDocument.Document.GetElement(levelID) as Level;
 
-                Parameter elevationPara = systemLevel.get_Parameter(BuiltInParameter.LEVEL_ELEV);
+                var elevationPara = systemLevel.get_Parameter(BuiltInParameter.LEVEL_ELEV);
                 elevationPara.SetValueString(levelElevation.ToString());
                 systemLevel.Name = levelName;
 
@@ -158,8 +152,8 @@ namespace Revit.SDK.Samples.LevelsProperty.CS
         /// <param name="levelElevation">Pass a Level's Elevation</param>
         public void CreateLevel(String levelName, double levelElevation)
         {
-           Level newLevel = Level.Create(m_revit.Application.ActiveUIDocument.Document, levelElevation);
-            Parameter elevationPara = newLevel.get_Parameter(BuiltInParameter.LEVEL_ELEV);
+           var newLevel = Level.Create(m_revit.Application.ActiveUIDocument.Document, levelElevation);
+            var elevationPara = newLevel.get_Parameter(BuiltInParameter.LEVEL_ELEV);
             elevationPara.SetValueString(levelElevation.ToString());
 
             newLevel.Name = levelName;

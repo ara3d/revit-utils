@@ -33,8 +33,8 @@ namespace CreateAndPrintSheetsAndViews
        Element part)
     {
       //Debug.Print("ClassifyPart: " + Util.ElementDescription(part));
-      bool rc = false;
-      string product_code = Util.GetProductCode(part);
+      var rc = false;
+      var product_code = Util.GetProductCode(part);
       if (null != product_code
         && product_codes.Contains(product_code))
       {
@@ -58,7 +58,7 @@ namespace CreateAndPrintSheetsAndViews
     {
       // https://thebuildingcoder.typepad.com/blog/2013/03/export-wall-parts-individually-to-dxf.html#3
 
-      TaskDialogShowingEventArgs e2
+      var e2
         = e as TaskDialogShowingEventArgs;
 
       if (null != e2 && e2.DialogId.Equals(
@@ -78,33 +78,32 @@ namespace CreateAndPrintSheetsAndViews
       ref string message,
       ElementSet elements)
     {
-      UIApplication uiapp = commandData.Application;
-      UIDocument uidoc = uiapp.ActiveUIDocument;
-      Application app = uiapp.Application;
-      Document doc = uidoc.Document;
+      var uiapp = commandData.Application;
+      var uidoc = uiapp.ActiveUIDocument;
+      var app = uiapp.Application;
+      var doc = uidoc.Document;
 
       uiapp.DialogBoxShowing
-        += new EventHandler<DialogBoxShowingEventArgs>(
-          OnDialogBoxShowing);
+        += OnDialogBoxShowing;
 
-      List<ElementId> ids = new FabricationPartSelector(uidoc).Ids;
+      var ids = new FabricationPartSelector(uidoc).Ids;
 
-      int n = ids.Count;
+      var n = ids.Count;
 
       if (0 == n)
       {
         return Result.Cancelled;
       }
 
-      int nPartsProcessed = 0;
-      int nPartsNotProcessed = 0;
-      List<string> report = new List<string>();
+      var nPartsProcessed = 0;
+      var nPartsNotProcessed = 0;
+      var report = new List<string>();
 
-      using (Transaction t = new Transaction(doc))
+      using (var t = new Transaction(doc))
       {
-        foreach (ElementId id in ids)
+        foreach (var id in ids)
         {
-          FabricationPart part
+          var part
             = doc.GetElement(id) as FabricationPart;
 
           t.Start(string.Format(
@@ -124,10 +123,10 @@ namespace CreateAndPrintSheetsAndViews
         //t.Commit();
       }
 
-      string s = $"{nPartsProcessed} parts processed, "
-        + $"{nPartsNotProcessed} not:";
+      var s = $"{nPartsProcessed} parts processed, "
+              + $"{nPartsNotProcessed} not:";
 
-      string s2 = string.Join(", ", report.ToArray());
+      var s2 = string.Join(", ", report.ToArray());
       Util.InfoMsg2(s, s2);
 
       return Result.Succeeded;

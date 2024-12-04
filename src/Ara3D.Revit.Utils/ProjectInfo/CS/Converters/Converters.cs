@@ -40,7 +40,7 @@ namespace Revit.SDK.Samples.ProjectInfo.CS
         /// <returns>true if destinationType is string, otherwise false</returns>
         public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
         {
-            return destinationType.Equals(typeof(System.String)) || base.CanConvertTo(context, destinationType);
+            return destinationType.Equals(typeof(String)) || base.CanConvertTo(context, destinationType);
         }
 
         /// <summary>
@@ -59,9 +59,9 @@ namespace Revit.SDK.Samples.ProjectInfo.CS
                 if (value == null) return "(null)";
 
                 // get its name
-                Type type = value.GetType();
-                string wrapperType = type.ToString();
-                MethodInfo mi = type.GetMethod("get_Name", new Type[0]);
+                var type = value.GetType();
+                var wrapperType = type.ToString();
+                var mi = type.GetMethod("get_Name", new Type[0]);
                 if (mi != null)
                 {
                     return mi.Invoke(value, new object[0]).ToString();

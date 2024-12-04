@@ -30,7 +30,7 @@ using System.Windows.Forms;
 
 namespace Revit.SDK.Samples.ViewPrinter.CS
 {
-    public partial class viewSheetSetForm : System.Windows.Forms.Form
+    public partial class viewSheetSetForm : Form
     {
         public viewSheetSetForm(ViewSheets viewSheets)
         {            
@@ -45,13 +45,13 @@ namespace Revit.SDK.Samples.ViewPrinter.CS
         private void ViewSheetSetForm_Load(object sender, EventArgs e)
         {
             viewSheetSetNameComboBox.DataSource = m_viewSheets.ViewSheetSetNames;            
-            this.viewSheetSetNameComboBox.SelectedValueChanged += new System.EventHandler(this.viewSheetSetNameComboBox_SelectedValueChanged);
+            viewSheetSetNameComboBox.SelectedValueChanged += viewSheetSetNameComboBox_SelectedValueChanged;
             viewSheetSetNameComboBox.SelectedItem = m_viewSheets.SettingName;
 
             showSheetsCheckBox.Checked = true;
             showViewsCheckBox.Checked = true;
             ListViewSheetSet();
-            this.viewSheetSetListView.ItemChecked += new System.Windows.Forms.ItemCheckedEventHandler(this.viewSheetSetListView_ItemChecked);
+            viewSheetSetListView.ItemChecked += viewSheetSetListView_ItemChecked;
         }
 
         private void ListViewSheetSet()
@@ -74,11 +74,11 @@ namespace Revit.SDK.Samples.ViewPrinter.CS
                 vt = VisibleType.VT_None;
             }
 
-            List<Autodesk.Revit.DB.View> views = m_viewSheets.AvailableViewSheetSet(vt);
+            var views = m_viewSheets.AvailableViewSheetSet(vt);
             viewSheetSetListView.Items.Clear();
-            foreach (Autodesk.Revit.DB.View view in views)
+            foreach (var view in views)
             {
-                ListViewItem item = new ListViewItem(view.ViewType.ToString() + ": " + view.Name);
+                var item = new ListViewItem(view.ViewType.ToString() + ": " + view.Name);
                 item.Checked = m_viewSheets.IsSelected(item.Text);
                 viewSheetSetListView.Items.Add(item);
             }
@@ -110,7 +110,7 @@ namespace Revit.SDK.Samples.ViewPrinter.CS
 
         private void saveButton_Click(object sender, EventArgs e)
         {
-            List<string> names = new List<string>();
+            var names = new List<string>();
             foreach (ListViewItem item in viewSheetSetListView.Items)
             {
                 if (item.Checked)
@@ -126,7 +126,7 @@ namespace Revit.SDK.Samples.ViewPrinter.CS
 
         private void saveAsButton_Click(object sender, EventArgs e)
         {
-            using (SaveAsForm dlg = new SaveAsForm(m_viewSheets))
+            using (var dlg = new SaveAsForm(m_viewSheets))
             {
                 dlg.ShowDialog();
             }
@@ -147,7 +147,7 @@ namespace Revit.SDK.Samples.ViewPrinter.CS
 
         private void reNameButton_Click(object sender, EventArgs e)
         {
-            using (ReNameForm dlg = new ReNameForm(m_viewSheets))
+            using (var dlg = new ReNameForm(m_viewSheets))
             {
                 dlg.ShowDialog();
             }

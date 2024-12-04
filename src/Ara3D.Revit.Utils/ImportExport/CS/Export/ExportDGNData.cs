@@ -81,14 +81,8 @@ namespace Revit.SDK.Samples.ImportExport.CS
         /// </summary>
         public String ExportLayerMapping
         {
-            get
-            {
-                return m_exportLayerMapping;
-            }
-            set
-            {
-                m_exportLayerMapping = value;
-            }
+            get => m_exportLayerMapping;
+            set => m_exportLayerMapping = value;
         }
 
         /// <summary>
@@ -96,14 +90,8 @@ namespace Revit.SDK.Samples.ImportExport.CS
         /// </summary>
         public Boolean HideScopeBox
         {
-            get 
-            { 
-                return m_hideScopeBox; 
-            }
-            set 
-            {
-                m_hideScopeBox = value; 
-            }
+            get => m_hideScopeBox;
+            set => m_hideScopeBox = value;
         }
 
         /// <summary>
@@ -111,14 +99,8 @@ namespace Revit.SDK.Samples.ImportExport.CS
         /// </summary>
         public Boolean HideUnreferenceViewTags
         {
-            get 
-            { 
-                return m_hideUnreferenceViewTags;
-            }
-            set 
-            { 
-                m_hideUnreferenceViewTags = value;
-            }
+            get => m_hideUnreferenceViewTags;
+            set => m_hideUnreferenceViewTags = value;
         }
 
         /// <summary>
@@ -126,14 +108,8 @@ namespace Revit.SDK.Samples.ImportExport.CS
         /// </summary>
         public Boolean HideReferencePlane
         {
-            get 
-            { 
-                return m_hideReferencePlane;
-            }
-            set 
-            { 
-                m_hideReferencePlane = value; 
-            }
+            get => m_hideReferencePlane;
+            set => m_hideReferencePlane = value;
         }
 
         /// <summary>
@@ -141,48 +117,24 @@ namespace Revit.SDK.Samples.ImportExport.CS
         /// </summary>
         public String ExportFileVersion
         {
-            get 
-            { 
-                return m_exportFileVersion; 
-            }
-            set 
-            { 
-                m_exportFileVersion = value; 
-            }
+            get => m_exportFileVersion;
+            set => m_exportFileVersion = value;
         }
 
         /// <summary>
         /// String collection of Layer Settings used in UI
         /// </summary>
-        public ReadOnlyCollection<String> LayerMapping
-        {
-            get
-            {
-                return new ReadOnlyCollection<String>(m_layerMapping);
-            }
-        }
+        public ReadOnlyCollection<String> LayerMapping => new(m_layerMapping);
 
         /// <summary>
         /// String list of exported format version defined in Revit 
         /// </summary>
-        public List<String> ExportFileVersions
-        {
-            get 
-            { 
-                return m_exportFileVersions; 
-            }
-        }
+        public List<String> ExportFileVersions => m_exportFileVersions;
 
         /// <summary>
         /// String collection of layer settings values defined in Revit  
         /// </summary>
-        public ReadOnlyCollection<String> EnumLayerMapping
-        {
-            get
-            {
-                return new ReadOnlyCollection<String>(m_enumLayerMapping);
-            }
-        }
+        public ReadOnlyCollection<String> EnumLayerMapping => new(m_enumLayerMapping);
 
         #endregion
 
@@ -232,7 +184,7 @@ namespace Revit.SDK.Samples.ImportExport.CS
         {
             base.Export();
 
-            bool exported = false;
+            var exported = false;
             ICollection<ElementId> views = new List<ElementId>();
             if (m_currentViewOnly)
             {
@@ -247,7 +199,7 @@ namespace Revit.SDK.Samples.ImportExport.CS
             }
 
             //parameter : DWGExportOptions dwgExportOptions
-            DGNExportOptions dgnExportOptions = new DGNExportOptions();
+            var dgnExportOptions = new DGNExportOptions();
             // default values
             dgnExportOptions.FileVersion = DGNFileFormat.DGNVersion8;
             m_exportLayerMapping = m_enumLayerMapping[0];
@@ -265,8 +217,8 @@ namespace Revit.SDK.Samples.ImportExport.CS
             dgnExportOptions.HideScopeBox = m_hideScopeBox;
             dgnExportOptions.HideUnreferenceViewTags = m_hideUnreferenceViewTags;
             dgnExportOptions.HideReferencePlane = m_hideReferencePlane;
-            ProcessModule mainModule = Process.GetCurrentProcess().MainModule;
-            String RevitFolder = Path.GetDirectoryName( mainModule.FileName );
+            var mainModule = Process.GetCurrentProcess().MainModule;
+            var RevitFolder = Path.GetDirectoryName( mainModule.FileName );
             dgnExportOptions.SeedName = Path.Combine(RevitFolder, @"ACADInterop\V8-Imperial-Seed3D.dgn");
             
             //Export

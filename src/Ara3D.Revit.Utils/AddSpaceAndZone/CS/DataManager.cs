@@ -53,8 +53,8 @@ namespace Revit.SDK.Samples.AddSpaceAndZone.CS
             m_levels = new List<Level>();
             Initialize();
             m_currentLevel = m_levels[0];
-            Parameter para = commandData.Application.ActiveUIDocument.Document.ActiveView.get_Parameter(Autodesk.Revit.DB.BuiltInParameter.VIEW_PHASE);
-            Autodesk.Revit.DB.ElementId phaseId = para.AsElementId();
+            var para = commandData.Application.ActiveUIDocument.Document.ActiveView.get_Parameter(BuiltInParameter.VIEW_PHASE);
+            var phaseId = para.AsElementId();
             m_defaultPhase = commandData.Application.ActiveUIDocument.Document.GetElement(phaseId) as Phase;
         }
 
@@ -63,19 +63,19 @@ namespace Revit.SDK.Samples.AddSpaceAndZone.CS
         /// </summary>
         private void Initialize()
         {
-            Dictionary<ElementId, List<Space>> spaceDictionary = new Dictionary<ElementId, List<Space>>();
-            Dictionary<ElementId, List<Zone>> zoneDictionary = new Dictionary<ElementId, List<Zone>>();
+            var spaceDictionary = new Dictionary<ElementId, List<Space>>();
+            var zoneDictionary = new Dictionary<ElementId, List<Zone>>();
 
-            Document activeDoc = m_commandData.Application.ActiveUIDocument.Document;
+            var activeDoc = m_commandData.Application.ActiveUIDocument.Document;
 
-            FilteredElementIterator levelsIterator = (new FilteredElementCollector(activeDoc)).OfClass(typeof(Level)).GetElementIterator();
-            FilteredElementIterator spacesIterator =(new FilteredElementCollector(activeDoc)).WherePasses(new SpaceFilter()).GetElementIterator();
-            FilteredElementIterator zonesIterator = (new FilteredElementCollector(activeDoc)).OfClass(typeof(Zone)).GetElementIterator();
+            var levelsIterator = (new FilteredElementCollector(activeDoc)).OfClass(typeof(Level)).GetElementIterator();
+            var spacesIterator =(new FilteredElementCollector(activeDoc)).WherePasses(new SpaceFilter()).GetElementIterator();
+            var zonesIterator = (new FilteredElementCollector(activeDoc)).OfClass(typeof(Zone)).GetElementIterator();
           
             levelsIterator.Reset();
             while (levelsIterator.MoveNext())
             {
-                Level level = levelsIterator.Current as Level;
+                var level = levelsIterator.Current as Level;
                 if (level != null)
                 {
                     m_levels.Add(level);
@@ -87,7 +87,7 @@ namespace Revit.SDK.Samples.AddSpaceAndZone.CS
             spacesIterator.Reset();
             while (spacesIterator.MoveNext())
             {
-                Space space = spacesIterator.Current as Space;
+                var space = spacesIterator.Current as Space;
                 if (space != null)
                 {
                     spaceDictionary[space.LevelId].Add(space);
@@ -97,7 +97,7 @@ namespace Revit.SDK.Samples.AddSpaceAndZone.CS
             zonesIterator.Reset();
             while (zonesIterator.MoveNext())
             {
-                Zone zone = zonesIterator.Current as Zone;
+                var zone = zonesIterator.Current as Zone;
                 if (zone != null && activeDoc.GetElement(zone.LevelId) != null)
                 {
                     zoneDictionary[zone.LevelId].Add(zone);
@@ -111,13 +111,7 @@ namespace Revit.SDK.Samples.AddSpaceAndZone.CS
         /// <summary>
         /// Get the Level elements.
         /// </summary>
-        public ReadOnlyCollection<Level> Levels
-        {
-            get
-            {
-                return new ReadOnlyCollection<Level>(m_levels);
-            }
-        }
+        public ReadOnlyCollection<Level> Levels => new(m_levels);
 
         /// <summary>
         /// Create a Zone element.
@@ -126,16 +120,16 @@ namespace Revit.SDK.Samples.AddSpaceAndZone.CS
         {
             if (m_defaultPhase == null)
             {
-                Autodesk.Revit.UI.TaskDialog.Show("Revit", "The phase of the active view is null, you can't create zone in a null phase");
+                TaskDialog.Show("Revit", "The phase of the active view is null, you can't create zone in a null phase");
                 return;
             }
             try
             {
-                this.m_zoneManager.CreateZone(m_currentLevel, m_defaultPhase);
+                m_zoneManager.CreateZone(m_currentLevel, m_defaultPhase);
             }
             catch (Exception ex)
             {
-                Autodesk.Revit.UI.TaskDialog.Show("Revit", ex.Message);
+                TaskDialog.Show("Revit", ex.Message);
             }         
         }
 
@@ -146,24 +140,24 @@ namespace Revit.SDK.Samples.AddSpaceAndZone.CS
         {           
             if (m_defaultPhase == null)
             {
-                Autodesk.Revit.UI.TaskDialog.Show("Revit", "The phase of the active view is null, you can't create spaces in a null phase");
+                TaskDialog.Show("Revit", "The phase of the active view is null, you can't create spaces in a null phase");
                 return;
             }
 
             try
             {
-                if (m_commandData.Application.ActiveUIDocument.Document.ActiveView.ViewType == Autodesk.Revit.DB.ViewType.FloorPlan)
+                if (m_commandData.Application.ActiveUIDocument.Document.ActiveView.ViewType == ViewType.FloorPlan)
                 {
                     m_spaceManager.CreateSpaces(m_currentLevel, m_defaultPhase);
                 }
                 else
                 {
-                    Autodesk.Revit.UI.TaskDialog.Show("Revit", "You can not create spaces in this plan view");
+                    TaskDialog.Show("Revit", "You can not create spaces in this plan view");
                 }
             }
             catch (Exception ex)
             {
-                Autodesk.Revit.UI.TaskDialog.Show("Revit", ex.Message);
+                TaskDialog.Show("Revit", ex.Message);
             }               
         }
 
@@ -191,7 +185,7 @@ namespace Revit.SDK.Samples.AddSpaceAndZone.CS
         /// <param name="level"></param>
         public void Update(Level level)
         {
-            this.m_currentLevel = level;
+            m_currentLevel = level;
         }
     }
 }

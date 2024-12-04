@@ -40,7 +40,7 @@ namespace Revit.SDK.Samples.TraverseSystem.CS
         /// <summary>
         /// Id of the element
         /// </summary>
-        private Autodesk.Revit.DB.ElementId m_Id;
+        private ElementId m_Id;
         /// <summary>
         /// Flow direction of the node
         /// For the starting element of the traversal, the direction will be the same as the connector
@@ -70,27 +70,15 @@ namespace Revit.SDK.Samples.TraverseSystem.CS
         /// <summary>
         /// Id of the element
         /// </summary>
-        public Autodesk.Revit.DB.ElementId Id
-        {
-            get
-            {
-                return m_Id;
-            }
-        }
+        public ElementId Id => m_Id;
 
         /// <summary>
         /// Flow direction of the node
         /// </summary>
         public FlowDirectionType Direction
         {
-            get
-            {
-                return m_direction;
-            }
-            set
-            {
-                m_direction = value;
-            }
+            get => m_direction;
+            set => m_direction = value;
         }
 
         /// <summary>
@@ -98,14 +86,8 @@ namespace Revit.SDK.Samples.TraverseSystem.CS
         /// </summary>
         public TreeNode Parent
         {
-            get
-            {
-                return m_parent;
-            }
-            set
-            {
-                m_parent = value;
-            }
+            get => m_parent;
+            set => m_parent = value;
         }
 
         /// <summary>
@@ -113,14 +95,8 @@ namespace Revit.SDK.Samples.TraverseSystem.CS
         /// </summary>
         public List<TreeNode> ChildNodes
         {
-            get
-            {
-                return m_childNodes;
-            }
-            set
-            {
-                m_childNodes = value;
-            }
+            get => m_childNodes;
+            set => m_childNodes = value;
         }
 
         /// <summary>
@@ -128,14 +104,8 @@ namespace Revit.SDK.Samples.TraverseSystem.CS
         /// </summary>
         public Connector InputConnector
         {
-            get
-            {
-                return m_inputConnector;
-            }
-            set
-            {
-                m_inputConnector = value;
-            }
+            get => m_inputConnector;
+            set => m_inputConnector = value;
         }
         #endregion
 
@@ -145,7 +115,7 @@ namespace Revit.SDK.Samples.TraverseSystem.CS
         /// </summary>
         /// <param name="doc">Revit document</param>
         /// <param name="id">Element's Id</param>
-        public TreeNode(Document doc, Autodesk.Revit.DB.ElementId id)
+        public TreeNode(Document doc, ElementId id)
         {
             m_document = doc;
             m_Id = id;
@@ -157,7 +127,7 @@ namespace Revit.SDK.Samples.TraverseSystem.CS
         /// </summary>
         /// <param name="eid">Element's Id</param>
         /// <returns>Element</returns>
-        private Element GetElementById(Autodesk.Revit.DB.ElementId eid)
+        private Element GetElementById(ElementId eid)
         {
             return m_document.GetElement(eid);
         }
@@ -169,12 +139,12 @@ namespace Revit.SDK.Samples.TraverseSystem.CS
         public void DumpIntoXML(XmlWriter writer)
         {
             // Write node information
-            Element element = GetElementById(m_Id);
-            FamilyInstance fi = element as FamilyInstance;
+            var element = GetElementById(m_Id);
+            var fi = element as FamilyInstance;
             if (fi != null)
             {
-                MEPModel mepModel = fi.MEPModel;
-                String type = String.Empty;
+                var mepModel = fi.MEPModel;
+                var type = String.Empty;
                 if (mepModel is MechanicalEquipment)
                 {
                     type = "MechanicalEquipment";
@@ -182,7 +152,7 @@ namespace Revit.SDK.Samples.TraverseSystem.CS
                 }
                 else if (mepModel is MechanicalFitting)
                 {
-                    MechanicalFitting mf = mepModel as MechanicalFitting;
+                    var mf = mepModel as MechanicalFitting;
                     type = "MechanicalFitting";
                     writer.WriteStartElement(type);
                     writer.WriteAttributeString("Category", element.Category.Name);
@@ -202,7 +172,7 @@ namespace Revit.SDK.Samples.TraverseSystem.CS
             }
             else
             {
-                String type = element.GetType().Name;
+                var type = element.GetType().Name;
 
                 writer.WriteStartElement(type);
                 writer.WriteAttributeString("Name", element.Name);
@@ -211,7 +181,7 @@ namespace Revit.SDK.Samples.TraverseSystem.CS
                 writer.WriteEndElement();
             }
 
-            foreach (TreeNode node in m_childNodes)
+            foreach (var node in m_childNodes)
             {
                 if (m_childNodes.Count > 1)
                 {
@@ -280,7 +250,7 @@ namespace Revit.SDK.Samples.TraverseSystem.CS
         {
             TreeNode startingElementNode = null;
 
-            FamilyInstance equipment = m_system.BaseEquipment;
+            var equipment = m_system.BaseEquipment;
             //
             // If the system has base equipment then get it;
             // Otherwise get the owner of the open connector in the system
@@ -309,7 +279,7 @@ namespace Revit.SDK.Samples.TraverseSystem.CS
 
             //
             // Get an element from the system's terminals
-            ElementSet elements = m_system.Elements;
+            var elements = m_system.Elements;
             foreach (Element ele in elements)
             {
                 element = ele;
@@ -317,7 +287,7 @@ namespace Revit.SDK.Samples.TraverseSystem.CS
             }
 
             // Get the open connector recursively
-            Connector openConnector = GetOpenConnector(element, null);
+            var openConnector = GetOpenConnector(element, null);
 
             return openConnector.Owner;
         }
@@ -337,12 +307,12 @@ namespace Revit.SDK.Samples.TraverseSystem.CS
             // Get the connector manager of the element
             if (element is FamilyInstance)
             {
-                FamilyInstance fi = element as FamilyInstance;
+                var fi = element as FamilyInstance;
                 cm = fi.MEPModel.ConnectorManager;
             }
             else
             {
-                MEPCurve mepCurve = element as MEPCurve;
+                var mepCurve = element as MEPCurve;
                 cm = mepCurve.ConnectorManager;
             }
 
@@ -404,7 +374,7 @@ namespace Revit.SDK.Samples.TraverseSystem.CS
             //
             // Find all child nodes and analyze them recursively
             AppendChildren(elementNode);
-            foreach (TreeNode node in elementNode.ChildNodes)
+            foreach (var node in elementNode.ChildNodes)
             {
                 Traverse(node);
             }
@@ -416,26 +386,26 @@ namespace Revit.SDK.Samples.TraverseSystem.CS
         /// <param name="elementNode">The specified element node to be analyzed</param>
         private void AppendChildren(TreeNode elementNode)
         {
-            List<TreeNode> nodes = elementNode.ChildNodes;
+            var nodes = elementNode.ChildNodes;
             ConnectorSet connectors;
             //
             // Get connector manager
-            Element element = GetElementById(elementNode.Id);
-            FamilyInstance fi = element as FamilyInstance;
+            var element = GetElementById(elementNode.Id);
+            var fi = element as FamilyInstance;
             if (fi != null)
             {
                 connectors = fi.MEPModel.ConnectorManager.Connectors;
             }
             else
             {
-                MEPCurve mepCurve = element as MEPCurve;
+                var mepCurve = element as MEPCurve;
                 connectors = mepCurve.ConnectorManager.Connectors;
             }
 
             // Find connected connector for each connector
             foreach (Connector connector in connectors)
             {
-                MEPSystem mepSystem = connector.MEPSystem;
+                var mepSystem = connector.MEPSystem;
                 // Ignore the connector does not belong to any MEP System or belongs to another different MEP system
                 if (mepSystem == null || mepSystem.Id != m_system.Id)
                 {
@@ -463,10 +433,10 @@ namespace Revit.SDK.Samples.TraverseSystem.CS
                 }
 
                 // Get the connector connected to current connector
-                Connector connectedConnector = GetConnectedConnector(connector);
+                var connectedConnector = GetConnectedConnector(connector);
                 if (connectedConnector != null)
                 {
-                    TreeNode node = new TreeNode(m_document, connectedConnector.Owner.Id);
+                    var node = new TreeNode(m_document, connectedConnector.Owner.Id);
                     node.InputConnector = connector;
                     node.Parent = elementNode;
                     nodes.Add(node);
@@ -488,7 +458,7 @@ namespace Revit.SDK.Samples.TraverseSystem.CS
         static private Connector GetConnectedConnector(Connector connector)
         {
             Connector connectedConnector = null;
-            ConnectorSet allRefs = connector.AllRefs;
+            var allRefs = connector.AllRefs;
             foreach (Connector conn in allRefs)
             {
                 // Ignore non-EndConn connectors and connectors of the current element
@@ -508,7 +478,7 @@ namespace Revit.SDK.Samples.TraverseSystem.CS
         /// <summary>
         /// Get element by its id
         /// </summary>
-        private Element GetElementById(Autodesk.Revit.DB.ElementId eid)
+        private Element GetElementById(ElementId eid)
         {
             return m_document.GetElement(eid);
         }
@@ -519,13 +489,13 @@ namespace Revit.SDK.Samples.TraverseSystem.CS
         /// <param name="fileName">Name of the XML file</param>
         public void DumpIntoXML(String fileName)
         {
-            XmlWriterSettings settings = new XmlWriterSettings();
+            var settings = new XmlWriterSettings();
             settings.Indent = true;
             settings.IndentChars = "    ";
-            XmlWriter writer = XmlWriter.Create(fileName, settings);
+            var writer = XmlWriter.Create(fileName, settings);
 
             // Write the root element
-            String mepSystemType = String.Empty;
+            var mepSystemType = String.Empty;
             mepSystemType = (m_system is MechanicalSystem ? "MechanicalSystem" : "PipingSystem");
             writer.WriteStartElement(mepSystemType);
 
@@ -608,7 +578,7 @@ namespace Revit.SDK.Samples.TraverseSystem.CS
 
             // Write HasBaseEquipment property
             writer.WriteStartElement("HasBaseEquipment");
-            bool hasBaseEquipment = ((m_system.BaseEquipment == null) ? false : true);
+            var hasBaseEquipment = ((m_system.BaseEquipment == null) ? false : true);
             writer.WriteValue(hasBaseEquipment);
             writer.WriteEndElement();
 

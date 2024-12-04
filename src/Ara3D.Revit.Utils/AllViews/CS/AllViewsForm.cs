@@ -142,7 +142,7 @@ namespace Revit.SDK.Samples.AllViews.CS
 
             if (1 == titleBlocksListBox.SelectedItems.Count)
             {
-                string titleBlock = titleBlocksListBox.SelectedItems[0].ToString();
+                var titleBlock = titleBlocksListBox.SelectedItems[0].ToString();
                 m_data.ChooseTitleBlock(titleBlock);
             }
         }
@@ -182,7 +182,7 @@ namespace Revit.SDK.Samples.AllViews.CS
         /// <param name="e"></param>
         private void titleBlocksListBox_MouseClick(object sender, MouseEventArgs e)
         {
-            int idx = titleBlocksListBox.SelectedIndex;
+            var idx = titleBlocksListBox.SelectedIndex;
             if (0 < idx)
             {
                 titleBlocksListBox.SetSelected(idx, true);

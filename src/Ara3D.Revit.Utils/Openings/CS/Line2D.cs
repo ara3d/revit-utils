@@ -43,13 +43,7 @@ namespace Revit.SDK.Samples.Openings.CS
         /// <summary>
         /// rectangle box contains the line
         /// </summary>
-        public RectangleF BoundingBox
-        {
-            get 
-            {
-                return m_boundingBox; 
-            }
-        }
+        public RectangleF BoundingBox => m_boundingBox;
 
         /// <summary>
         /// start point of the line; if it is set to new value,
@@ -57,10 +51,7 @@ namespace Revit.SDK.Samples.Openings.CS
         /// </summary>
         public PointF StartPnt
         {
-            get
-            {
-                return m_startPnt;
-            }
+            get => m_startPnt;
             set
             {
                 if (m_startPnt == value)
@@ -79,10 +70,7 @@ namespace Revit.SDK.Samples.Openings.CS
         /// </summary>
         public PointF EndPnt
         {
-            get
-            {
-                return m_endPnt;
-            }
+            get => m_endPnt;
             set
             {
                 if (m_endPnt == value)
@@ -101,11 +89,7 @@ namespace Revit.SDK.Samples.Openings.CS
         /// </summary>
         public float Length
         {
-            get
-            {
-                return m_length;
-
-            }
+            get => m_length;
             set
             {
                 if (m_length == value)
@@ -124,11 +108,7 @@ namespace Revit.SDK.Samples.Openings.CS
         /// </summary>
         public PointF Normal
         {
-            get
-            {
-                return m_normal;
-
-            }
+            get => m_normal;
             set
             {
                 if (m_normal == value)
@@ -173,13 +153,13 @@ namespace Revit.SDK.Samples.Openings.CS
         /// </summary>
         private void CalculateBoundingBox()
         {
-            float x1 = m_endPnt.X;
-            float x2 = m_startPnt.X;
-            float y1 = m_endPnt.Y;
-            float y2 = m_startPnt.Y;
+            var x1 = m_endPnt.X;
+            var x2 = m_startPnt.X;
+            var y1 = m_endPnt.Y;
+            var y2 = m_startPnt.Y;
 
-            float width = Math.Abs(x1 - x2);
-            float height = Math.Abs(y1 - y2);
+            var width = Math.Abs(x1 - x2);
+            var height = Math.Abs(y1 - y2);
 
             if (x1 > x2)
             {

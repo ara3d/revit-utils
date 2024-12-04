@@ -52,10 +52,10 @@ namespace Revit.SDK.Samples.VisibilityControl.CS
         /// Cancelled can be used to signify that the user cancelled the external operation 
         /// at some point. Failure should be returned if the application is unable to proceed with 
         /// the operation.</returns>
-        public virtual Autodesk.Revit.UI.Result Execute(ExternalCommandData commandData
-            , ref string message, Autodesk.Revit.DB.ElementSet elements)
+        public virtual Result Execute(ExternalCommandData commandData
+            , ref string message, ElementSet elements)
         {
-            Transaction trans = new Transaction(commandData.Application.ActiveUIDocument.Document, "Revit.SDK.Samples.VisibilityControl");
+            var trans = new Transaction(commandData.Application.ActiveUIDocument.Document, "Revit.SDK.Samples.VisibilityControl");
             trans.Start();
             try
             {
@@ -66,36 +66,36 @@ namespace Revit.SDK.Samples.VisibilityControl.CS
                 }
 
                 // create an instance of VisibilityCtrl
-                VisibilityCtrl visiController = new VisibilityCtrl(commandData.Application.ActiveUIDocument);
+                var visiController = new VisibilityCtrl(commandData.Application.ActiveUIDocument);
 
                 // create a user interface form
-                using (VisibilityCtrlForm dlg = new VisibilityCtrlForm(visiController))
+                using (var dlg = new VisibilityCtrlForm(visiController))
                 {
                     // show dialog
-                    System.Windows.Forms.DialogResult result = dlg.ShowDialog();
+                    var result = dlg.ShowDialog();
 
                     if (result == System.Windows.Forms.DialogResult.OK)
                     {
                         trans.Commit();
-                        return Autodesk.Revit.UI.Result.Succeeded;
+                        return Result.Succeeded;
                     }
                     else if (result == System.Windows.Forms.DialogResult.Yes)
                     {
                         // isolate the selected element(s)
                         visiController.Isolate();
                         trans.Commit();
-                        return Autodesk.Revit.UI.Result.Succeeded;
+                        return Result.Succeeded;
                     }
                 }
 
                 trans.RollBack();
-                return Autodesk.Revit.UI.Result.Cancelled;
+                return Result.Cancelled;
             }
             catch (Exception ex)
             {
                 message = ex.Message;
                 trans.RollBack();
-                return Autodesk.Revit.UI.Result.Failed;
+                return Result.Failed;
             }
         }
 

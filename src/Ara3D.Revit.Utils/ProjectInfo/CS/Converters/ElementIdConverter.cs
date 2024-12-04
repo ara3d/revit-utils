@@ -82,13 +82,13 @@ namespace Revit.SDK.Samples.ProjectInfo.CS
         /// <returns>An element if the element exists, otherwise null</returns>
         public override object ConvertFrom(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
         {
-            string text = value as string;
+            var text = value as string;
             if (!string.IsNullOrEmpty(text))
             {
-                StandardValuesCollection svc = GetStandardValues(context);
+                var svc = GetStandardValues(context);
                 foreach (ElementId elementId in svc)
                 {
-                    Element element = RevitStartInfo.GetElement(elementId);
+                    var element = RevitStartInfo.GetElement(elementId);
                     if (element.Name == text)
                         return element.Id;
                 }
@@ -113,13 +113,13 @@ namespace Revit.SDK.Samples.ProjectInfo.CS
             if (destinationType == typeof(string))
             {
                 if (value == null) return string.Empty;
-                ElementId elementId = value as ElementId;
+                var elementId = value as ElementId;
                 if (elementId != null)
                 {
-                    Element element = RevitStartInfo.GetElement(elementId);
+                    var element = RevitStartInfo.GetElement(elementId);
                     if (element != null)
                     {
-                        string elementName = string.Empty;
+                        var elementName = string.Empty;
                         try
                         {
                             elementName = element.Name;

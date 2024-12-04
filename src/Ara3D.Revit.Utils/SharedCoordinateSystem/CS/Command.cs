@@ -56,34 +56,34 @@ namespace Revit.SDK.Samples.SharedCoordinateSystem.CS
       /// Cancelled can be used to signify that the user cancelled the external operation 
       /// at some point. Failure should be returned if the application is unable to proceed with 
       /// the operation.</returns>
-      public Autodesk.Revit.UI.Result Execute(ExternalCommandData commandData,
-                                             ref string message, Autodesk.Revit.DB.ElementSet elements)
+      public Result Execute(ExternalCommandData commandData,
+                                             ref string message, ElementSet elements)
       {
            
          try
          {
-            Transaction trans = new Transaction(commandData.Application.ActiveUIDocument.Document, "Revit.SDK.Samples.SharedCoordinateSystem");
+            var trans = new Transaction(commandData.Application.ActiveUIDocument.Document, "Revit.SDK.Samples.SharedCoordinateSystem");
             trans.Start();
-            CoordinateSystemData Data = new CoordinateSystemData(commandData);
+            var Data = new CoordinateSystemData(commandData);
             Data.GatData();
 
-            using (CoordinateSystemDataForm displayForm =
+            using (var displayForm =
                                     new CoordinateSystemDataForm(Data, commandData.Application.Application.Cities,
                                                 commandData.Application.ActiveUIDocument.Document.SiteLocation))
             {
                if (DialogResult.OK != displayForm.ShowDialog())
                {
                   trans.RollBack();
-                  return Autodesk.Revit.UI.Result.Cancelled;
+                  return Result.Cancelled;
                }
             }
             trans.Commit();
-            return Autodesk.Revit.UI.Result.Succeeded;
+            return Result.Succeeded;
          }
          catch (Exception ex)
          {
             message = ex.Message;            
-            return Autodesk.Revit.UI.Result.Failed;
+            return Result.Failed;
          }
 
      }

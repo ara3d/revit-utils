@@ -50,27 +50,15 @@ namespace Revit.SDK.Samples.VisibilityControl.CS
         /// <summary>
         /// get all categories name with its visibility
         /// </summary>
-        public Hashtable AllCategories
-        {
-            get
-            {
-                return m_allCategories;
-            }
-        }
+        public Hashtable AllCategories => m_allCategories;
 
         /// <summary>
         /// get and set the mode to select element(s)
         /// </summary>
         public IsolateMode IsolateMode
         {
-            get
-            {
-                return m_isolateMode;
-            }
-            set
-            {
-                m_isolateMode = value;
-            }
+            get => m_isolateMode;
+            set => m_isolateMode = value;
         }
 
         /// <summary>
@@ -112,7 +100,7 @@ namespace Revit.SDK.Samples.VisibilityControl.CS
         {
             try
             {
-                Category cat = m_categoriesWithName[name] as Category;                
+                var cat = m_categoriesWithName[name] as Category;                
                 m_document.Document.ActiveView.SetCategoryHidden(cat.Id, !visible);
                 //or cat.set_Visible(m_document.ActiveView, visible);
                 m_allCategories[cat.Name] = visible;
@@ -158,9 +146,9 @@ namespace Revit.SDK.Samples.VisibilityControl.CS
             }
 
             // set the visibility for the selection elements
-            foreach (Reference reference in elements)
+            foreach (var reference in elements)
             {
-                Category cat = m_document.Document.GetElement(reference).Category;
+                var cat = m_document.Document.GetElement(reference).Category;
                 if (null != cat && !string.IsNullOrEmpty(cat.Name))
                 {
                     SetVisibility(true, cat.Name);

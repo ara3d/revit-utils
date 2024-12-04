@@ -15,7 +15,7 @@ namespace RevitElementBipChecker.Viewmodel
         public BipCheckerViewmodel Viewmodel;
         public ExportJsonCommand(BipCheckerViewmodel vm)
         {
-            this.Viewmodel = vm;
+            Viewmodel = vm;
         }
         public bool CanExecute(object parameter)
         {
@@ -24,10 +24,10 @@ namespace RevitElementBipChecker.Viewmodel
         public void Execute(object parameter)
         {
 
-            List<ParameterData> parameterDatas = Viewmodel.frmmain.lsBipChecker.Items.Cast<ParameterData>().ToList();
-            DataTable dataTable = parameterDatas.ToDataTable2();
+            var parameterDatas = Viewmodel.frmmain.lsBipChecker.Items.Cast<ParameterData>().ToList();
+            var dataTable = parameterDatas.ToDataTable2();
             dataTable.Columns.RemoveAt(0);
-            dataTable.WriteJson(out string path);
+            dataTable.WriteJson(out var path);
             Process.Start("explorer.exe", path);
 
         }

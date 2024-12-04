@@ -39,15 +39,15 @@ namespace Revit.SDK.Samples.ProjectInfo.CS
         /// <returns>ConstructionWrapper collection depends on current context</returns>
         public override StandardValuesCollection GetStandardValues(ITypeDescriptorContext context)
         {
-            List<ConstructionWrapper> list = new List<ConstructionWrapper>();
+            var list = new List<ConstructionWrapper>();
             // convert property name to ConstructionType
-            ConstructionType constructionType = (ConstructionType)Enum.Parse(typeof(ConstructionType), context.PropertyDescriptor.Name);
+            var constructionType = (ConstructionType)Enum.Parse(typeof(ConstructionType), context.PropertyDescriptor.Name);
 
             // convert instance to MEPBuildingConstructionWrapper
-            MEPBuildingConstructionWrapper mEPBuildingConstruction = context.Instance as MEPBuildingConstructionWrapper;
+            var mEPBuildingConstruction = context.Instance as MEPBuildingConstructionWrapper;
 
             // get all Constructions from MEPBuildingConstructionWrapper and add them to a list
-            foreach (Construction con in mEPBuildingConstruction.GetConstructions(constructionType))
+            foreach (var con in mEPBuildingConstruction.GetConstructions(constructionType))
             {
                 list.Add(new ConstructionWrapper(con));
             }
@@ -74,7 +74,7 @@ namespace Revit.SDK.Samples.ProjectInfo.CS
         /// <returns>true if destinationType is string, otherwise false</returns>
         public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
         {
-            return destinationType.Equals(typeof(System.String)) || base.CanConvertTo(context, destinationType);
+            return destinationType.Equals(typeof(String)) || base.CanConvertTo(context, destinationType);
         }
 
         /// <summary>
@@ -88,10 +88,10 @@ namespace Revit.SDK.Samples.ProjectInfo.CS
         /// <returns>A ConstructionWrapper from the StandardValues</returns>
         public override object ConvertFrom(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
         {
-            string text = value as string;
+            var text = value as string;
             if (!string.IsNullOrEmpty(text))
             {
-                foreach (ConstructionWrapper con in this.GetStandardValues(context))
+                foreach (ConstructionWrapper con in GetStandardValues(context))
                 {
                     if (con.Name == text)
                     {
@@ -119,7 +119,7 @@ namespace Revit.SDK.Samples.ProjectInfo.CS
             if (destinationType == typeof(string))
             {
                 if (value == null) return string.Empty;
-                ConstructionWrapper construction = value as ConstructionWrapper;
+                var construction = value as ConstructionWrapper;
                 if (construction != null)
                 {
                     return construction.Name;

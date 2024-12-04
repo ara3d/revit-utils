@@ -69,10 +69,10 @@ namespace Revit.SDK.Samples.AddSpaceAndZone.CS
         {
             try
             {
-                ICollection<ElementId> elements = m_commandData.Application.ActiveUIDocument.Document.Create.NewSpaces2(level, phase, this.m_commandData.Application.ActiveUIDocument.Document.ActiveView);
-                foreach (ElementId elem in elements)
+                var elements = m_commandData.Application.ActiveUIDocument.Document.Create.NewSpaces2(level, phase, m_commandData.Application.ActiveUIDocument.Document.ActiveView);
+                foreach (var elem in elements)
                 {
-                    Space space = m_commandData.Application.ActiveUIDocument.Document.GetElement(elem) as Space;
+                    var space = m_commandData.Application.ActiveUIDocument.Document.GetElement(elem) as Space;
                     if (space != null)
                     {
                         m_spaceDictionary[level.Id].Add(space);
@@ -80,13 +80,13 @@ namespace Revit.SDK.Samples.AddSpaceAndZone.CS
                 }
                 if (elements == null || elements.Count == 0)
                 {
-                    Autodesk.Revit.UI.TaskDialog.Show("Revit", "There is no enclosed loop in " + level.Name);
+                    TaskDialog.Show("Revit", "There is no enclosed loop in " + level.Name);
                 }
                  
             }
             catch (Exception ex)
             {
-                Autodesk.Revit.UI.TaskDialog.Show("Revit", ex.Message);
+                TaskDialog.Show("Revit", ex.Message);
             }
         }
     }

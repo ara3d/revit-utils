@@ -149,16 +149,16 @@ namespace Revit.SDK.Samples.PrintLog.CS
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public void AppDocumentPrinting(object sender, Autodesk.Revit.DB.Events.DocumentPrintingEventArgs e)
+        public void AppDocumentPrinting(object sender, DocumentPrintingEventArgs e)
         {
             // ensure log files are specified and dump header information
             SetupLogFiles();
             //
             // Dump environment of print: user name, printer name and project title.
-            DumpPrintEnv(System.Environment.UserName, e.Document.PrintManager.PrinterName, e.Document.Title);
+            DumpPrintEnv(Environment.UserName, e.Document.PrintManager.PrinterName, e.Document.Title);
             //
             // Start new watch for DocumentPrint
-            Trace.WriteLine(System.Environment.NewLine + "Document Print Start: >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+            Trace.WriteLine(Environment.NewLine + "Document Print Start: >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
             StartNewWatch(e.Document, false);
             //
             // Dump the events arguments 
@@ -171,10 +171,10 @@ namespace Revit.SDK.Samples.PrintLog.CS
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public void AppViewPrinting(object sender, Autodesk.Revit.DB.Events.ViewPrintingEventArgs e)
+        public void AppViewPrinting(object sender, ViewPrintingEventArgs e)
         {
             // header information
-            Trace.WriteLine(System.Environment.NewLine + "View Print Start: -----------------------------------------------");
+            Trace.WriteLine(Environment.NewLine + "View Print Start: -----------------------------------------------");
             //
             // Start new watch for ViewPrint
             StartNewWatch(e.Document, true);
@@ -190,10 +190,10 @@ namespace Revit.SDK.Samples.PrintLog.CS
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public void AppViewPrinted(object sender, Autodesk.Revit.DB.Events.ViewPrintedEventArgs e)
+        public void AppViewPrinted(object sender, ViewPrintedEventArgs e)
         {
             // header information
-            Trace.WriteLine(System.Environment.NewLine + "View Print End: -------");
+            Trace.WriteLine(Environment.NewLine + "View Print End: -------");
             //
             // Stop watch and calculate the cost time
             StopWatch(e.Document, true);
@@ -208,10 +208,10 @@ namespace Revit.SDK.Samples.PrintLog.CS
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public void AppDocumentPrinted(object sender, Autodesk.Revit.DB.Events.DocumentPrintedEventArgs e)
+        public void AppDocumentPrinted(object sender, DocumentPrintedEventArgs e)
         {
             // header information
-            Trace.WriteLine(System.Environment.NewLine + "Document Print End: <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+            Trace.WriteLine(Environment.NewLine + "Document Print End: <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
             //
             // Stop watch and calculate the cost time
             StopWatch(e.Document, false);
@@ -237,8 +237,8 @@ namespace Revit.SDK.Samples.PrintLog.CS
             }
             //
             // delete existed log files
-            String printLogFile = Path.Combine(m_assemblyPath, "PrintLog.txt");
-            String printEventsLogFile = Path.Combine(m_assemblyPath, "PrintEventsLog.txt");
+            var printLogFile = Path.Combine(m_assemblyPath, "PrintLog.txt");
+            var printEventsLogFile = Path.Combine(m_assemblyPath, "PrintEventsLog.txt");
             if (File.Exists(printLogFile))
             {
                 File.Delete(printLogFile);
@@ -269,7 +269,7 @@ namespace Revit.SDK.Samples.PrintLog.CS
             //
             // Start new watch for view print or document print
             EventsWatches watches;
-            bool result = m_docEventsWatches.TryGetValue(curDoc.GetHashCode(), out watches);
+            var result = m_docEventsWatches.TryGetValue(curDoc.GetHashCode(), out watches);
             if (!result || null == watches)
             {
                 watches = new EventsWatches();
@@ -300,7 +300,7 @@ namespace Revit.SDK.Samples.PrintLog.CS
             //
             // Calculate the elapse time print for this view
             EventsWatches watches;
-            bool result = m_docEventsWatches.TryGetValue(curDoc.GetHashCode(), out watches);
+            var result = m_docEventsWatches.TryGetValue(curDoc.GetHashCode(), out watches);
             if (!result)
             {
                 Trace.Write("Failed to find the watch, time calculation is skipped.");
@@ -346,7 +346,7 @@ namespace Revit.SDK.Samples.PrintLog.CS
         {
             // ensure log file has been specified
             SetupLogFiles();
-            m_printLog.WriteLine(String.Format("{0} Time: {1}", prefix, System.DateTime.Now.ToString()));
+            m_printLog.WriteLine(String.Format("{0} Time: {1}", prefix, DateTime.Now.ToString()));
         }
         
         /// <summary>
@@ -366,7 +366,7 @@ namespace Revit.SDK.Samples.PrintLog.CS
             if (eventArgs.GetType().Equals(typeof(DocumentPrintingEventArgs)))
             {
                 Trace.WriteLine("DocumentPrintingEventArgs Parameters ------>");
-                DocumentPrintingEventArgs args = eventArgs as DocumentPrintingEventArgs;
+                var args = eventArgs as DocumentPrintingEventArgs;
                 Trace.WriteLine("    Event Cancellable   : " + args.Cancellable); // cancellable
                 Trace.WriteLine("    Views to be printed : "); // Views
                 DumpViewsInfo(args.Document, args.GetViewElementIds(), "    ");
@@ -374,12 +374,12 @@ namespace Revit.SDK.Samples.PrintLog.CS
             else if (eventArgs.GetType().Equals(typeof(DocumentPrintedEventArgs)))
             {
                 Trace.WriteLine("DocumentPrintedEventArgs Parameters ------>");
-                DocumentPrintedEventArgs args = eventArgs as DocumentPrintedEventArgs;
+                var args = eventArgs as DocumentPrintedEventArgs;
                 Trace.WriteLine("    Event Status      : " + args.Status.ToString()); // Status
                 Trace.WriteLine("    Event Cancellable : " + args.Cancellable); // Cancellable 
                 //
                 // PrintedViews
-                IList<ElementId> ids = args.GetPrintedViewElementIds();
+                var ids = args.GetPrintedViewElementIds();
                 if (null == ids || 0 == ids.Count)
                 {
                     Trace.WriteLine("    Views been printed: <null>");
@@ -405,7 +405,7 @@ namespace Revit.SDK.Samples.PrintLog.CS
             else if (eventArgs.GetType().Equals(typeof(ViewPrintingEventArgs)))
             {
                 Trace.WriteLine("ViewPrintingEventArgs Parameters ------>");
-                ViewPrintingEventArgs args = eventArgs as ViewPrintingEventArgs;
+                var args = eventArgs as ViewPrintingEventArgs;
                 Trace.WriteLine("    Event Cancellable   : " + args.Cancellable); // Cancellable
                 Trace.WriteLine("    TotalViews          : " + args.TotalViews); // TotalViews
                 Trace.WriteLine("    View Index          : " + args.Index); // Index
@@ -415,7 +415,7 @@ namespace Revit.SDK.Samples.PrintLog.CS
             else if (eventArgs.GetType().Equals(typeof(ViewPrintedEventArgs)))
             {
                 Trace.WriteLine("ViewPrintedEventArgs Parameters ------>");
-                ViewPrintedEventArgs args = eventArgs as ViewPrintedEventArgs;
+                var args = eventArgs as ViewPrintedEventArgs;
                 Trace.WriteLine("    Event Status        : " + args.Status); // Cancellable
                 Trace.WriteLine("    TotalViews          : " + args.TotalViews); // TotalViews
                 Trace.WriteLine("    View Index          : " + args.Index); // Index
@@ -437,10 +437,10 @@ namespace Revit.SDK.Samples.PrintLog.CS
         /// <param name="prefix">Prefix mark for each line dumped to log files.</param>
         private static void DumpViewsInfo(Document activeDoc, IList<ElementId> viewIds, String prefix)
         {
-            int index = 0;
-            foreach (ElementId id in viewIds)
+            var index = 0;
+            foreach (var id in viewIds)
             {
-                View curView = activeDoc.GetElement(id) as View;
+                var curView = activeDoc.GetElement(id) as View;
                 if (null != curView)
                 {
                     DumpViewInfo(curView, String.Format("{0}#{1}", prefix, index++));

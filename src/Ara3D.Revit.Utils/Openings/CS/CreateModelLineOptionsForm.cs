@@ -34,7 +34,7 @@ namespace Revit.SDK.Samples.Openings.CS
     /// <summary>
     /// create model line options form
     /// </summary>
-    public partial class CreateModelLineOptionsForm : System.Windows.Forms.Form
+    public partial class CreateModelLineOptionsForm : Form
     {
         /// <summary>
         /// The default constructor
@@ -69,14 +69,14 @@ namespace Revit.SDK.Samples.Openings.CS
             }
             else if (CreateAllRadioButton.Checked)
             {
-                foreach (OpeningInfo openingInfo in m_openingInfos)
+                foreach (var openingInfo in m_openingInfos)
                 {
                     openingInfo.BoundingBox.CreateLines(m_selectedOpeningInfo.Revit);
                 }
             }
             else if (CreateShaftRadioButton.Checked)
             {
-                foreach (OpeningInfo openingInfo in m_openingInfos)
+                foreach (var openingInfo in m_openingInfos)
                 {
                     if (openingInfo.IsShaft)
                     {
@@ -85,12 +85,12 @@ namespace Revit.SDK.Samples.Openings.CS
                 }
             }
 
-            this.Close();
+            Close();
         }
 
         private void cancelButton_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
     }
 }

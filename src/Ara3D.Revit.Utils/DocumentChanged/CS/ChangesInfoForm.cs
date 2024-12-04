@@ -66,10 +66,10 @@ namespace Revit.SDK.Samples.ChangesMonitor.CS
         private void ChangesInfoForm_Shown(object sender, EventArgs e)
         {
             // set window's display location
-            int left             = Screen.PrimaryScreen.WorkingArea.Right - this.Width - 5;
-            int top              = Screen.PrimaryScreen.WorkingArea.Bottom - this.Height;
-            Point windowLocation = new Point(left, top);
-            this.Location        = windowLocation;
+            var left             = Screen.PrimaryScreen.WorkingArea.Right - Width - 5;
+            var top              = Screen.PrimaryScreen.WorkingArea.Bottom - Height;
+            var windowLocation = new Point(left, top);
+            Location        = windowLocation;
         }
 
         /// <summary>

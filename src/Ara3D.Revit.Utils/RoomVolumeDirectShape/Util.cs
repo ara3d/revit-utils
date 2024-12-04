@@ -11,29 +11,11 @@ namespace RoomVolumeDirectShape
     #region Geometrical Comparison
     public const double _eps = 1.0e-9;
 
-    public static double Eps
-    {
-      get
-      {
-        return _eps;
-      }
-    }
+    public static double Eps => _eps;
 
-    public static double MinLineLength
-    {
-      get
-      {
-        return _eps;
-      }
-    }
+    public static double MinLineLength => _eps;
 
-    public static double TolPointOnPlane
-    {
-      get
-      {
-        return _eps;
-      }
-    }
+    public static double TolPointOnPlane => _eps;
 
     public static bool IsZero(
       double a,
@@ -65,7 +47,7 @@ namespace RoomVolumeDirectShape
       XYZ q,
       double tolerance = _eps )
     {
-      int d = Compare( p.X, q.X, tolerance );
+      var d = Compare( p.X, q.X, tolerance );
 
       if( 0 == d )
       {
@@ -86,29 +68,29 @@ namespace RoomVolumeDirectShape
     /// </summary>
     public static int Compare( Line a, Line b )
     {
-      XYZ pa = a.GetEndPoint( 0 );
-      XYZ qa = a.GetEndPoint( 1 );
-      XYZ pb = b.GetEndPoint( 0 );
-      XYZ qb = b.GetEndPoint( 1 );
-      XYZ va = qa - pa;
-      XYZ vb = qb - pb;
+      var pa = a.GetEndPoint( 0 );
+      var qa = a.GetEndPoint( 1 );
+      var pb = b.GetEndPoint( 0 );
+      var qb = b.GetEndPoint( 1 );
+      var va = qa - pa;
+      var vb = qb - pb;
 
       // Compare angle in the XY plane
 
-      double ang_a = Math.Atan2( va.Y, va.X );
-      double ang_b = Math.Atan2( vb.Y, vb.X );
+      var ang_a = Math.Atan2( va.Y, va.X );
+      var ang_b = Math.Atan2( vb.Y, vb.X );
 
-      int d = Compare( ang_a, ang_b );
+      var d = Compare( ang_a, ang_b );
 
       if( 0 == d )
       {
         // Compare distance of unbounded line to origin
 
-        double da = ( qa.X * pa.Y - qa.Y * pa.Y )
-          / va.GetLength();
+        var da = ( qa.X * pa.Y - qa.Y * pa.Y )
+                 / va.GetLength();
 
-        double db = ( qb.X * pb.Y - qb.Y * pb.Y )
-          / vb.GetLength();
+        var db = ( qb.X * pb.Y - qb.Y * pb.Y )
+                 / vb.GetLength();
 
         d = Compare( da, db );
 
@@ -160,9 +142,9 @@ namespace RoomVolumeDirectShape
     /// </summary>
     bool IsPerpendicular( XYZ v, XYZ w )
     {
-      double a = v.GetLength();
-      double b = v.GetLength();
-      double c = Math.Abs( v.DotProduct( w ) );
+      var a = v.GetLength();
+      var b = v.GetLength();
+      var c = Math.Abs( v.DotProduct( w ) );
       return _eps < a
         && _eps < b
         && _eps > c;
@@ -176,8 +158,8 @@ namespace RoomVolumeDirectShape
 
     public static bool IsCollinear( Line a, Line b )
     {
-      XYZ v = a.Direction;
-      XYZ w = b.Origin - a.Origin;
+      var v = a.Direction;
+      var w = b.Origin - a.Origin;
       return IsParallel( v, b.Direction )
         && IsParallel( v, w );
     }
@@ -200,8 +182,8 @@ namespace RoomVolumeDirectShape
 
     public static bool IsHorizontal( Edge e )
     {
-      XYZ p = e.Evaluate( 0 );
-      XYZ q = e.Evaluate( 1 );
+      var p = e.Evaluate( 0 );
+      var q = e.Evaluate( 1 );
       return IsHorizontal( q - p );
     }
 
@@ -235,8 +217,8 @@ namespace RoomVolumeDirectShape
     /// </summary>
     public static bool PointsUpwards( XYZ v )
     {
-      double horizontalLength = v.X * v.X + v.Y * v.Y;
-      double verticalLength = v.Z * v.Z;
+      var horizontalLength = v.X * v.X + v.Y * v.Y;
+      var verticalLength = v.Z * v.Z;
 
       return 0 < v.Z
         && _minimumSlope
@@ -254,8 +236,8 @@ namespace RoomVolumeDirectShape
       Debug.Assert( 1 == a.Rank, "expected one-dimensional array" );
       Debug.Assert( 0 == a.GetLowerBound( 0 ), "expected zero-based array" );
       Debug.Assert( 0 < a.GetUpperBound( 0 ), "expected non-empty array" );
-      double max = a[0];
-      for( int i = 1; i <= a.GetUpperBound( 0 ); ++i )
+      var max = a[0];
+      for( var i = 1; i <= a.GetUpperBound( 0 ); ++i )
       {
         if( max < a[i] )
         {
@@ -324,7 +306,7 @@ namespace RoomVolumeDirectShape
       List<XYZ> vertices )
     {
       return string.Join( " ",
-        vertices.Select<XYZ, string>( p
+        vertices.Select( p
           => new IntPoint3d( p.X, p.Y, p.Z )
             .ToString( true ) ) );
     }

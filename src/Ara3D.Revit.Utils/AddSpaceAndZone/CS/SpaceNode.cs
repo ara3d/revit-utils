@@ -47,18 +47,12 @@ namespace Revit.SDK.Samples.AddSpaceAndZone.CS
             : base(space.Name)
         {
             m_space = space;
-            base.Text = space.Name;
+            Text = space.Name;
         }
 
         /// <summary>
         /// Get the Zone element in the ZoneNode.
         /// </summary>
-        public Space Space
-        {
-            get
-            {
-                return m_space;
-            }
-        }
+        public Space Space => m_space;
     }
 }

@@ -56,15 +56,15 @@ namespace Revit.SDK.Samples.SheetToView3D.CS
       /// Cancelled can be used to signify that the user cancelled the external operation 
       /// at some point. Failure should be returned if the application is unable to proceed with 
       /// the operation.</returns>
-      public Autodesk.Revit.UI.Result Execute(Autodesk.Revit.UI.ExternalCommandData commandData,
-        ref string message, Autodesk.Revit.DB.ElementSet elements)
+      public Result Execute(ExternalCommandData commandData,
+        ref string message, ElementSet elements)
       {
          if (null == commandData)
          {
             throw new ArgumentNullException("commandData");
          }
 
-         Result result = Result.Succeeded;
+         var result = Result.Succeeded;
          try
          {
             result = MakeView3D.MakeFromViewportClick(commandData.Application.ActiveUIDocument);
@@ -72,7 +72,7 @@ namespace Revit.SDK.Samples.SheetToView3D.CS
          catch (Exception e)
          {
             message = e.Message;
-            return Autodesk.Revit.UI.Result.Failed;
+            return Result.Failed;
          }
 
          return result;
@@ -93,44 +93,44 @@ namespace Revit.SDK.Samples.SheetToView3D.CS
       /// </summary>
       /// <param name="uidoc">the currently active uidocument</param>
       /// <param name="doc">the currently active document</param>
-      public static Autodesk.Revit.UI.Result MakeFromViewportClick(UIDocument uidoc)
+      public static Result MakeFromViewportClick(UIDocument uidoc)
       {
          if (null == uidoc)
          {
             throw new ArgumentNullException("uidoc");
          }
 
-         Document doc = uidoc.Document;
+         var doc = uidoc.Document;
          if (null == doc)
          {
             throw new InvalidOperationException("The document can't be found.");
          }
 
-         Result result = Result.Succeeded;
+         var result = Result.Succeeded;
 
          // Have the user click on a plan view viewport on a sheet.
-         XYZ click = uidoc.Selection.PickPoint("Click on a plan view viewport on a sheet to create a perspective View3D with its camera at that point.");
+         var click = uidoc.Selection.PickPoint("Click on a plan view viewport on a sheet to create a perspective View3D with its camera at that point.");
          if (null == click)
          {
             throw new InvalidOperationException("Please click on a plan view viewport on a sheet.");
          }
 
          // Make sure the active view was a sheet view.
-         ViewSheet viewSheet = uidoc.ActiveGraphicalView as ViewSheet;
+         var viewSheet = uidoc.ActiveGraphicalView as ViewSheet;
          if (null == viewSheet)
          {
             throw new InvalidOperationException("The click was not on a sheet.");
          }
 
          // Find which viewport was clicked.
-         Viewport clickedViewport = GetViewportAtClick(viewSheet, click);
+         var clickedViewport = GetViewportAtClick(viewSheet, click);
          if (null == clickedViewport)
          {
             throw new InvalidOperationException("The click was not on a viewport.");
          }
 
          // Verify that the transforms are reported by the viewport and its view.
-         View clickedView = doc.GetElement(clickedViewport.ViewId) as View;
+         var clickedView = doc.GetElement(clickedViewport.ViewId) as View;
          if (null == clickedView || !clickedView.HasViewTransforms() || !clickedViewport.HasViewportTransforms())
          {
             throw new InvalidOperationException("The clicked viewport doesn't report 3D model space to sheet space transforms.");
@@ -146,7 +146,7 @@ namespace Revit.SDK.Samples.SheetToView3D.CS
             throw new InvalidOperationException("Only plan views are supported by this demo application.");
          }
 
-         ViewPlan plan = clickedView as ViewPlan;
+         var plan = clickedView as ViewPlan;
          if (null == plan)
          {
             throw new InvalidOperationException("Only plan views are supported by this demo application.");
@@ -154,7 +154,7 @@ namespace Revit.SDK.Samples.SheetToView3D.CS
 
          // Convert the viewport click into a ray through 3d model space.
          // Note: The output XYZ needs to be projected onto the view's cut plane before use.
-         XYZ clickAsModelRay = CalculateClickAsModelRay(clickedViewport, click);
+         var clickAsModelRay = CalculateClickAsModelRay(clickedViewport, click);
          if (null == clickAsModelRay)
          {
             throw new InvalidOperationException("The click was outside the view crop regions.");
@@ -162,23 +162,23 @@ namespace Revit.SDK.Samples.SheetToView3D.CS
 
          // Project the ray onto the view's cut plane.  
          // This picks a reasonable height in the model for the View3D camera.
-         Plane cutPlane = GetViewPlanCutPlane(plan);
+         var cutPlane = GetViewPlanCutPlane(plan);
          if (null == cutPlane)
          {
             throw new InvalidOperationException("An error occured when getting the view's cut plane.");
          }
-         XYZ view3dCameraLocation = ProjectPointOnPlane(cutPlane, clickAsModelRay);
+         var view3dCameraLocation = ProjectPointOnPlane(cutPlane, clickAsModelRay);
          if (null == view3dCameraLocation)
          {
             throw new InvalidOperationException("An error occured when calculating the View3D camera position.");
          }
 
-         using (Transaction tran = new Transaction(doc, "New 3D View"))
+         using (var tran = new Transaction(doc, "New 3D View"))
          {
             tran.Start();
 
             // Create a new perspective 3D View with its camera at the point.
-            View3D view3d = Create3DView(doc, view3dCameraLocation, XYZ.BasisZ, XYZ.BasisY);
+            var view3d = Create3DView(doc, view3dCameraLocation, XYZ.BasisZ, XYZ.BasisY);
             if (null != view3d)
             {
                tran.Commit();
@@ -207,13 +207,13 @@ namespace Revit.SDK.Samples.SheetToView3D.CS
          if (null == viewSheet || null == click)
             return null;
 
-         Document doc = viewSheet.Document;
+         var doc = viewSheet.Document;
          if (null == doc)
             return null;
 
          foreach (var vpId in viewSheet.GetAllViewports())
          {
-            Viewport viewport = doc.GetElement(vpId) as Viewport;
+            var viewport = doc.GetElement(vpId) as Viewport;
 
             if (null != viewport && viewport.GetBoxOutline().Contains(click, CLICK_TOLERANCE))
             {
@@ -237,7 +237,7 @@ namespace Revit.SDK.Samples.SheetToView3D.CS
          if (null == trfModelToProjection || null == trfProjectionToSheet)
             return null;
 
-         Transform modelToSheetTrf = trfProjectionToSheet.Multiply(trfModelToProjection);
+         var modelToSheetTrf = trfProjectionToSheet.Multiply(trfModelToProjection);
          return modelToSheetTrf.Inverse;
       }
 
@@ -249,7 +249,7 @@ namespace Revit.SDK.Samples.SheetToView3D.CS
       /// <returns>The point projected onto the plane.</returns>
       private static XYZ ProjectPointOnPlane(Plane plane, XYZ point)
       {
-         UV uv = new UV();
+         var uv = new UV();
          double ignored;
          plane.Project(point, out uv, out ignored);
          return plane.Origin + (plane.XVec * uv.U) + (plane.YVec * uv.V);
@@ -277,24 +277,24 @@ namespace Revit.SDK.Samples.SheetToView3D.CS
          // This test can fail if the curveloop is wider than the very long line.
 
          // Calculate the plane on which the edges of the curveloop lie.
-         Plane plane = Plane.CreateByThreePoints(curveloop.ElementAt(0).GetEndPoint(0),
+         var plane = Plane.CreateByThreePoints(curveloop.ElementAt(0).GetEndPoint(0),
                                                  curveloop.ElementAt(1).GetEndPoint(0),
                                                  curveloop.ElementAt(2).GetEndPoint(0));
 
          // Project the test point on the plane.
-         XYZ projectedPoint = ProjectPointOnPlane(plane, point);
+         var projectedPoint = ProjectPointOnPlane(plane, point);
 
          // Create a very long bounded line that starts at projectedPoint and runs 
          // along the plane's surface.
-         Line veryLongLine = Line.CreateBound(projectedPoint,
+         var veryLongLine = Line.CreateBound(projectedPoint,
             projectedPoint + (RANDOM_X_SCALE * plane.XVec) + (RANDOM_Y_SCALE * plane.YVec));
 
          // Count how many edges of curveloop intersect veryLongLine.
-         int intersectionCount = 0;
+         var intersectionCount = 0;
          foreach (var edge in curveloop)
          {
             IntersectionResultArray resultArray;
-            SetComparisonResult res = veryLongLine.Intersect(edge, out resultArray);
+            var res = veryLongLine.Intersect(edge, out resultArray);
             if (SetComparisonResult.Overlap == res)
             {
                intersectionCount += resultArray.Size;
@@ -318,16 +318,16 @@ namespace Revit.SDK.Samples.SheetToView3D.CS
          if (null == viewport || null == click)
             return null;
 
-         Document doc = viewport.Document;
+         var doc = viewport.Document;
          if (null == doc)
             return null;
 
-         View view = doc.GetElement(viewport.ViewId) as View;
+         var view = doc.GetElement(viewport.ViewId) as View;
          if (null == view)
             return null;
 
          // Transform for view projection space --> sheet space
-         Transform trfProjectionToSheet = new Transform(viewport.GetProjectionToSheetTransform());
+         var trfProjectionToSheet = new Transform(viewport.GetProjectionToSheetTransform());
 
          // Most views have just one model space --> view projection space transform. 
          // However, views whose view crops are broken into multiple regions
@@ -335,20 +335,20 @@ namespace Revit.SDK.Samples.SheetToView3D.CS
          //
          // Iterate all the model space --> view projection space transforms.  
          // Look for the region that contains the click as a model point.
-         foreach (TransformWithBoundary trfWithBoundary in view.GetModelToProjectionTransforms())
+         foreach (var trfWithBoundary in view.GetModelToProjectionTransforms())
          {
             // Make the sheet space --> 3D model space transform for the current crop region.
-            Transform trfSheetToModel = MakeSheetToModelTransform(trfWithBoundary.GetModelToProjectionTransform(), trfProjectionToSheet);
+            var trfSheetToModel = MakeSheetToModelTransform(trfWithBoundary.GetModelToProjectionTransform(), trfProjectionToSheet);
             if (null == trfSheetToModel)
             {
                throw new InvalidOperationException("An error occured when calculating the sheet-to-model transforms.");
             }
 
             // Transform the click point into 3D model space.
-            XYZ clickAsModelRay = trfSheetToModel.OfPoint(click);
+            var clickAsModelRay = trfSheetToModel.OfPoint(click);
 
             // Get the edges of the current crop region.
-            CurveLoop modelCurveLoop = trfWithBoundary.GetBoundary();
+            var modelCurveLoop = trfWithBoundary.GetBoundary();
 
             if (null == modelCurveLoop)
             {
@@ -378,11 +378,11 @@ namespace Revit.SDK.Samples.SheetToView3D.CS
          if (null == plan)
             return null;
 
-         double levelElevation = 0.0;
+         var levelElevation = 0.0;
          if (null != plan.GenLevel)
             levelElevation = plan.GenLevel.Elevation;
-         double cutPlaneOffset = plan.GetViewRange().GetOffset(PlanViewPlane.CutPlane);
-         double viewCutPlaneElevation = levelElevation + cutPlaneOffset;
+         var cutPlaneOffset = plan.GetViewRange().GetOffset(PlanViewPlane.CutPlane);
+         var viewCutPlaneElevation = levelElevation + cutPlaneOffset;
 
          return Plane.CreateByNormalAndOrigin(plan.ViewDirection, new XYZ(0.0, 0.0, viewCutPlaneElevation));
       }
@@ -405,7 +405,7 @@ namespace Revit.SDK.Samples.SheetToView3D.CS
             .Cast<ViewFamilyType>()
             .FirstOrDefault(t => t.ViewFamily == ViewFamily.ThreeDimensional);
 
-         View3D view3d = View3D.CreatePerspective(doc, vft.Id);
+         var view3d = View3D.CreatePerspective(doc, vft.Id);
          if (null == view3d)
          {
             return null;

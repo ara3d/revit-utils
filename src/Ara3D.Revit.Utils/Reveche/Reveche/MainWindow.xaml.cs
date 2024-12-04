@@ -40,9 +40,9 @@ namespace Reveche
     {
       try
       {
-        Assembly assembly = Assembly.GetExecutingAssembly();
-        FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(assembly.Location);
-        string version = fvi.FileVersion;
+        var assembly = Assembly.GetExecutingAssembly();
+        var fvi = FileVersionInfo.GetVersionInfo(assembly.Location);
+        var version = fvi.FileVersion;
 
         RevitFiles = new List<string>();
         var start = DateTime.Now;
@@ -114,7 +114,7 @@ namespace Reveche
           //Console.WriteLine(info);
           if (info.Contains("Autodesk"))
           {
-            Match match = FoundYear.Match(info);
+            var match = FoundYear.Match(info);
             if (match.Success)
             {
               rf.Version = match.Value.Replace(" ", "");
@@ -131,7 +131,7 @@ namespace Reveche
         {
           foreach (var info in fileInfoData.Select((val, i) => new { i, val }))
           {
-            Match yearMatch = FoundYear2019.Match(info.val);
+            var yearMatch = FoundYear2019.Match(info.val);
           
             if (yearMatch.Success) 
             {
@@ -175,7 +175,7 @@ namespace Reveche
         foreach (var clashItem in selectetitems)
           SourceCollection.Remove(clashItem);
       }
-      catch (System.Exception ex1)
+      catch (Exception ex1)
       {
         MessageBox.Show("exception: " + ex1);
       }
@@ -203,7 +203,7 @@ namespace Reveche
           ProcessSourceFiles(openFileDialog1.FileNames);
         }
       }
-      catch (System.Exception ex1)
+      catch (Exception ex1)
       {
         MessageBox.Show("exception: " + ex1);
       }
@@ -232,7 +232,7 @@ namespace Reveche
 
           if ( File.Exists( openFileDialog1.FileName ) ) {
 
-            System.IO.StreamReader file = new System.IO.StreamReader( openFileDialog1.FileName );
+            var file = new StreamReader( openFileDialog1.FileName );
             string line;
             while ( ( line = file.ReadLine() ) != null ) {
             
@@ -246,7 +246,7 @@ namespace Reveche
 
         }
       }
-      catch ( System.Exception ex1 ) {
+      catch ( Exception ex1 ) {
         MessageBox.Show( "exception: " + ex1 );
       }
 
@@ -267,7 +267,7 @@ namespace Reveche
           revitFile.RefreshName(GetSelectedAction());
         }
       }
-      catch (System.Exception ex1)
+      catch (Exception ex1)
       {
         MessageBox.Show("exception: " + ex1);
       }
@@ -287,7 +287,7 @@ namespace Reveche
           MessageBox.Show("Some files have the same output path and name,\ncannot continue!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
           return;
         }
-        int i = 0;
+        var i = 0;
         foreach (var revitFile in SourceCollection)
         {
           if (File.Exists(revitFile.FullPath) && !string.IsNullOrEmpty(revitFile.NewFilename))
@@ -309,7 +309,7 @@ namespace Reveche
           return;
         }
       }
-      catch (System.Exception ex1)
+      catch (Exception ex1)
       {
         MessageBox.Show("exception: " + ex1);
       }
@@ -318,14 +318,14 @@ namespace Reveche
     private void Window_Paste( object sender, ExecutedRoutedEventArgs e ) {
 
       try {
-        string text = Clipboard.GetText() as string;
+        var text = Clipboard.GetText() as string;
 
         if ( string.IsNullOrWhiteSpace( text ) )
           return;
 
-        string[] lines = Regex.Split( text, "\r\n|\r|\n" );
+        var lines = Regex.Split( text, "\r\n|\r|\n" );
 
-        List<string> fileList = new List<string>();
+        var fileList = new List<string>();
 
         foreach ( var line in lines ) {
 
@@ -336,35 +336,35 @@ namespace Reveche
 
         ProcessSourceFiles( fileList.ToArray() );
       }
-      catch ( System.Exception ex1 ) {
+      catch ( Exception ex1 ) {
         MessageBox.Show( "exception: " + ex1 );
       }
     }
 
     private void Window_DragEnter(object sender, DragEventArgs e)
     {
-      whitespace.Visibility = System.Windows.Visibility.Visible;
+      whitespace.Visibility = Visibility.Visible;
     }
 
     private void Window_DragLeave(object sender, DragEventArgs e)
     {
-      whitespace.Visibility = System.Windows.Visibility.Hidden;
+      whitespace.Visibility = Visibility.Hidden;
     }
 
     private void Window_Drop(object sender, DragEventArgs e)
     {
       try
       {
-        whitespace.Visibility = System.Windows.Visibility.Hidden;
+        whitespace.Visibility = Visibility.Hidden;
         if (e.Data.GetDataPresent(DataFormats.FileDrop))
         {
           // Note that you can have more than one file.
-          string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+          var files = (string[])e.Data.GetData(DataFormats.FileDrop);
 
           ProcessSourceFiles(files);
         }
       }
-      catch (System.Exception ex1)
+      catch (Exception ex1)
       {
         MessageBox.Show("exception: " + ex1);
       }
@@ -391,7 +391,7 @@ namespace Reveche
           throw new NotSupportedException("File is not a structured storage file");
         }
 
-        using (StructuredStorageRoot ssRoot =
+        using (var ssRoot =
             new StructuredStorageRoot(revitFileName))
         {
           if (!ssRoot.BaseRoot.StreamExists(StreamName))
@@ -402,19 +402,19 @@ namespace Reveche
                 "File doesn't contain {0} stream", StreamName));
           }
 
-          StreamInfo imageStreamInfo =
+          var imageStreamInfo =
               ssRoot.BaseRoot.GetStreamInfo(StreamName);
 
-          using (Stream stream = imageStreamInfo.GetStream(
+          using (var stream = imageStreamInfo.GetStream(
               FileMode.Open, FileAccess.Read))
           {
-            byte[] buffer = new byte[stream.Length];
+            var buffer = new byte[stream.Length];
             stream.Read(buffer, 0, buffer.Length);
             return buffer;
           }
         }
       }
-      catch (System.Exception ex1)
+      catch (Exception ex1)
       {
         MessageBox.Show("exception: " + ex1);
       }
@@ -431,7 +431,7 @@ namespace Reveche
       public static bool IsFileStucturedStorage(
           string fileName)
       {
-        int res = StgIsStorageFile(fileName);
+        var res = StgIsStorageFile(fileName);
 
         if (res == 0)
           return true;
@@ -504,9 +504,9 @@ namespace Reveche
       {
         try
         {
-          Type storageRootType = typeof(StorageInfo).Assembly.GetType("System.IO.Packaging.StorageRoot", false, false);
+          var storageRootType = typeof(StorageInfo).Assembly.GetType("System.IO.Packaging.StorageRoot", false, false);
 
-          object result = storageRootType.InvokeMember(
+          var result = storageRootType.InvokeMember(
             methodName,
             BindingFlags.Static | BindingFlags.Instance
             | BindingFlags.Public | BindingFlags.NonPublic
@@ -536,12 +536,9 @@ namespace Reveche
 
       #endregion
 
-      public StorageInfo BaseRoot
-      {
-        get { return _storageRoot; }
-      }
+      public StorageInfo BaseRoot => _storageRoot;
 
-    #endregion
+      #endregion
 
     }
   }

@@ -39,7 +39,7 @@ namespace OOG.Core.RevitData
 
                     if (withTransaction)
                     {
-                        using (Transaction t = new Transaction(_doc, _transactionName ?? "RevitEvent"))
+                        using (var t = new Transaction(_doc, _transactionName ?? "RevitEvent"))
                         {
                             t.Start();
                             _doAction();

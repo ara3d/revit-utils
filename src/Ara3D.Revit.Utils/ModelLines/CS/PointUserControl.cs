@@ -63,7 +63,7 @@ namespace Revit.SDK.Samples.ModelLines.CS
         /// Get the point data of this user control
         /// </summary>
         /// <returns>the point data stored in this control</returns>
-        public Autodesk.Revit.DB.XYZ GetPointData()
+        public XYZ GetPointData()
         {
             double x = 0;   // Store the temporary x coordinate
             double y = 0;   // Store the temporary y coordinate
@@ -71,7 +71,7 @@ namespace Revit.SDK.Samples.ModelLines.CS
             x = Convert.ToDouble(xCoordinateTextBox.Text);  // Get x coordinate
             y = Convert.ToDouble(yCoordinateTextBox.Text);  // Get x coordinate
             z = Convert.ToDouble(zCoordinateTextBox.Text);  // Get x coordinate
-            return new Autodesk.Revit.DB.XYZ(x, y, z);
+            return new XYZ(x, y, z);
         }
 
 
@@ -103,7 +103,7 @@ namespace Revit.SDK.Samples.ModelLines.CS
         void CoordinateTextBox_Validating(object sender, CancelEventArgs e)
         {
             // Check whether the sender is a TextBox reference
-            TextBox numberTextBox = sender as TextBox;
+            var numberTextBox = sender as TextBox;
             if (null == numberTextBox)
             {
                 // If it is not a TextBox, just return

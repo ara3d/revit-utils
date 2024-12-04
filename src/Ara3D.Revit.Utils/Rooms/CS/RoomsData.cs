@@ -41,7 +41,7 @@ namespace Revit.SDK.Samples.Rooms.CS
     public class RoomsData
     {
         #region class member variables
-        Autodesk.Revit.UI.UIApplication m_revit;  // Store the reference of the application in revit
+        UIApplication m_revit;  // Store the reference of the application in revit
 
         List<Room> m_rooms = new List<Room>();    // a list to store all rooms in the project
         List<RoomTag> m_roomTags = new List<RoomTag>(); // a list to store all room tags
@@ -64,36 +64,18 @@ namespace Revit.SDK.Samples.Rooms.CS
             /// <summary>
             /// the name of department
             /// </summary>
-            public String DepartmentName
-            {
-                get
-                {
-                    return m_departmentName;
-                }
-            }
+            public String DepartmentName => m_departmentName;
 
 
             /// <summary>
             /// get the amount of rooms in the department
             /// </summary>
-            public int RoomsAmount
-            {
-                get
-                {
-                    return m_roomAmount;
-                }
-            }
+            public int RoomsAmount => m_roomAmount;
 
             /// <summary>
             /// the total area of the rooms in department
             /// </summary>
-            public double DepartmentAreaValue
-            {
-                get
-                {
-                    return m_departmentAreaValue;
-                }
-            }
+            public double DepartmentAreaValue => m_departmentAreaValue;
 
             /// <summary>
             /// constructor
@@ -110,61 +92,31 @@ namespace Revit.SDK.Samples.Rooms.CS
         /// <summary>
         /// a list of all department
         /// </summary>
-        public ReadOnlyCollection<DepartmentInfo> DepartmentInfos
-        {
-            get
-            {
-                return new ReadOnlyCollection<DepartmentInfo>(m_departmentInfos);
-            }
-        }
+        public ReadOnlyCollection<DepartmentInfo> DepartmentInfos => new(m_departmentInfos);
 
 
         /// <summary>
         /// a list of all the rooms in the project
         /// </summary>
-        public ReadOnlyCollection<Room> Rooms
-        {
-            get
-            {
-                return new ReadOnlyCollection<Room>(m_rooms);
-            }
-        }
+        public ReadOnlyCollection<Room> Rooms => new(m_rooms);
 
 
         /// <summary>
         /// a list of all the room tags in the project
         /// </summary>
-        public ReadOnlyCollection<RoomTag> RoomTags
-        {
-            get
-            {
-                return new ReadOnlyCollection<RoomTag>(m_roomTags);
-            }
-        }
+        public ReadOnlyCollection<RoomTag> RoomTags => new(m_roomTags);
 
 
         /// <summary>
         /// a list of the rooms that had tag
         /// </summary>
-        public ReadOnlyCollection<Room> RoomsWithTag
-        {
-            get
-            {
-                return new ReadOnlyCollection<Room>(m_roomsWithTag);
-            }
-        }
+        public ReadOnlyCollection<Room> RoomsWithTag => new(m_roomsWithTag);
 
 
         /// <summary>
         /// a list of the rooms which lack room tag
         /// </summary>
-        public ReadOnlyCollection<Room> RoomsWithoutTag
-        {
-            get
-            {
-                return new ReadOnlyCollection<Room>(m_roomsWithoutTag);
-            }
-        }
+        public ReadOnlyCollection<Room> RoomsWithoutTag => new(m_roomsWithoutTag);
 
 
         /// <summary>
@@ -189,20 +141,20 @@ namespace Revit.SDK.Samples.Rooms.CS
         {
             try
             {
-                foreach (Room tmpRoom in m_roomsWithoutTag)
+                foreach (var tmpRoom in m_roomsWithoutTag)
                 {
                     // get the location point of the room
-                    LocationPoint locPoint = tmpRoom.Location as LocationPoint;
+                    var locPoint = tmpRoom.Location as LocationPoint;
                     if (null == locPoint)
                     {
-                        String roomId = "Room Id:  " + tmpRoom.Id.ToString();
-                        String errMsg = roomId + "\r\nFault to create room tag," +
-                                                   "can't get the location point!";
+                        var roomId = "Room Id:  " + tmpRoom.Id.ToString();
+                        var errMsg = roomId + "\r\nFault to create room tag," +
+                                     "can't get the location point!";
                         throw new Exception(errMsg);
                     }
 
                     // create a instance of Autodesk.Revit.DB.UV class
-                    Autodesk.Revit.DB.UV point = new Autodesk.Revit.DB.UV(locPoint.Point.X, locPoint.Point.Y);
+                    var point = new UV(locPoint.Point.X, locPoint.Point.Y);
 
                     //create room tag
                     RoomTag tmpTag;
@@ -231,10 +183,10 @@ namespace Revit.SDK.Samples.Rooms.CS
         /// </summary>
         public void ReorderRooms()
         {
-            bool result = false;
+            var result = false;
 
             // sort all the rooms by ascending order according their coordinate
-            result = this.SortRooms();
+            result = SortRooms();
 
             // fault to reorder rooms' number
             if (!result)
@@ -245,13 +197,13 @@ namespace Revit.SDK.Samples.Rooms.CS
 
             // to avoid revit display the warning message,
             // change the rooms' name to a temp name 
-            foreach (Room tmpRoom in m_rooms)
+            foreach (var tmpRoom in m_rooms)
             {
                 tmpRoom.Number += "XXX";
             }
 
             // set the tag number of rooms in order
-            for (int i = 1; i <= m_rooms.Count; i++)
+            for (var i = 1; i <= m_rooms.Count; i++)
             {
                 m_rooms[i - 1].Number = i.ToString();
             }
@@ -271,25 +223,25 @@ namespace Revit.SDK.Samples.Rooms.CS
             String propertyValue = null;  //the value of parameter 
 
             // get the parameter via the parameterId
-            Parameter param = room.get_Parameter(paraEnum);
+            var param = room.get_Parameter(paraEnum);
             if (null == param)
             {
                 return "";
             }
             // get the parameter's storage type
-            StorageType storageType = param.StorageType;
+            var storageType = param.StorageType;
             switch (storageType)
             {
                 case StorageType.Integer:
-                    int iVal = param.AsInteger();
+                    var iVal = param.AsInteger();
                     propertyValue = iVal.ToString();
                     break;
                 case StorageType.String:
-                    String stringVal = param.AsString();
+                    var stringVal = param.AsString();
                     propertyValue = stringVal;
                     break;
                 case StorageType.Double:
-                    Double dVal = param.AsDouble();
+                    var dVal = param.AsDouble();
                     dVal = Math.Round(dVal, 2);
                     propertyValue = dVal.ToString();
                     break;
@@ -311,20 +263,20 @@ namespace Revit.SDK.Samples.Rooms.CS
             if (0 == m_departmentInfos.Count)
             {
                 // create a new instance of DepartmentArea struct and insert it to the list
-                DepartmentInfo tmpDep = new DepartmentInfo(departName, 1, areaValue);
+                var tmpDep = new DepartmentInfo(departName, 1, areaValue);
                 m_departmentInfos.Add(tmpDep);
             }
             else
             {
-                bool flag = false;
+                var flag = false;
                 // find whether the department exist in the project
-                for (int i = 0; i < m_departmentInfos.Count; i++)
+                for (var i = 0; i < m_departmentInfos.Count; i++)
                 {
                     if (departName == m_departmentInfos[i].DepartmentName)
                     {
-                        int newAmount = m_departmentInfos[i].RoomsAmount + 1;
-                        double tempValue = m_departmentInfos[i].DepartmentAreaValue + areaValue;
-                        DepartmentInfo tempInstance = new DepartmentInfo(departName, newAmount, tempValue);
+                        var newAmount = m_departmentInfos[i].RoomsAmount + 1;
+                        var tempValue = m_departmentInfos[i].DepartmentAreaValue + areaValue;
+                        var tempInstance = new DepartmentInfo(departName, newAmount, tempValue);
                         m_departmentInfos[i] = tempInstance;
                         flag = true;
                     }
@@ -334,7 +286,7 @@ namespace Revit.SDK.Samples.Rooms.CS
                 // create a new instance of DepartmentArea struct and insert it to the list
                 if (!flag)
                 {
-                    DepartmentInfo tmpDep = new DepartmentInfo(departName, 1, areaValue);
+                    var tmpDep = new DepartmentInfo(departName, 1, areaValue);
                     m_departmentInfos.Add(tmpDep);
                 }
             }
@@ -348,14 +300,14 @@ namespace Revit.SDK.Samples.Rooms.CS
         public void ExportFile(String fileName)
         {
             // store all the information that to be exported
-            String allData = "";
+            var allData = "";
 
             // get the project title
-            String projectTitle = m_revit.ActiveUIDocument.Document.Title;  //the name of the project
+            var projectTitle = m_revit.ActiveUIDocument.Document.Title;  //the name of the project
             allData += "Total Rooms area of " + projectTitle + "\r\n";
             allData += "Department" + "," + "Rooms Amount" + "," + "Total Area" + "\r\n";
 
-            foreach (DepartmentInfo tmp in m_departmentInfos)
+            foreach (var tmp in m_departmentInfos)
             {
                 allData += tmp.DepartmentName + "," + tmp.RoomsAmount +
                                         "," + tmp.DepartmentAreaValue + " SF\r\n";
@@ -364,7 +316,7 @@ namespace Revit.SDK.Samples.Rooms.CS
             // save the information into a Excel file
             if (0 < allData.Length)
             {
-                System.IO.StreamWriter exportinfo = new System.IO.StreamWriter(fileName);
+                var exportinfo = new System.IO.StreamWriter(fileName);
                 exportinfo.WriteLine(allData);
                 exportinfo.Close();
             }
@@ -377,12 +329,12 @@ namespace Revit.SDK.Samples.Rooms.CS
         private void GetAllRoomsAndTags()
         {
             // get the active document 
-            Document document = m_revit.ActiveUIDocument.Document;
-            RoomFilter roomFilter = new RoomFilter();
-            RoomTagFilter roomTagFilter = new RoomTagFilter();
-            LogicalOrFilter orFilter = new LogicalOrFilter(roomFilter, roomTagFilter);
+            var document = m_revit.ActiveUIDocument.Document;
+            var roomFilter = new RoomFilter();
+            var roomTagFilter = new RoomTagFilter();
+            var orFilter = new LogicalOrFilter(roomFilter, roomTagFilter);
 
-            FilteredElementIterator elementIterator =
+            var elementIterator =
                 (new FilteredElementCollector(document)).WherePasses(orFilter).GetElementIterator();
             elementIterator.Reset();
 
@@ -392,7 +344,7 @@ namespace Revit.SDK.Samples.Rooms.CS
                 object obj = elementIterator.Current;
 
                 // find the rooms, skip those rooms which don't locate at Level yet.
-                Room tmpRoom = obj as Room;
+                var tmpRoom = obj as Room;
                 if (null != tmpRoom && null != document.GetElement(tmpRoom.LevelId))
                 {
                     m_rooms.Add(tmpRoom);
@@ -400,7 +352,7 @@ namespace Revit.SDK.Samples.Rooms.CS
                 }
 
                 // find the room tags
-                RoomTag tmpTag = obj as RoomTag;
+                var tmpTag = obj as RoomTag;
                 if (null != tmpTag)
                 {
                     m_roomTags.Add(tmpTag);
@@ -424,13 +376,13 @@ namespace Revit.SDK.Samples.Rooms.CS
             // get the room id from room tag via room property
             // if find the room id in list RoomWithoutTag,
             // add it to the list RoomWithTag and delete it from list RoomWithoutTag
-            foreach (RoomTag tmpTag in m_roomTags)
+            foreach (var tmpTag in m_roomTags)
             {
-                ElementId idValue = tmpTag.Room.Id;
+                var idValue = tmpTag.Room.Id;
                 m_roomsWithTag.Add(tmpTag.Room);
 
                 // search the id for list RoomWithoutTag
-                foreach (Room tmpRoom in m_rooms)
+                foreach (var tmpRoom in m_rooms)
                 {
                     if (idValue == tmpRoom.Id)
                     {
@@ -449,15 +401,15 @@ namespace Revit.SDK.Samples.Rooms.CS
             LocationPoint tmpPoint = null;
             LocationPoint roomPoint = null;
             Room listRoom = null;
-            int result = 0;    //a temp variable
-            int amount = m_rooms.Count; //the number of rooms
-            bool flag = false;
+            var result = 0;    //a temp variable
+            var amount = m_rooms.Count; //the number of rooms
+            var flag = false;
 
             // sort the rooms according their location point 
-            for (int i = 0; i < amount - 1; i++)
+            for (var i = 0; i < amount - 1; i++)
             {
-                Room tmpRoom = m_rooms[i];
-                for (int j = i + 1; j < amount; j++)
+                var tmpRoom = m_rooms[i];
+                for (var j = i + 1; j < amount; j++)
                 {
                     tmpPoint = tmpRoom.Location as LocationPoint;
                     listRoom = m_rooms[j];
@@ -500,7 +452,7 @@ namespace Revit.SDK.Samples.Rooms.CS
                 // if flag equals 1 ,move the room to the front of list
                 if (flag)
                 {
-                    Room tempRoom = m_rooms[i];
+                    var tempRoom = m_rooms[i];
                     m_rooms[i] = m_rooms[result];
                     m_rooms[result] = tempRoom;
                     flag = false;

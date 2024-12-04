@@ -13,7 +13,7 @@ namespace RevitElementBipChecker.Model
     {
         public static void WriteJson(this DataTable dataTable, out string path, string filename = "Report.json")
         {
-            string PathDocument = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            var PathDocument = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
             string namesave;
             if (filename.ToLower().Contains(".json"))
             {
@@ -28,7 +28,7 @@ namespace RevitElementBipChecker.Model
             {
                 File.Delete(path);
             }
-            string serializeObject = JsonConvert.SerializeObject(dataTable,Formatting.Indented);
+            var serializeObject = JsonConvert.SerializeObject(dataTable,Formatting.Indented);
             File.WriteAllText(path, serializeObject);
         }
 

@@ -17,11 +17,11 @@ namespace RevitElementBipChecker.View
 
         public MainWindows(BipCheckerViewmodel vm)
         {
-            this.DataContext = vm;
-            this.Viewmodel = vm;
+            DataContext = vm;
+            Viewmodel = vm;
             Viewmodel.frmmain = this;
             InitializeComponent();
-            this.PreviewKeyDown += new KeyEventHandler(HandleEsc);
+            PreviewKeyDown += HandleEsc;
         }
 
         private void AboutOnClick(object sender, RoutedEventArgs e)
@@ -34,7 +34,7 @@ namespace RevitElementBipChecker.View
 
         private void GridViewColumnHeaderClickedHandler(object sender, RoutedEventArgs e)
         {
-            GridViewColumnHeader headerClicked = e.OriginalSource as GridViewColumnHeader;
+            var headerClicked = e.OriginalSource as GridViewColumnHeader;
             ListSortDirection direction;
 
             if (headerClicked != null)
@@ -57,7 +57,7 @@ namespace RevitElementBipChecker.View
                         }
                     }
 
-                    string header = (string) headerClicked.Column.Header;
+                    var header = (string) headerClicked.Column.Header;
                     Sort(header.RemoveInvalid(), direction);
 
                     _lastHeaderClicked = headerClicked;
@@ -68,11 +68,11 @@ namespace RevitElementBipChecker.View
 
         private void Sort(string sortBy, ListSortDirection direction)
         {
-            ICollectionView dataView =
+            var dataView =
                 CollectionViewSource.GetDefaultView(lsBipChecker.ItemsSource);
 
             dataView.SortDescriptions.Clear();
-            SortDescription sd = new SortDescription(sortBy, direction);
+            var sd = new SortDescription(sortBy, direction);
             dataView.SortDescriptions.Add(sd);
             dataView.Refresh();
         }

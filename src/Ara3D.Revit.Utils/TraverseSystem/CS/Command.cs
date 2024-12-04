@@ -61,29 +61,29 @@ namespace Revit.SDK.Samples.TraverseSystem.CS
         /// Cancelled can be used to signify that the user cancelled the external operation 
         /// at some point. Failure should be returned if the application is unable to proceed with 
         /// the operation.</returns>
-        public virtual Autodesk.Revit.UI.Result Execute(ExternalCommandData commandData
-            , ref string message, Autodesk.Revit.DB.ElementSet elements)
+        public virtual Result Execute(ExternalCommandData commandData
+            , ref string message, ElementSet elements)
         {
             try
             {
                 // Verify if the active document is null
-                UIDocument activeDoc = commandData.Application.ActiveUIDocument;
+                var activeDoc = commandData.Application.ActiveUIDocument;
                 if (activeDoc == null)
                 {
                     TaskDialog.Show("No Active Document", "There's no active document in Revit.", TaskDialogCommonButtons.Ok);
-                    return Autodesk.Revit.UI.Result.Failed;
+                    return Result.Failed;
                 }
 
                 // Verify the number of selected elements
-                ElementSet selElements = new ElementSet();
-                foreach (ElementId elementId in activeDoc.Selection.GetElementIds())
+                var selElements = new ElementSet();
+                foreach (var elementId in activeDoc.Selection.GetElementIds())
                 {
                    selElements.Insert(activeDoc.Document.GetElement(elementId));
                 }
                 if (selElements.Size != 1)
                 {
                     message = "Please select ONLY one element from current project.";
-                    return Autodesk.Revit.UI.Result.Failed;
+                    return Result.Failed;
                 }
 
                 // Get the selected element
@@ -99,7 +99,7 @@ namespace Revit.SDK.Samples.TraverseSystem.CS
                 //the system in the direction of flow; and
                 // flow direction of elements in a non-well-connected system may not be right, 
                 // therefore the sample will only support well-connected system.
-                MEPSystem system = ExtractMechanicalOrPipingSystem(selectedElement);
+                var system = ExtractMechanicalOrPipingSystem(selectedElement);
                 if (system == null)
                 {
                     message = "The selected element does not belong to any well-connected mechanical or piping system. " +
@@ -108,22 +108,22 @@ namespace Revit.SDK.Samples.TraverseSystem.CS
                         "- Some elements in a non-well-connected system may get lost when traversing the system in the " +
                         "direction of flow" + Environment.NewLine +
                         "- Flow direction of elements in a non-well-connected system may not be right";
-                    return Autodesk.Revit.UI.Result.Failed;
+                    return Result.Failed;
                 }
 
                 // Traverse the system and dump the traversal into an XML file
-                TraversalTree tree = new TraversalTree(activeDoc.Document, system);
+                var tree = new TraversalTree(activeDoc.Document, system);
                 tree.Traverse();
                 String fileName;
                 fileName = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "traversal.xml");
                 tree.DumpIntoXML(fileName);
 
-                return Autodesk.Revit.UI.Result.Succeeded;
+                return Result.Succeeded;
             }
             catch (Exception ex)
             {
                 message = ex.Message;
-                return Autodesk.Revit.UI.Result.Failed;
+                return Result.Failed;
             }
         }
 
@@ -146,18 +146,18 @@ namespace Revit.SDK.Samples.TraverseSystem.CS
             }
             else // Selected element is not a system
             {
-                FamilyInstance fi = selectedElement as FamilyInstance;
+                var fi = selectedElement as FamilyInstance;
                 //
                 // If selected element is a family instance, iterate its connectors and get the expected system
                 if (fi != null)
                 {
-                    MEPModel mepModel = fi.MEPModel;
+                    var mepModel = fi.MEPModel;
                     ConnectorSet connectors = null;
                     try
                     {
                         connectors = mepModel.ConnectorManager.Connectors;
                     }
-                    catch (System.Exception)
+                    catch (Exception)
                     {
                         system = null;
                     }
@@ -169,7 +169,7 @@ namespace Revit.SDK.Samples.TraverseSystem.CS
                     //
                     // If selected element is a MEPCurve (e.g. pipe or duct), 
                     // iterate its connectors and get the expected system
-                    MEPCurve mepCurve = selectedElement as MEPCurve;
+                    var mepCurve = selectedElement as MEPCurve;
                     if (mepCurve != null)
                     {
                         ConnectorSet connectors = null;
@@ -197,16 +197,16 @@ namespace Revit.SDK.Samples.TraverseSystem.CS
             }
 
             // Get well-connected mechanical or piping systems from each connector
-            List<MEPSystem> systems = new List<MEPSystem>();
+            var systems = new List<MEPSystem>();
             foreach (Connector connector in connectors)
             {
-                MEPSystem tmpSystem = connector.MEPSystem;
+                var tmpSystem = connector.MEPSystem;
                 if (tmpSystem == null)
                 {
                     continue;
                 }
 
-                MechanicalSystem ms = tmpSystem as MechanicalSystem;
+                var ms = tmpSystem as MechanicalSystem;
                 if (ms != null)
                 {
                     if (ms.IsWellConnected)
@@ -216,7 +216,7 @@ namespace Revit.SDK.Samples.TraverseSystem.CS
                 }
                 else
                 {
-                    PipingSystem ps = tmpSystem as PipingSystem;
+                    var ps = tmpSystem as PipingSystem;
                     if (ps != null && ps.IsWellConnected)
                     {
                         systems.Add(tmpSystem);
@@ -225,11 +225,11 @@ namespace Revit.SDK.Samples.TraverseSystem.CS
             }
 
             // If more than one system is found, get the system contains the most elements
-            int countOfSystem = systems.Count;
+            var countOfSystem = systems.Count;
             if (countOfSystem != 0)
             {
-                int countOfElements = 0;
-                foreach (MEPSystem sys in systems)
+                var countOfElements = 0;
+                foreach (var sys in systems)
                 {
                     if (sys.Elements.Size > countOfElements)
                     {
